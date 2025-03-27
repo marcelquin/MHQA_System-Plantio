@@ -1,0 +1,38 @@
+version: "3"
+services:
+
+  database:
+    image: 'postgres:17'
+    environment:
+      - 'POSTGRES_DB=db_gerhortalicas'
+      - 'POSTGRES_PASSWORD=p29qu50k8s3506'
+      - 'POSTGRES_USER=Quinteiro_adm'
+    ports:
+      - 5432:5432
+    volumes:
+      - /app/database/database_gerhortalicas
+    restart: on-failure
+
+  backend:
+    build: /BACKEND
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/db_gerhortalicas
+      - SPRING_DATASOURCE_USERNAME=Quinteiro_adm
+      - SPRING_DATASOURCE_PASSWORD=p29qu50k8s3506
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+      - spring.jpa.show-sql=true
+      - spring.application.name=gerhottalica
+    depends_on:
+      - database
+    restart: on-failure
+   
+  frontend:
+    build: /FRONTEND/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    restart: on-failure 
