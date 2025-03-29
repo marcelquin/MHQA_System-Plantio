@@ -279,30 +279,19 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-
     public void AdicionarNovaPlanta(String nomeCientifico,
                                             String nomePopular,
-                                            String instrucoes,
-                                            Boolean cavalo)
+                                            String instrucoes)
     {
         try
         {
-            if(nomeCientifico != null && nomePopular != null && instrucoes != null && cavalo != null)
+            if(nomeCientifico != null && nomePopular != null && instrucoes != null)
             {
                 int dig = (int) (111 + Math.random() * 999);
                 String identificador = nomePopular.substring(0, 3);
                 String codigo = identificador+"_"+dig;
-                List<String>notificacoes = new ArrayList<>();
                 PlantaEntity entity = new PlantaEntity();
-                entity.setNomeCientifico(nomeCientifico);
-                entity.setNomePopular(nomePopular);
-                entity.setCodigo(codigo);
-                entity.setFaseatual(AGUARDANDO);
-                entity.setInstrucoes(instrucoes);
-                entity.setNotificacoes(notificacoes);
-                entity.setCavalo(cavalo);
-                entity.setDataPlantio(LocalDate.now());
-                entity.setTimeStamp(LocalDateTime.now());
+                entity.SetInfoInicial(nomeCientifico,nomePopular,codigo,instrucoes);
                 plantaRepository.save(entity);
                 Planta response = plantaMapper.EntityToRecord(entity);
             }
@@ -329,51 +318,63 @@ public class PlantaService {
         return Boolean.FALSE;
     }
 
-    public Boolean AtualizaCiclo(String codigo, int numeroSubarea, String faseatual)
+    public Boolean AtualizaCiclo(String codigoPlanta, String codigoSubarea, String faseatual)
     {
         try
         {
-            Planta planta = BuscarPlantaPorCodigo(codigo).getBody();
-            SubAreaPlantio subAreaPlantio = subareaPlantioService.BuscarSubAreaPorNumero(numeroSubarea).getBody();
-            FASEATUAL faseAtualConvertida = RetornaFaseAtual(faseatual);
-            if(faseAtualConvertida.equals(FIM))
+            if(codigoPlanta != null && codigoSubarea != null && faseatual != null)
             {
-                SubAreaPlantio subAreaPlantioAtual = subareaPlantioService.BuscarSubAreaPorNumero(planta.getNumeroSubareaPlantio()).getBody();
-                subAreaPlantioAtual.ResetInformacao();
-                planta.FimCiclo();
-                SalvarAlteracao(planta);
-                subareaPlantioService.SalvarAlteracao(subAreaPlantioAtual);
-                return Boolean.TRUE;
-            }
-            Boolean validacao = planta.ValidaAlteracao(faseAtualConvertida);
-            if(subAreaPlantio.getDataInicioCiclo() == null && validacao.equals(Boolean.TRUE && planta.getFaseatual().equals(AGUARDANDO)))
-            {
-                subAreaPlantio.AtribuirPlanta(planta);
-                planta.AtribuirSubArea(subAreaPlantio.getNumero(),subAreaPlantio.getNomeAreaPlantio());
-                SalvarAlteracao(planta);
-                subareaPlantioService.SalvarAlteracao(subAreaPlantio);
-                return Boolean.TRUE;
-            }
-            if(planta.getFaseatual() != AGUARDANDO)
-            {
-                if(planta.getNumeroSubareaPlantio() != numeroSubarea)
+                PlantaEntity planta = plantaRepository.findBycodigo(codigoPlanta).orElseThrow(
+                        EntityNotFoundException::new
+                );
+                SubAreaPlantio subAreaPlantio = subareaPlantioService.BuscarSubAreaPorCodigo(codigoSubarea).getBody();
+                FASEATUAL faseAtualConvertida = RetornaFaseAtual(faseatual);
+                if(faseAtualConvertida.equals(FIM))
                 {
-                    //buscar atual
-                    SubAreaPlantio subAreaPlantioAtual = subareaPlantioService.BuscarSubAreaPorNumero(planta.getNumeroSubareaPlantio()).getBody();
-                    //zerar informações
-                    subAreaPlantioAtual.ResetInformacao();
-                    subareaPlantioService.SalvarAlteracao(subAreaPlantioAtual);
-                    //setar inforações
-                    subAreaPlantio.AtribuirPlanta(planta);
-                    //setar informação planta
-                    planta.AtribuirSubArea(subAreaPlantio.getNumero(),subAreaPlantio.getNomeAreaPlantio());
-                    subareaPlantioService.SalvarAlteracao(subAreaPlantio);
+                    subareaPlantioService.ResetarInformacoes(subAreaPlantio);
+                    planta.FimCiclo();
+                    plantaRepository.save(planta);
                 }
-                //alterar ciclo
-                planta.AlterarFaseAtual(faseAtualConvertida);
-                SalvarAlteracao(planta);
+                if(planta.getFaseatual().equals(AGUARDANDO) && subAreaPlantio.getDisponivel().equals(Boolean.TRUE))
+                {
+                    Boolean validacao = planta.ValidaAlteracaoCiclo(faseAtualConvertida);
+                    if(validacao.equals(Boolean.TRUE))
+                    {
+                        planta.AtribuirSubArea(subAreaPlantio.getCodigo(),subAreaPlantio.getNomeAreaPlantio());
+                        plantaRepository.save(planta);
+                        subareaPlantioService.AdicionarPlanta(planta,subAreaPlantio);
+                    }
+                }
+                if(planta.getLocalizacao() != null)
+                {
+                    if(planta.getLocalizacao().equals(subAreaPlantio.getCodigo()))
+                    {
+                        System.out.println(faseAtualConvertida);
+                        Boolean validacao = planta.ValidaAlteracaoCiclo(faseAtualConvertida);
+                        System.out.println(validacao);
+                        if(validacao.equals(Boolean.TRUE))
+                        {
+                            planta.SetNovoCiclo(faseAtualConvertida);
+                            plantaRepository.save(planta);
+                        }
+                    }
+                    else
+                    {
+                        if(faseAtualConvertida != CRESCIMENTO){throw new IllegalActionException();}
+                        Boolean validacao = planta.ValidaAlteracaoCiclo(faseAtualConvertida);
+                        if(validacao.equals(Boolean.TRUE))
+                        {
+                            SubAreaPlantio subAreaPlantioAtual = subareaPlantioService.BuscarSubAreaPorCodigo(planta.getLocalizacao()).getBody();
+                            subareaPlantioService.ResetarInformacoes(subAreaPlantioAtual);
+                            planta.AtribuirSubArea(subAreaPlantio.getCodigo(),subAreaPlantio.getNomeAreaPlantio());
+                            plantaRepository.save(planta);
+                            subareaPlantioService.AdicionarPlanta(planta, subAreaPlantio);
+                        }
+                    }
+                }
                 return Boolean.TRUE;
             }
+            else{throw new NullargumentsException();}
         }
         catch (Exception e)
         {
@@ -382,37 +383,22 @@ public class PlantaService {
         return Boolean.FALSE;
     }
 
-    public ResponseEntity<Boolean> ExecutarEnxertia(String codigoPlantaDoadora, String codigoPlantaReceptora)
+    public void SetAdubacao(Long id, String mensagem)
     {
         try
         {
-            if(codigoPlantaDoadora != null && codigoPlantaReceptora != null)
+            if(id != null && mensagem != null)
             {
-                Planta plantaDoadora = BuscarPlantaPorCodigo(codigoPlantaDoadora).getBody();
-                Planta plantaReceptora = BuscarPlantaPorCodigo(codigoPlantaReceptora).getBody();
-                Boolean validacaoDoadora = plantaDoadora.validaDoadora();
-                Boolean validacaoReceptora = plantaReceptora.validaReceptora();
-                if(validacaoDoadora.equals(Boolean.TRUE) && validacaoReceptora.equals(Boolean.TRUE))
-                {
-                    plantaReceptora.SetDadosEnxertia(plantaDoadora.getNomeCientifico(), plantaDoadora.getNomePopular(), plantaDoadora.getInstrucoes());
-                    SalvarAlteracao(plantaReceptora);
-                    plantaDoadora.FimCiclo();
-                    SalvarAlteracao(plantaDoadora);
-                    return new ResponseEntity<>(Boolean.TRUE,HttpStatus.OK);
-                }
-/*                if(plantaDoadora.getCavalo().equals(Boolean.FALSE)){throw new IllegalActionException();}
-                if(plantaDoadora.getNumeroSubareaPlantio() > 0){throw new IllegalActionException();}
-                if(plantaDoadora.getDataFimCiclo() != null){throw new IllegalActionException();}
-                if(plantaDoadora.getFaseatual() != AGUARDANDO){throw new IllegalActionException();}
-                if(plantaReceptora.getCavalo().equals(Boolean.TRUE)){throw new IllegalActionException();}
-                if(plantaReceptora.getNumeroSubareaPlantio() == 0){throw new IllegalActionException();}
-                if(plantaReceptora.getDataFimCiclo() != null){throw new IllegalActionException();}
-                if(plantaReceptora.getFaseatual() != CRESCIMENTO){throw new IllegalActionException();}*/
+                Planta planta = BuscarPlantaPorId(id).getBody();
+                PlantaEntity entity = plantaMapper.RecordToEntity(planta);
+                entity.Adubacao(mensagem);
+                plantaRepository.save(entity);
             }
-        } catch (Exception e) {
-            throw new IllegalActionException();
         }
-        return new ResponseEntity<>(Boolean.FALSE,HttpStatus.BAD_REQUEST);
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
     }
 
     public FASEATUAL RetornaFaseAtual(String faseAtual)

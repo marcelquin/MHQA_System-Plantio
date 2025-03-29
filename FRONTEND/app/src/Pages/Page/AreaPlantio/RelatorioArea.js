@@ -9,6 +9,8 @@ function RelatorioArea({data})
             <br/>
             <p className='infoItem'>GPS: <span className='infoTexto'>{data.gps}</span></p>
             <p className='infoItem'>Dimensão: <span className='infoTexto'>{data.dimensao}</span></p>        
+            <p className='infoItem'>Quantidade de Sub Áreas: <span className='infoTexto'>{data.tamanhoMax} sendo {data.eixoX} no eixo X por {data.eixoY} no eixo Y</span></p>        
+
             <p className='infoItem'>Notificações:</p>
             {data.notificacoes != null ?(<>
                 {data.notificacoes.map((data, i)=>{return(<>

@@ -21,8 +21,13 @@ public class SubAreaPlantioEntity {
 
     private String cor;
 
+
+    private int eixoX;
+
+    private int eixoY;
+
     @JoinColumn(unique = true)
-    private int numero;
+    private String codigo;
 
     @Enumerated(EnumType.STRING)
     private TAMANHO tamanho;
@@ -49,10 +54,12 @@ public class SubAreaPlantioEntity {
     public SubAreaPlantioEntity() {
     }
 
-    public SubAreaPlantioEntity(Long id, String cor, int numero, TAMANHO tamanho, PlantaEntity planta, Boolean disponivel, String nomeAreaPlantio, LocalDate dataInicioCiclo, LocalDate dataAdubacao, List<String> notificacoes, LocalDateTime timeStamp) {
+    public SubAreaPlantioEntity(Long id, String cor, int eixoX, int eixoY, String codigo, TAMANHO tamanho, PlantaEntity planta, Boolean disponivel, String nomeAreaPlantio, LocalDate dataInicioCiclo, LocalDate dataAdubacao, List<String> notificacoes, LocalDateTime timeStamp) {
         this.id = id;
         this.cor = cor;
-        this.numero = numero;
+        this.eixoX = eixoX;
+        this.eixoY = eixoY;
+        this.codigo = codigo;
         this.tamanho = tamanho;
         this.planta = planta;
         this.disponivel = disponivel;
@@ -62,6 +69,8 @@ public class SubAreaPlantioEntity {
         this.notificacoes = notificacoes;
         this.timeStamp = timeStamp;
     }
+
+
 
     public Long getId() {
         return id;
@@ -79,20 +88,28 @@ public class SubAreaPlantioEntity {
         this.cor = cor;
     }
 
-    public int getNumero() {
-        return numero;
+    public int getEixoX() {
+        return eixoX;
     }
 
-    public void setNumero(int numero) {
-        this.numero = numero;
+    public void setEixoX(int eixoX) {
+        this.eixoX = eixoX;
     }
 
-    public String getNomeAreaPlantio() {
-        return nomeAreaPlantio;
+    public int getEixoY() {
+        return eixoY;
     }
 
-    public void setNomeAreaPlantio(String nomeAreaPlantio) {
-        this.nomeAreaPlantio = nomeAreaPlantio;
+    public void setEixoY(int eixoY) {
+        this.eixoY = eixoY;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public TAMANHO getTamanho() {
@@ -119,8 +136,12 @@ public class SubAreaPlantioEntity {
         this.disponivel = disponivel;
     }
 
-    public void setnomeAreaPlantio(String nomeCanteiro) {
-        this.nomeAreaPlantio = nomeCanteiro;
+    public String getNomeAreaPlantio() {
+        return nomeAreaPlantio;
+    }
+
+    public void setNomeAreaPlantio(String nomeAreaPlantio) {
+        this.nomeAreaPlantio = nomeAreaPlantio;
     }
 
     public LocalDate getDataInicioCiclo() {
@@ -162,6 +183,25 @@ public class SubAreaPlantioEntity {
         return Boolean.TRUE;
     }
 
+    public void SetInfoInicial()
+    {
+        List<String> list = new ArrayList<>();
+        this.notificacoes = list;
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    public void SetInfo(int eixox, int eixoY, String nomeAreaPlantio, String codigo, TAMANHO tamanho, String cor)
+    {
+        this.cor = cor;
+        this.eixoX = eixox;
+        this.eixoY = eixoY;
+        this.codigo = codigo;
+        this.nomeAreaPlantio = nomeAreaPlantio;
+        this.timeStamp = LocalDateTime.now();
+        this.tamanho = tamanho;
+        this.disponivel = Boolean.TRUE;
+    }
+
     public void AtribuirPlanta(PlantaEntity planta)
     {
         if(this.planta == null)
@@ -182,13 +222,9 @@ public class SubAreaPlantioEntity {
 
     public void ResetInformacao()
     {
-        List<String> list = new ArrayList<>();
         this.planta = null;
         this.disponivel = Boolean.TRUE;
-        this.setNotificacoes(list);
-        this.dataAdubacao = null;
         this.dataInicioCiclo = null;
-        this.nomeAreaPlantio = null;
         this.timeStamp = LocalDateTime.now();
     }
 

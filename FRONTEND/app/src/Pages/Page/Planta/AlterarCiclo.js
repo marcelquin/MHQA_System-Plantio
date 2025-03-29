@@ -8,9 +8,9 @@ function AlterarCiclo({ data }) {
     const [alterarLocalizacao, setalterarLocalizacao ] = useState('')
     const navigate = useNavigate();
     const [dataPost, setDataPost] = useState({
-      codigo: data.codigo,
-      numeroSubarea: data.localizacao,
-      novaFaseCiclo: ''
+      codigoPlanta: data.codigoPlanta,
+      localizacao: data.localizacao,
+      faseatual: ''
     })
 
     const handleChanage = (e) => {
@@ -25,15 +25,15 @@ function AlterarCiclo({ data }) {
             'Content-Type': 'application/x-www-form-urlencoded'
           },    
           body: new URLSearchParams({
-            codigo: dataPost.codigo,
-            numeroSubarea: dataPost.numeroSubarea,
-            faseatual: dataPost.novaFaseCiclo
+            codigoPlanta: dataPost.codigoPlanta,
+            codigoSubarea: dataPost.localizacao,
+            faseatual: dataPost.faseatual
       })})
       .then(navigate("/gerenciar")) 
       setDataPost({
-        codigo: data.codigo,
-        numeroSubarea: data.numeroSubareaPlantio,
-        novaFaseCiclo: ''
+        codigoPlanta: data.codigoPlanta,
+        localizacao: data.localizacao,
+        faseatual: ''
       })
       }catch (err){
         console.log("erro")
@@ -60,10 +60,19 @@ function AlterarCiclo({ data }) {
                     <td>
                         <div class="input-group mb-3">
                           <button class="btn btn-outline-secondary" type="button" id="button-addon1">Código</button>
-                          <input type="text" name="codigo" value={data.codigo} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                          <input type="text" name="codigoPlanta" value={data.codigoPlanta} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                         </div>
                     </td>
                   </tr>
+                  <tr>
+                        <td>
+                        <br/>
+                          <div class="input-group mb-3">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon1">Área Plantio</button>
+                            <input type="text" value={data.areaPlantio}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                          </div>
+                        </td>
+                      </tr>
                   <tr>
                         <td>
                         <br/>
@@ -95,7 +104,7 @@ function AlterarCiclo({ data }) {
                         <br/>
                           <div class="input-group mb-3">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon1">Localização</button>
-                            <input type="number" name="numeroSubarea" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                            <input type="text" name="codigoSubarea" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                           </div>
                         </td>
                       </tr>
@@ -114,7 +123,7 @@ function AlterarCiclo({ data }) {
                       <select 
                         class="form-select" 
                         aria-label="Default select example"
-                        name="novaFaseCiclo"
+                        name="faseatual"
                         onChange={handleChanage}
                       >
                         <option value="">Selecione a opção desejada</option>
@@ -131,7 +140,6 @@ function AlterarCiclo({ data }) {
                   </tr>
                   <tr>
                     <td><button type="submit" onClick={handleClick} class="btn btn-success">Salvar</button></td>
-                    <td>{dataPost.faseAtual}</td>  
                   </tr>
                 </table>
               </form>

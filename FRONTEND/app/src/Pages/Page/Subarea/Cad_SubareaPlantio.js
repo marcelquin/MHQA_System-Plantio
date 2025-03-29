@@ -4,17 +4,18 @@ import { useNavigate } from 'react-router-dom';
 function Cad_SubareaPlantio() {
 
   const UrlGetList = "http://localhost:8080/areaPlantio/ListarAreas"
-  const UrlPost = "http://localhost:8080/processo/NovaSubArea"
+  const UrlPost = "http://localhost:8080/subareaPlantio/AdicionarNovaSubArea"
   const navigate = useNavigate();
 
-
+  
   const [listaAreas, setListaAreas] = useState([]);
 
   const [dataPost, serdataPost] = useState({
     cor: "",
     tamanho: "",
+    eixoX: "",
+    eixoY: "",
     nomeAreaPlantio: "",
-    quantidade: "",
   });
 
   const getListaAreas = async () => {
@@ -46,15 +47,17 @@ function Cad_SubareaPlantio() {
         body: new URLSearchParams({
           cor: dataPost.cor,
           tamanho: dataPost.tamanho,
+          eixoX: dataPost.eixoX,
+          eixoY: dataPost.eixoY,
           nomeAreaPlantio: dataPost.nomeAreaPlantio,
-          quantidade: dataPost.quantidade,
     })})
     .then(navigate("/gerenciar")) 
     serdataPost({
       cor: "",
       tamanho: "",
+      eixoX: "",
+      eixoY: "",
       nomeAreaPlantio: "",
-      quantidade: "",
     })
     }catch (err){
       console.log("erro")
@@ -87,8 +90,16 @@ function Cad_SubareaPlantio() {
                 <tr>
                   <td>
                     <div class="input-group mb-3">
-                      <button class="btn btn-outline-secondary" type="button" id="button-addon1">Quantidade</button>
-                      <input type="text" name="quantidade" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                      <button class="btn btn-outline-secondary" type="button" id="button-addon1">eixoX</button>
+                      <input type="text" name="eixoX" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="input-group mb-3">
+                      <button class="btn btn-outline-secondary" type="button" id="button-addon1">eixoY</button>
+                      <input type="text" name="eixoY" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                     </div>
                   </td>
                 </tr>

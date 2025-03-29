@@ -8,7 +8,7 @@ function RelatorioPlanta({data}) {
                    <br/>
                    <p className='infoItem'>Nome Cientifico:  <span className='infoTexto'>{data.nomeCientifico}</span></p>
                    <p className='infoItem'>Nome Popular:  <span className='infoTexto'>{data.nomePopular}</span></p>
-                   <p className='infoItem'>Código:  <span className='infoTexto'>{data.codigo}</span></p>
+                   <p className='infoItem'>Código:  <span className='infoTexto'>{data.codigoPlanta}</span></p>
                    <p className='infoItem'>Área plantio:  <span className='infoTexto'>{data.areaPlantio}</span></p>
                    <p className='infoItem'>Localização:  <span className='infoTexto'>{data.localizacao}</span></p>
                    <p className='infoItem'>Fase Atual:  <span className='infoTexto'>{data.faseAtual}</span></p>

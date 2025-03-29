@@ -31,9 +31,10 @@ function Gerencia_Planta() {
   }, []);
 
   const [dataRequest, setDataRequest] = useState({
+    'idPlanta': '',
     'nomecientifico': '',
     'nomePopular': '',
-    'codigo': '',
+    'codigoPlanta': '',
     'localizacao': '',
     'faseAtual': '',
     'inicioCiclo': '',
@@ -43,10 +44,11 @@ function Gerencia_Planta() {
 
 const handleRowSelect = (data) => {
   setDataRequest({
+    'idPlanta': data.id,
     'nomeCientifico': data.nomeCientifico,
     'nomePopular': data.nomePopular,
-    'codigo': data.codigo,
-    'localizacao': data.numeroSubareaPlantio,
+    'codigoPlanta': data.codigo,
+    'localizacao': data.localizacao,
     'areaPlantio': data.areaPlantio,
     'faseAtual': data.faseatual,
     'inicioCiclo': data.dataPlantio,
@@ -76,7 +78,7 @@ const handleRowSelect = (data) => {
                     <td>{data.nomePopular}</td>
                     <td>{data.codigo}</td>
                     <td>{data.faseatual}</td>
-                    <td>{data.numeroSubareaPlantio}</td>
+                    <td>{data.localizacao}</td>
                     <td>{data.areaPlantio}</td>
                     <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
                     <td><a onClick={() => {handleOpenModal('maisInfo'); handleRowSelect(data); }} className='opcaoExtra'>Mais informações</a></td>

@@ -12,7 +12,7 @@ services:
     volumes:
       - /app/database/database_gerhortalicas
     restart: on-failure
-
+    
   backend:
     build: /BACKEND
     ports:

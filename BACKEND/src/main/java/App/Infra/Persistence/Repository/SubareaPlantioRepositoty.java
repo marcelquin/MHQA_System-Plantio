@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface SubareaPlantioRepositoty extends JpaRepository<SubAreaPlantioEntity,Long> {
 
-    Optional<SubAreaPlantioEntity> findBynumero(int numero);
+    Optional<SubAreaPlantioEntity> findBycodigo(String codigo);
 
 }

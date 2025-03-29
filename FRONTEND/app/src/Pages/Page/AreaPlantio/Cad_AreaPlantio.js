@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 
 function Cad_AreaPlantio() {
 
@@ -11,6 +11,8 @@ function Cad_AreaPlantio() {
     nomeIdentificador: "",
     dimencao: "",
     gps: "",
+    tamanhoEixoX: "",
+    tamanhoEixoY: ""
   });
 
   const handleChanage = (e) => {
@@ -28,12 +30,16 @@ function Cad_AreaPlantio() {
           nomeIdentificador: dataPost.nomeIdentificador,
           dimencao: dataPost.dimencao,
           gps: dataPost.gps,
+          tamanhoEixoX: dataPost.tamanhoEixoX,
+          tamanhoEixoY: dataPost.tamanhoEixoY
     })})
     .then(navigate("/gerenciar")) 
     serdataPost({
       nomeIdentificador: "",
       dimencao: "",
       gps: "",
+      tamanhoEixoX: "",
+      tamanhoEixoY: ""
     })
     }catch (err){
       console.log("erro")
@@ -65,6 +71,22 @@ function Cad_AreaPlantio() {
               <div class="input-group mb-3">
                 <button class="btn btn-outline-secondary" type="button" id="button-addon1">GPS</button>
                 <input type="text" name="gps" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+              </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+              <div class="input-group mb-3">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Eixo X</button>
+                <input type="number" name="tamanhoEixoX" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+              </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+              <div class="input-group mb-3">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Eixo Y</button>
+                <input type="number" name="tamanhoEixoY" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
               </div>
               </td>
             </tr>

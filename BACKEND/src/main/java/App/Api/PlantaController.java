@@ -160,9 +160,8 @@ public class PlantaController {
     @PostMapping("/AdicionarNovaPlanta")
     public void AdicionarNovaPlanta(@RequestParam String nomeCientifico,
                                             @RequestParam String nomePopular,
-                                            @RequestParam String instrucoes,
-                                            @RequestParam Boolean cavalo)
-    {service.AdicionarNovaPlanta(nomeCientifico, nomePopular, instrucoes, cavalo);}
+                                            @RequestParam String instrucoes)
+    {service.AdicionarNovaPlanta(nomeCientifico, nomePopular, instrucoes);}
 
     @Operation(summary = "Salva novo Registro na tabela", method = "PUT")
     @ApiResponses(value = {
@@ -172,21 +171,10 @@ public class PlantaController {
             @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
     })
     @PutMapping("/AtualizaCiclo")
-    public Boolean AtualizaCiclo(@RequestParam String codigo,
-                                 @RequestParam int numeroSubarea,
+    public Boolean AtualizaCiclo(@RequestParam String codigoPlanta,
+                                 @RequestParam String codigoSubarea,
                                  @RequestParam String faseatual)
-    { return service.AtualizaCiclo(codigo, numeroSubarea, faseatual);}
+    { return service.AtualizaCiclo(codigoPlanta,codigoSubarea, faseatual);}
 
-    @Operation(summary = "Salva novo Registro na tabela", method = "PUT")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
-            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
-    })
-    @PutMapping("/ExecutarEnxertia")
-    public ResponseEntity<Boolean> ExecutarEnxertia(@RequestParam String codigoPlantaDoadora,
-                                                    @RequestParam String codigoPlantaReceptora)
-    {return service.ExecutarEnxertia(codigoPlantaDoadora, codigoPlantaReceptora);}
 
 }

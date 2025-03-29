@@ -39,7 +39,10 @@ function Gerencia_AreaPlantio() {
       'codigo': '',
       'dimensao': '',
       'gps': '',
-      'notificacoes': ''
+      'notificacoes': '',
+      'tamanhoMax': '',
+      'eixoX': '',
+      'eixoY': ''
   })
 
   const handleRowSelect = (data) => {
@@ -48,7 +51,10 @@ function Gerencia_AreaPlantio() {
       'codigo': data.codigo,
       'dimensao': data.dimencao,
       'gps': data.gps,
-      'notificacoes': data.notificacoes
+      'notificacoes': data.notificacoes,
+      'tamanhoMax': data.maxQuantidadeSubareas,
+      'eixoX': data.eixoX,
+      'eixoY': data.eixoy
     });
   }
 

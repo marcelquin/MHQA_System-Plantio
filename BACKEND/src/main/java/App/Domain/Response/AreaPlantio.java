@@ -17,6 +17,12 @@ public class AreaPlantio {
 
     private String dimencao;
 
+    private int eixoX;
+
+    private int eixoy;
+
+    private int maxQuantidadeSubareas;
+
     private String gps;
 
     private List<String> notificacoes;
@@ -29,11 +35,14 @@ public class AreaPlantio {
     public AreaPlantio() {
     }
 
-    public AreaPlantio(Long id, String nomeIdentificador, String codigo, String dimencao, String gps, List<String> notificacoes, List<SubAreaPlantio> subareas, LocalDateTime timeStamp) {
+    public AreaPlantio(Long id, String nomeIdentificador, String codigo, String dimencao, int eixoX, int eixoy, int maxQuantidadeSubareas, String gps, List<String> notificacoes, List<SubAreaPlantio> subareas, LocalDateTime timeStamp) {
         this.id = id;
         this.nomeIdentificador = nomeIdentificador;
         this.codigo = codigo;
         this.dimencao = dimencao;
+        this.eixoX = eixoX;
+        this.eixoy = eixoy;
+        this.maxQuantidadeSubareas = maxQuantidadeSubareas;
         this.gps = gps;
         this.notificacoes = notificacoes;
         this.subareas = subareas;
@@ -104,15 +113,29 @@ public class AreaPlantio {
         this.gps = gps;
     }
 
-    public void Adubacao(String resumoAdubacao) {
-        this.notificacoes.add(resumoAdubacao);
-        this.setTimeStamp(LocalDateTime.now());
+    public int getEixoX() {
+        return eixoX;
     }
 
-    public void AddNovaSubArea(SubAreaPlantio subAreaPlantio)
-    {
-        this.getSubareas().add(subAreaPlantio);
-        this.timeStamp = LocalDateTime.now();
+    public void setEixoX(int eixoX) {
+        this.eixoX = eixoX;
     }
+
+    public int getEixoy() {
+        return eixoy;
+    }
+
+    public void setEixoy(int eixoy) {
+        this.eixoy = eixoy;
+    }
+
+    public int getMaxQuantidadeSubareas() {
+        return maxQuantidadeSubareas;
+    }
+
+    public void setMaxQuantidadeSubareas(int maxQuantidadeSubareas) {
+        this.maxQuantidadeSubareas = maxQuantidadeSubareas;
+    }
+
 
 }

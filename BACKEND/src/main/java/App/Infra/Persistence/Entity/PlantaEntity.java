@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,7 @@ public class PlantaEntity {
     @JoinColumn(unique = true)
     private String codigo;
 
-    private int numeroSubareaPlantio;
+    private String localizacao;
 
     private String areaPlantio;
 
@@ -33,8 +34,6 @@ public class PlantaEntity {
     private FASEATUAL faseatual;
 
     private String instrucoes;
-
-    private Boolean cavalo;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataPlantio;
@@ -50,166 +49,124 @@ public class PlantaEntity {
     public PlantaEntity() {
     }
 
-    public PlantaEntity(Long id, String nomeCientifico, String nomePopular, String codigo, int numeroSubareaPlantio, String areaPlantio, FASEATUAL faseatual, String instrucoes, Boolean cavalo, LocalDate dataPlantio, LocalDate dataAdubacao, LocalDateTime timeStamp, List<String> notificacoes) {
+    public PlantaEntity(Long id, String nomeCientifico, String nomePopular, String codigo, String localizacao, String areaPlantio, FASEATUAL faseatual, String instrucoes, LocalDate dataPlantio, LocalDate dataAdubacao, LocalDateTime timeStamp, List<String> notificacoes) {
         this.id = id;
         this.nomeCientifico = nomeCientifico;
         this.nomePopular = nomePopular;
         this.codigo = codigo;
-        this.numeroSubareaPlantio = numeroSubareaPlantio;
+        this.localizacao = localizacao;
         this.areaPlantio = areaPlantio;
         this.faseatual = faseatual;
         this.instrucoes = instrucoes;
-        this.cavalo = cavalo;
         this.dataPlantio = dataPlantio;
         this.dataAdubacao = dataAdubacao;
         this.timeStamp = timeStamp;
         this.notificacoes = notificacoes;
     }
 
-    public int getNumeroSubareaPlantio() {
-        return numeroSubareaPlantio;
+    public String getLocalizacao() {
+        return localizacao;
     }
-
-    public void setNumeroSubareaPlantio(int numeroSubareaPlantio) {
-        this.numeroSubareaPlantio = numeroSubareaPlantio;
-    }
-
-    public String getAreaPlantio() {
-        return areaPlantio;
-    }
-
-    public void setAreaPlantio(String areaPlantio) {
-        this.areaPlantio = areaPlantio;
-    }
-
-    public List<String> getNotificacoes() {
-        return notificacoes;
-    }
-
-    public void setNotificacoes(List<String> notificacoes) {
-        this.notificacoes = notificacoes;
-    }
-
-    public LocalDate getDataAdubacao() {
-        return dataAdubacao;
-    }
-
-    public void setDataAdubacao(LocalDate dataAdubacao) {
-        this.dataAdubacao = dataAdubacao;
-    }
-
-    public Boolean getCavalo() {
-        return cavalo;
-    }
-
-    public void setCavalo(Boolean cavalo) {
-        this.cavalo = cavalo;
-    }
-
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNomeCientifico() {
         return nomeCientifico;
     }
 
-    public void setNomeCientifico(String nomeCientifico) {
-        this.nomeCientifico = nomeCientifico;
-    }
-
     public String getNomePopular() {
         return nomePopular;
-    }
-
-    public void setNomePopular(String nomePopular) {
-        this.nomePopular = nomePopular;
-    }
-
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
-    public FASEATUAL getFaseatual() {
-        return faseatual;
-    }
-
-    public void setFaseatual(FASEATUAL faseatual) {
-        this.faseatual = faseatual;
-    }
-
-    public LocalDate getDataPlantio() {
-        return dataPlantio;
-    }
-
-    public void setDataPlantio(LocalDate dataPlantio) {
-        this.dataPlantio = dataPlantio;
-    }
-
-    public String getInstrucoes() {
-        return instrucoes;
-    }
-
-    public void setInstrucoes(String instrucoes) {
-        this.instrucoes = instrucoes;
     }
 
     public String getCodigo() {
         return codigo;
     }
 
+    public String getAreaPlantio() {
+        return areaPlantio;
+    }
+
+    public FASEATUAL getFaseatual() {
+        return faseatual;
+    }
+
+    public String getInstrucoes() {
+        return instrucoes;
+    }
+
+    public LocalDate getDataPlantio() {
+        return dataPlantio;
+    }
+
+    public LocalDate getDataAdubacao() {
+        return dataAdubacao;
+    }
+
+    public LocalDateTime getTimeStamp() {
+        return timeStamp;
+    }
+
+    public List<String> getNotificacoes() {
+        return notificacoes;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNomeCientifico(String nomeCientifico) {
+        this.nomeCientifico = nomeCientifico;
+    }
+
+    public void setNomePopular(String nomePopular) {
+        this.nomePopular = nomePopular;
+    }
+
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
-    public void FimCiclo()
-    {
-        this.faseatual = FASEATUAL.FIM;
-        this.timeStamp = LocalDateTime.now();
-        this.numeroSubareaPlantio = 0;
-        this.areaPlantio = null;
+    public void setLocalizacao(String localizacao) {
+        this.localizacao = localizacao;
     }
 
-    public void SetDadosEnxertia(String nomeCientifico, String nomePopular, String instrucoes)
-    {
-        this.nomeCientifico = nomeCientifico;
-        this.nomePopular = nomePopular;
+    public void setAreaPlantio(String areaPlantio) {
+        this.areaPlantio = areaPlantio;
+    }
+
+    public void setFaseatual(FASEATUAL faseatual) {
+        this.faseatual = faseatual;
+    }
+
+    public void setInstrucoes(String instrucoes) {
         this.instrucoes = instrucoes;
-        this.timeStamp = LocalDateTime.now();
     }
 
-    public Boolean AtribuirSubArea(int numero, String nomeAreaPlantio)
+    public void setDataPlantio(LocalDate dataPlantio) {
+        this.dataPlantio = dataPlantio;
+    }
+
+    public void setDataAdubacao(LocalDate dataAdubacao) {
+        this.dataAdubacao = dataAdubacao;
+    }
+
+    public void setTimeStamp(LocalDateTime timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public void setNotificacoes(List<String> notificacoes) {
+        this.notificacoes = notificacoes;
+    }
+
+    public void AtribuirSubArea(String codigoSubArea , String nomeAreaPlantio)
     {
-        if(this.numeroSubareaPlantio == numero) {throw new IllegalActionException();}
-        this.numeroSubareaPlantio = numero;
+        this.localizacao = codigoSubArea;
         this.areaPlantio = nomeAreaPlantio;
         this.faseatual = FASEATUAL.GERMINACAO;
         this.timeStamp = LocalDateTime.now();
-        return Boolean.TRUE;
-    }
-
-    public Boolean ValidaAlteracao(FASEATUAL faseatual)
-    {
-        if(this.faseatual.equals(faseatual)){throw new IllegalActionException();}
-        if(this.faseatual == FASEATUAL.AGUARDANDO && faseatual != FASEATUAL.GERMINACAO){throw new IllegalActionException();}
-        if(this.faseatual == FASEATUAL.GERMINACAO && faseatual != FASEATUAL.MUDA){throw new IllegalActionException();}
-        if(this.faseatual == FASEATUAL.MUDA && faseatual != FASEATUAL.CRESCIMENTO){throw new IllegalActionException();}
-        return Boolean.TRUE;
-    }
-
-    public Boolean ValidaAtribuicao(int numeroSubareaPlantio)
-    {
-        if(this.numeroSubareaPlantio == numeroSubareaPlantio){throw new IllegalActionException();}
-        return Boolean.TRUE;
+        this.dataPlantio = LocalDate.now();
     }
 
     public Boolean SetNovoCiclo(FASEATUAL faseatual)
@@ -227,6 +184,57 @@ public class PlantaEntity {
             this.timeStamp = LocalDateTime.now();
             this.notificacoes.add(mensagem);
         }
+    }
+
+    public void SetInfo(String nomeCientifico, String nomePopular, String instrucoes)
+    {
+        this.nomePopular = nomePopular;
+        this.nomeCientifico = nomeCientifico;
+        this.instrucoes = instrucoes;
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    public void SetInfoInicial(String nomeCientifico, String nomePopular, String codigo, String instrucoes)
+    {
+        List<String> list = new ArrayList<>();
+        this.faseatual = FASEATUAL.AGUARDANDO;
+        this.timeStamp = LocalDateTime.now();
+        this.notificacoes = list;
+        this.nomeCientifico = nomeCientifico;
+        this.nomePopular = nomePopular;
+        this.codigo = codigo;
+        this.instrucoes = instrucoes;
+    }
+    public void ResetInfo()
+    {
+        this.areaPlantio = null;
+        this.dataPlantio = null;
+        this.localizacao = null;
+        this.dataAdubacao = null;
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    public void FimCiclo()
+    {
+        this.faseatual = FASEATUAL.FIM;
+        this.timeStamp = LocalDateTime.now();
+        this.localizacao = null;
+        this.areaPlantio = null;
+    }
+
+    public Boolean ValidaAtribuicao(String localizacao)
+    {
+        if(this.localizacao == localizacao) {throw new IllegalActionException();}
+        return Boolean.TRUE;
+    }
+
+    public Boolean ValidaAlteracaoCiclo(FASEATUAL faseatual)
+    {
+        if(this.faseatual.equals(faseatual)){throw new IllegalActionException();}
+        if(this.faseatual == FASEATUAL.AGUARDANDO && faseatual != FASEATUAL.GERMINACAO){throw new IllegalActionException();}
+        if(this.faseatual == FASEATUAL.GERMINACAO && faseatual != FASEATUAL.MUDA){throw new IllegalActionException();}
+        if(this.faseatual == FASEATUAL.MUDA && faseatual != FASEATUAL.CRESCIMENTO){throw new IllegalActionException();}
+        return Boolean.TRUE;
     }
 
 }

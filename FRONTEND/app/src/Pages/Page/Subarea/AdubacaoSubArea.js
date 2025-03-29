@@ -4,8 +4,7 @@ import React, { useState } from 'react';
 function AdubacaoIndividual({ data }) {
   const UrlPut = "http://localhost:8080/subareaPlantio/AdubacaoSubAreaIndividual"
   const [dataPost, setDataPost] = useState({
-    nomeAreaPlantio: data.nomeIdentificador,
-    numeroSubarea: data.numeroSubarea,
+    codigo: data.codigo,
     resumoAdubacao: ''
   })
 
@@ -21,15 +20,13 @@ function AdubacaoIndividual({ data }) {
           'Content-Type': 'application/x-www-form-urlencoded'
         },    
         body: new URLSearchParams({
-          nomeAreaPlantio: dataPost.nomeAreaPlantio,
-          numeroSubarea: dataPost.numeroSubarea,
+          codigo: dataPost.codigo,
           resumoAdubacao: dataPost.resumoAdubacao
     })})
     .then(navigate("/gerenciar")) 
     setDataPost({
-      nomeAreaPlantio: data.nomeIdentificador,
-      numeroSubarea: data.numeroSubarea,
-      resumoAdubacao: ''
+    codigo: data.codigo,
+    resumoAdubacao: ''
     })
     }catch (err){
       console.log("erro")
@@ -57,7 +54,7 @@ function AdubacaoIndividual({ data }) {
                       <td>
                         <div class="input-group mb-3">
                         <button class="btn btn-outline-secondary" type="button" id="button-addon1">localização</button>
-                        <input type="number" value={data.numero} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                        <input type="text" value={data.codigo} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                       </div>
                     </td>
                   </tr>

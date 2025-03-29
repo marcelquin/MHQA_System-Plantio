@@ -37,23 +37,8 @@ public class ProcessoController {
     public ResponseEntity<Void> NovaPlanta(@RequestParam String nomeCientifico,
                                            @RequestParam String nomePopular,
                                            @RequestParam String instrucoes,
-                                           @RequestParam Boolean cavalo,
                                            @RequestParam int quantidade)
-    { return service.NovaPlanta(nomeCientifico, nomePopular, instrucoes, cavalo, quantidade);}
+    { return service.NovaPlanta(nomeCientifico, nomePopular, instrucoes, quantidade);}
 
-
-    @Operation(summary = "Salva novo Registro na tabela", method = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
-            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
-    })
-    @PostMapping("/NovaSubArea")
-    public ResponseEntity<Void> NovaSubArea(@RequestParam String cor,
-                                            @RequestParam TAMANHO tamanho,
-                                            @RequestParam String nomeAreaPlantio,
-                                            @RequestParam int quantidade)
-    {return service.NovaSubArea(cor, tamanho, nomeAreaPlantio, quantidade);}
 
 }

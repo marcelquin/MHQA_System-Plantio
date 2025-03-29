@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,6 +24,12 @@ public class AreaPlantioEntity {
 
     private String gps;
 
+    private int eixoX;
+
+    private int eixoy;
+
+    private int maxQuantidadeSubareas;
+
     private List<String> notificacoes;
 
     @OneToMany
@@ -34,84 +41,97 @@ public class AreaPlantioEntity {
     public AreaPlantioEntity() {
     }
 
-    public AreaPlantioEntity(Long id, String nomeIdentificador, String codigo, String dimencao, String gps, List<String> notificacoes, List<SubAreaPlantioEntity> subareas, LocalDateTime timeStamp) {
+    public AreaPlantioEntity(Long id, String nomeIdentificador, String codigo, String dimencao, String gps, int eixoX, int eixoy, int maxQuantidadeSubareas, List<String> notificacoes, List<SubAreaPlantioEntity> subareas, LocalDateTime timeStamp) {
         this.id = id;
         this.nomeIdentificador = nomeIdentificador;
         this.codigo = codigo;
         this.dimencao = dimencao;
         this.gps = gps;
+        this.eixoX = eixoX;
+        this.eixoy = eixoy;
+        this.maxQuantidadeSubareas = maxQuantidadeSubareas;
         this.notificacoes = notificacoes;
         this.subareas = subareas;
         this.timeStamp = timeStamp;
+    }
+
+    public int getEixoX() {
+        return eixoX;
+    }
+
+    public int getEixoy() {
+        return eixoy;
+    }
+
+    public int getMaxQuantidadeSubareas() {
+        return maxQuantidadeSubareas;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getNomeIdentificador() {
         return nomeIdentificador;
-    }
-
-    public void setNomeIdentificador(String nomeIdentificador) {
-        this.nomeIdentificador = nomeIdentificador;
     }
 
     public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
     public String getDimencao() {
         return dimencao;
-    }
-
-    public void setDimencao(String dimencao) {
-        this.dimencao = dimencao;
     }
 
     public String getGps() {
         return gps;
     }
 
-    public void setGps(String gps) {
-        this.gps = gps;
-    }
-
     public List<String> getNotificacoes() {
         return notificacoes;
-    }
-
-    public void setNotificacoes(List<String> notificacoes) {
-        this.notificacoes = notificacoes;
     }
 
     public List<SubAreaPlantioEntity> getSubareas() {
         return subareas;
     }
 
-    public void setSubareas(List<SubAreaPlantioEntity> subareas) {
-        this.subareas = subareas;
-    }
-
     public LocalDateTime getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
+    public void SetInfo(String nomeIdentificador, String dimencao, String gps, String codigo, int eixoXrequest, int eixoYrequest)
+    {
+        this.gps = gps;
+        this.nomeIdentificador = nomeIdentificador;
+        this.dimencao = dimencao;
+        this.codigo = codigo;
+        this.timeStamp = LocalDateTime.now();
+        this.eixoX = eixoXrequest;
+        this.eixoy = eixoYrequest;
+        this.maxQuantidadeSubareas = this.eixoX * this.eixoy;
+    }
+
+    public void SetListsIniciais()
+    {
+        List<SubAreaPlantioEntity> list = new ArrayList<>();
+        List<String> list1 = new ArrayList<>();
+        this.subareas = list;
+        this.notificacoes = list1;
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    public void SetNovaSubArea(SubAreaPlantioEntity subAreaPlantio)
+    {
+        this.subareas.add(subAreaPlantio);
+        this.timeStamp = LocalDateTime.now();
     }
 
     public void Adubacao(String resumoAdubacao)
     {
         this.notificacoes.add(resumoAdubacao);
-        this.setTimeStamp(LocalDateTime.now());
+        this.timeStamp = LocalDateTime.now();
     }
+
+
+
 }

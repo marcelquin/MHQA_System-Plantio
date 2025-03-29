@@ -68,8 +68,10 @@ public class AreaPlantioController {
     @PostMapping("/NovaAreaPlantio")
     public ResponseEntity<AreaPlantio> NovaAreaPlantio(@RequestParam String nomeIdentificador,
                                                        @RequestParam String dimencao,
-                                                       @RequestParam String gps)
-    {return areaPlantioService.NovaAreaPlantio(nomeIdentificador, dimencao, gps);}
+                                                       @RequestParam String gps,
+                                                       @RequestParam int tamanhoEixoX,
+                                                       @RequestParam int tamanhoEixoY)
+    {return areaPlantioService.NovaAreaPlantio(nomeIdentificador, dimencao, gps,tamanhoEixoX,tamanhoEixoY);}
 
     @Operation(summary = "Salva novo Registro na tabela", method = "PUT")
     @ApiResponses(value = {

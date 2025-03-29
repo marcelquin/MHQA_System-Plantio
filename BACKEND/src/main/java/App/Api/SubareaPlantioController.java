@@ -55,9 +55,9 @@ public class SubareaPlantioController {
             @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
             @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
     })
-    @GetMapping("/BuscarSubAreaPorNumero")
-    public ResponseEntity<SubAreaPlantio> BuscarSubAreaPorNumero(@RequestParam int numero)
-    {return subareaPlantioService.BuscarSubAreaPorNumero(numero);}
+    @GetMapping("/BuscarSubAreaPorCodigo")
+    public ResponseEntity<SubAreaPlantio> BuscarSubAreaPorCodigo(String codigo)
+    {return subareaPlantioService.BuscarSubAreaPorCodigo(codigo);}
 
     @Operation(summary = "Salva novo Registro na tabela", method = "POST")
     @ApiResponses(value = {
@@ -69,8 +69,10 @@ public class SubareaPlantioController {
     @PostMapping("/AdicionarNovaSubArea")
     public ResponseEntity<SubAreaPlantio> AdicionarNovaSubArea(@RequestParam String cor,
                                                                @RequestParam TAMANHO tamanho,
+                                                               @RequestParam int eixoX,
+                                                               @RequestParam int eixoY,
                                                                @RequestParam String nomeAreaPlantio)
-    {return subareaPlantioService.AdicionarNovaSubArea(cor, tamanho, nomeAreaPlantio);}
+    {return subareaPlantioService.AdicionarNovaSubArea(cor, tamanho, eixoX, eixoY, nomeAreaPlantio);}
 
     @Operation(summary = "Edita Registro na tabela", method = "PUT")
     @ApiResponses(value = {
@@ -80,9 +82,8 @@ public class SubareaPlantioController {
             @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
     })
     @PutMapping("/AdubacaoSubAreaIndividual")
-    public ResponseEntity<SubAreaPlantio> AdubacaoSubAreaIndividual(@RequestParam String nomeAreaPlantio ,
-                                                                    @RequestParam int numeroSubarea,
+    public ResponseEntity<SubAreaPlantio> AdubacaoSubAreaIndividual(@RequestParam String codigo,
                                                                     @RequestParam String resumoAdubacao)
-    {return subareaPlantioService.AdubacaoSubAreaIndividual(nomeAreaPlantio, numeroSubarea, resumoAdubacao);}
+    {return subareaPlantioService.AdubacaoSubAreaIndividual(codigo, resumoAdubacao);}
     
 }

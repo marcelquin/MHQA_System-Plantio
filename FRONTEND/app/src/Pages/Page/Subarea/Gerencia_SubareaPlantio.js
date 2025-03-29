@@ -31,13 +31,13 @@ function Gerencia_SubareaPlantio() {
 
  const [dataRequest, setDataRequest] = useState({
       'nomeIdentificador': '',
-      'numeroSubarea': ''
+      'codigo': ''
   })
 
   const handleRowSelect = (data) => {
     setDataRequest({
       'nomeIdentificador': data.nomeAreaPlantio,
-      'numeroSubarea': data.numero
+      'codigo': data.codigo
     });
   }
 
@@ -47,8 +47,10 @@ function Gerencia_SubareaPlantio() {
                 <thead>
                   <tr>
                     <th scope="col">Cor</th>
-                    <th scope="col">Número</th>
+                    <th scope="col">Código</th>
                     <th scope="col">Tamanho</th>
+                    <th scope="col">Localização X</th>
+                    <th scope="col">Localização Y</th>
                     <th scope="col">Área de plantio</th>
                     <th scope="col">Nome Popular</th>
                     <th scope="col">Fase Atual</th>
@@ -61,8 +63,10 @@ function Gerencia_SubareaPlantio() {
                 <tbody key={i}>
                   <tr>
                     <th scope="row">{data.cor}</th>
-                    <td>{data.numero}</td>
+                    <td>{data.codigo}</td>
                     <td>{data.tamanho}</td>
+                    <td>{data.eixoX}</td>
+                    <td>{data.eixoY}</td>
                     <td>{data.nomeAreaPlantio}</td>
                     {data.planta !== null ? (<><td>{data.planta.nomePopular}</td>
                     <td>{data.planta.faseatual}</td>

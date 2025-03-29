@@ -7,25 +7,16 @@ function Cad_Planta() {
   const UrlPost = "http://localhost:8080/processo/NovaPlanta"
   const navigate = useNavigate();
 
-  const [isPlantaDoadora, setIsPlantaDoadora] = useState(false);
-
   const [dataPost, serdataPost] = useState({
     nomeCientifico: "",
     nomePopular: "",
     instrucoes: "",
-    cavalo: isPlantaDoadora,
     quantidade: ""
   });
 
 
   const handleChanage = (e) => {
-    if (e.target.name === 'cavalo') {
-      const isChecked = e.target.checked;
-      setIsPlantaDoadora(true);
-      serdataPost(prev => ({...prev, cavalo: isChecked}));
-    } else {
       serdataPost(prev => ({...prev, [e.target.name]: e.target.value}));
-    }
   }
 
   const handleClick=async (e)=>{
@@ -39,7 +30,6 @@ function Cad_Planta() {
           nomeCientifico: dataPost.nomeCientifico,
           nomePopular: dataPost.nomePopular,
           instrucoes: dataPost.instrucoes,
-          cavalo: dataPost.cavalo,
           quantidade: dataPost.quantidade
     })})
     .then(navigate("/gerenciar")) 
@@ -47,7 +37,6 @@ function Cad_Planta() {
       nomeCientifico: "",
       nomePopular: "",
       instrucoes: "",
-      cavalo: isPlantaDoadora,
     })
     }catch (err){
       console.log("erro")
@@ -91,13 +80,6 @@ function Cad_Planta() {
                       <input type="number" name="quantidade" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                     </div>
                   </td>
-                </tr>
-                <tr>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" name="cavalo" onChange={handleChanage} type="checkbox" id="flexSwitchCheckChecked"/>
-                    <label class="form-check-label" for="flexSwitchCheckChecked">Planta Doadora</label>
-                  </div>
-                  <br/>
                 </tr>
                 <tr>
                   <td><button type="submit" class="btn btn-success">Salvar</button></td>

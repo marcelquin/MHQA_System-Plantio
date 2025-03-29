@@ -21,7 +21,7 @@ public class Planta {
 
         private String codigo;
 
-        private int numeroSubareaPlantio;
+        private String localizacao;
 
         private String areaPlantio;
 
@@ -29,16 +29,11 @@ public class Planta {
 
         private String instrucoes;
 
-        private Boolean cavalo;
-
         @JsonFormat(pattern = "dd/MM/yyyy")
         private LocalDate dataPlantio;
 
         @JsonFormat(pattern = "dd/MM/yyyy")
         private LocalDate dataAdubacao;
-
-        @JsonFormat(pattern = "dd/MM/yyyy")
-        private LocalDate dataFimCiclo;
 
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
         private LocalDateTime timeStamp;
@@ -48,16 +43,15 @@ public class Planta {
         public Planta() {
         }
 
-        public Planta(Long id, String nomeCientifico, String nomePopular, String codigo, int numeroSubareaPlantio, String areaPlantio, FASEATUAL faseatual, String instrucoes, Boolean cavalo, LocalDate dataPlantio, LocalDate dataAdubacao, LocalDateTime timeStamp, List<String> notificacoes) {
+        public Planta(Long id, String nomeCientifico, String nomePopular, String codigo, String localizacao, String areaPlantio, FASEATUAL faseatual, String instrucoes, LocalDate dataPlantio, LocalDate dataAdubacao, LocalDateTime timeStamp, List<String> notificacoes) {
                 this.id = id;
                 this.nomeCientifico = nomeCientifico;
                 this.nomePopular = nomePopular;
                 this.codigo = codigo;
-                this.numeroSubareaPlantio = numeroSubareaPlantio;
+                this.localizacao = localizacao;
                 this.areaPlantio = areaPlantio;
                 this.faseatual = faseatual;
                 this.instrucoes = instrucoes;
-                this.cavalo = cavalo;
                 this.dataPlantio = dataPlantio;
                 this.dataAdubacao = dataAdubacao;
                 this.timeStamp = timeStamp;
@@ -96,12 +90,12 @@ public class Planta {
                 this.codigo = codigo;
         }
 
-        public int getNumeroSubareaPlantio() {
-                return numeroSubareaPlantio;
+        public String getLocalizacao() {
+                return localizacao;
         }
 
-        public void setNumeroSubareaPlantio(int numeroSubareaPlantio) {
-                this.numeroSubareaPlantio = numeroSubareaPlantio;
+        public void setLocalizacao(String localizacao) {
+                this.localizacao = localizacao;
         }
 
         public String getAreaPlantio() {
@@ -126,14 +120,6 @@ public class Planta {
 
         public void setInstrucoes(String instrucoes) {
                 this.instrucoes = instrucoes;
-        }
-
-        public Boolean getCavalo() {
-                return cavalo;
-        }
-
-        public void setCavalo(Boolean cavalo) {
-                this.cavalo = cavalo;
         }
 
         public LocalDate getDataPlantio() {
@@ -169,89 +155,7 @@ public class Planta {
                 this.notificacoes = notificacoes;
         }
 
-        public void FimCiclo()
-        {
-                if(this.faseatual != FASEATUAL.FIM)
-                {
-                        this.faseatual = FASEATUAL.FIM;
-                        this.timeStamp = LocalDateTime.now();
-                        this.areaPlantio = null;
-                        this.numeroSubareaPlantio = 0;
-                        this.instrucoes = null;
-                        this.notificacoes = null;
-                }
-        }
 
-        public Boolean ValidaAlteracao(FASEATUAL faseatual)
-        {
-                if(this.faseatual.equals(faseatual)){throw new IllegalActionException();}
-                if(this.faseatual == FASEATUAL.AGUARDANDO && faseatual != FASEATUAL.GERMINACAO){throw new IllegalActionException();}
-                if(this.faseatual == FASEATUAL.GERMINACAO && faseatual != FASEATUAL.MUDA){throw new IllegalActionException();}
-                if(this.faseatual == FASEATUAL.MUDA && faseatual != FASEATUAL.CRESCIMENTO){throw new IllegalActionException();}
-                if(faseatual.equals(FIM)){return  Boolean.TRUE;}
-                return Boolean.TRUE;
-        }
 
-        public Boolean validaDoadora()
-        {
-                if(this.getCavalo().equals(Boolean.FALSE)){throw new IllegalActionException();}
-                if(this.getNumeroSubareaPlantio() > 0){throw new IllegalActionException();}
-                if(this.getFaseatual() != AGUARDANDO){throw new IllegalActionException();}
-                return Boolean.TRUE;
-        }
-
-        public Boolean validaReceptora()
-        {
-                if(this.getCavalo().equals(Boolean.TRUE)){throw new IllegalActionException();}
-                if(this.getNumeroSubareaPlantio() == 0){throw new IllegalActionException();}
-                if(this.getFaseatual().equals(FIM)){throw new IllegalActionException();}
-                if(this.getFaseatual() != CRESCIMENTO){throw new IllegalActionException();}
-                return Boolean.TRUE;
-        }
-
-        public void SetDadosEnxertia(String nomeCientifico, String nomePopular, String instrucoes)
-        {
-                this.nomeCientifico = nomeCientifico;
-                this.nomePopular = nomePopular;
-                this.instrucoes = instrucoes;
-                this.timeStamp = LocalDateTime.now();
-                this.faseatual = FASEATUAL.MUDA;
-        }
-
-        public Boolean AtribuirSubArea(int numero, String nomeAreaPlantio) {
-                //if(this.numeroSubareaPlantio == numero) {throw new IllegalActionException();}
-                this.numeroSubareaPlantio = numero;
-                this.areaPlantio = nomeAreaPlantio;
-                this.faseatual = FASEATUAL.GERMINACAO;
-                this.timeStamp = LocalDateTime.now();
-                return Boolean.TRUE;
-        }
-
-        public Boolean AlterarFaseAtual(FASEATUAL faseatual)
-        {
-                this.faseatual = faseatual;
-                this.timeStamp = LocalDateTime.now();
-                return Boolean.TRUE;
-        }
-
-        public void VerificarLocalizacao(String nomeAreaPlantio, int numeroSubareaPlantio)
-        {
-            if(nomeAreaPlantio != null && numeroSubareaPlantio > 0)
-            {
-                    if(!this.areaPlantio.equals(nomeAreaPlantio))
-                    {
-                            this.areaPlantio = nomeAreaPlantio;
-                            this.numeroSubareaPlantio = numeroSubareaPlantio;
-                    }
-                    this.timeStamp = LocalDateTime.now();
-            }
-        }
-
-        public void Adubacao(String mensagem)
-        {
-                this.setTimeStamp(LocalDateTime.now());
-                this.setDataAdubacao(LocalDate.now());
-                this.getNotificacoes().add(mensagem);
-        }
 
 }
