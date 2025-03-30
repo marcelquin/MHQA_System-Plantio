@@ -46,9 +46,7 @@ function Gerencia_SubareaPlantio() {
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">Cor</th>
                     <th scope="col">Código</th>
-                    <th scope="col">Tamanho</th>
                     <th scope="col">Localização X</th>
                     <th scope="col">Localização Y</th>
                     <th scope="col">Área de plantio</th>
@@ -62,9 +60,7 @@ function Gerencia_SubareaPlantio() {
                 
                 <tbody key={i}>
                   <tr>
-                    <th scope="row">{data.cor}</th>
                     <td>{data.codigo}</td>
-                    <td>{data.tamanho}</td>
                     <td>{data.eixoX}</td>
                     <td>{data.eixoY}</td>
                     <td>{data.nomeAreaPlantio}</td>

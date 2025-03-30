@@ -3,6 +3,8 @@ package App.Api;
 import App.Domain.Bussness.SubareaPlantioService;
 import App.Domain.Response.SubAreaPlantio;
 import App.Infra.Persistence.Enum.TAMANHO;
+import App.Infra.UseCase.SubareaPlantio.UseCaseSubareaPlantioGet;
+import App.Infra.UseCase.SubareaPlantio.UseCaseSubareaPlantioPut;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -20,13 +22,16 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class SubareaPlantioController {
 
-    private final SubareaPlantioService subareaPlantioService;
+    private final UseCaseSubareaPlantioGet caseSubareaPlantioGet;
+    private final UseCaseSubareaPlantioPut caseSubareaPlantioPut;
 
-    public SubareaPlantioController(SubareaPlantioService subareaPlantioService) {
-        this.subareaPlantioService = subareaPlantioService;
+    public SubareaPlantioController(UseCaseSubareaPlantioGet caseSubareaPlantioGet, UseCaseSubareaPlantioPut caseSubareaPlantioPut) {
+        this.caseSubareaPlantioGet = caseSubareaPlantioGet;
+        this.caseSubareaPlantioPut = caseSubareaPlantioPut;
     }
 
-    @Operation(summary = "Busca Registro da tabela", method = "GET")
+
+    @Operation(summary = "Lista Registros da tabela", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
@@ -35,7 +40,7 @@ public class SubareaPlantioController {
     })
     @GetMapping("/ListarSubareas")
     public ResponseEntity<List<SubAreaPlantio>> ListarSubareas()
-    {return subareaPlantioService.ListarSubareas();}
+    {return caseSubareaPlantioGet.ListarSubareas();}
 
     @Operation(summary = "Busca Registro da tabela", method = "GET")
     @ApiResponses(value = {
@@ -46,7 +51,7 @@ public class SubareaPlantioController {
     })
     @GetMapping("/BuscarSubAreaPorId")
     public ResponseEntity<SubAreaPlantio> BuscarSubAreaPorId(@RequestParam Long id)
-    {return subareaPlantioService.BuscarSubAreaPorId(id);}
+    {return caseSubareaPlantioGet.BuscarSubAreaPorId(id);}
 
     @Operation(summary = "Busca Registro da tabela", method = "GET")
     @ApiResponses(value = {
@@ -57,22 +62,7 @@ public class SubareaPlantioController {
     })
     @GetMapping("/BuscarSubAreaPorCodigo")
     public ResponseEntity<SubAreaPlantio> BuscarSubAreaPorCodigo(String codigo)
-    {return subareaPlantioService.BuscarSubAreaPorCodigo(codigo);}
-
-    @Operation(summary = "Salva novo Registro na tabela", method = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
-            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
-            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
-    })
-    @PostMapping("/AdicionarNovaSubArea")
-    public ResponseEntity<SubAreaPlantio> AdicionarNovaSubArea(@RequestParam String cor,
-                                                               @RequestParam TAMANHO tamanho,
-                                                               @RequestParam int eixoX,
-                                                               @RequestParam int eixoY,
-                                                               @RequestParam String nomeAreaPlantio)
-    {return subareaPlantioService.AdicionarNovaSubArea(cor, tamanho, eixoX, eixoY, nomeAreaPlantio);}
+    {return caseSubareaPlantioGet.BuscarSubAreaPorCodigo(codigo);}
 
     @Operation(summary = "Edita Registro na tabela", method = "PUT")
     @ApiResponses(value = {
@@ -84,6 +74,6 @@ public class SubareaPlantioController {
     @PutMapping("/AdubacaoSubAreaIndividual")
     public ResponseEntity<SubAreaPlantio> AdubacaoSubAreaIndividual(@RequestParam String codigo,
                                                                     @RequestParam String resumoAdubacao)
-    {return subareaPlantioService.AdubacaoSubAreaIndividual(codigo, resumoAdubacao);}
+    {return caseSubareaPlantioPut.AdubacaoSubAreaIndividual(codigo, resumoAdubacao);}
     
 }

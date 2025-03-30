@@ -19,18 +19,12 @@ public class SubAreaPlantioEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String cor;
-
-
     private int eixoX;
 
     private int eixoY;
 
     @JoinColumn(unique = true)
     private String codigo;
-
-    @Enumerated(EnumType.STRING)
-    private TAMANHO tamanho;
 
     @OneToOne
     @JoinColumn(name = "plantaEntity_id", referencedColumnName = "id")
@@ -54,13 +48,11 @@ public class SubAreaPlantioEntity {
     public SubAreaPlantioEntity() {
     }
 
-    public SubAreaPlantioEntity(Long id, String cor, int eixoX, int eixoY, String codigo, TAMANHO tamanho, PlantaEntity planta, Boolean disponivel, String nomeAreaPlantio, LocalDate dataInicioCiclo, LocalDate dataAdubacao, List<String> notificacoes, LocalDateTime timeStamp) {
+    public SubAreaPlantioEntity(Long id, int eixoX, int eixoY, String codigo, PlantaEntity planta, Boolean disponivel, String nomeAreaPlantio, LocalDate dataInicioCiclo, LocalDate dataAdubacao, List<String> notificacoes, LocalDateTime timeStamp) {
         this.id = id;
-        this.cor = cor;
         this.eixoX = eixoX;
         this.eixoY = eixoY;
         this.codigo = codigo;
-        this.tamanho = tamanho;
         this.planta = planta;
         this.disponivel = disponivel;
         this.nomeAreaPlantio = nomeAreaPlantio;
@@ -70,22 +62,12 @@ public class SubAreaPlantioEntity {
         this.timeStamp = timeStamp;
     }
 
-
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getCor() {
-        return cor;
-    }
-
-    public void setCor(String cor) {
-        this.cor = cor;
     }
 
     public int getEixoX() {
@@ -112,13 +94,6 @@ public class SubAreaPlantioEntity {
         this.codigo = codigo;
     }
 
-    public TAMANHO getTamanho() {
-        return tamanho;
-    }
-
-    public void setTamanho(TAMANHO tamanho) {
-        this.tamanho = tamanho;
-    }
 
     public PlantaEntity getPlanta() {
         return planta;
@@ -190,15 +165,13 @@ public class SubAreaPlantioEntity {
         this.timeStamp = LocalDateTime.now();
     }
 
-    public void SetInfo(int eixox, int eixoY, String nomeAreaPlantio, String codigo, TAMANHO tamanho, String cor)
+    public void SetInfo(int eixox, int eixoY, String nomeAreaPlantio, String codigo)
     {
-        this.cor = cor;
         this.eixoX = eixox;
         this.eixoY = eixoY;
         this.codigo = codigo;
         this.nomeAreaPlantio = nomeAreaPlantio;
         this.timeStamp = LocalDateTime.now();
-        this.tamanho = tamanho;
         this.disponivel = Boolean.TRUE;
     }
 

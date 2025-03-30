@@ -4,14 +4,14 @@ import { data, useNavigate } from 'react-router-dom';
 
 function Cad_Planta() {
 
-  const UrlPost = "http://localhost:8080/processo/NovaPlanta"
+  const UrlPost = "http://localhost:8080/planta/AdicionarNovaPlanta"
   const navigate = useNavigate();
 
   const [dataPost, serdataPost] = useState({
     nomeCientifico: "",
     nomePopular: "",
     instrucoes: "",
-    quantidade: ""
+    codigoSubarea: ""
   });
 
 
@@ -30,13 +30,14 @@ function Cad_Planta() {
           nomeCientifico: dataPost.nomeCientifico,
           nomePopular: dataPost.nomePopular,
           instrucoes: dataPost.instrucoes,
-          quantidade: dataPost.quantidade
+          codigoSubarea: dataPost.codigoSubarea
     })})
     .then(navigate("/gerenciar")) 
     serdataPost({
       nomeCientifico: "",
       nomePopular: "",
       instrucoes: "",
+      codigoSubarea: ""
     })
     }catch (err){
       console.log("erro")
@@ -76,8 +77,8 @@ function Cad_Planta() {
                 <tr>
                   <td>
                     <div class="input-group mb-3">
-                      <button class="btn btn-outline-secondary" type="button" id="button-addon1">Quantidade</button>
-                      <input type="number" name="quantidade" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                      <button class="btn btn-outline-secondary" type="button" id="button-addon1">Localização</button>
+                      <input type="text" name="codigoSubarea" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                     </div>
                   </td>
                 </tr>

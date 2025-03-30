@@ -5,6 +5,7 @@ import App.Domain.Util.PlantaMapper;
 import App.Infra.Exceptions.EntityNotFoundException;
 import App.Infra.Exceptions.IllegalActionException;
 import App.Infra.Exceptions.NullargumentsException;
+import App.Infra.Gateway.PlantaGateway;
 import App.Infra.Persistence.Entity.PlantaEntity;
 import App.Infra.Persistence.Enum.FASEATUAL;
 import App.Infra.Persistence.Repository.PlantaRepository;
@@ -21,7 +22,7 @@ import java.util.List;
 import static App.Infra.Persistence.Enum.FASEATUAL.*;
 
 @Service
-public class PlantaService {
+public class PlantaService implements PlantaGateway {
 
     private final PlantaRepository plantaRepository;
     private final PlantaMapper plantaMapper;
@@ -33,6 +34,7 @@ public class PlantaService {
         this.subareaPlantioService = subareaPlantioService;
     }
 
+    @Override
     public ResponseEntity<List<Planta>>ListarPlantas()
     {
         try
@@ -53,6 +55,7 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<List<Planta>>ListarPlantasGerminacao()
     {
         try
@@ -76,6 +79,7 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<List<Planta>>ListarPlantasMudas()
     {
         try
@@ -99,6 +103,7 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<List<Planta>>ListarPlantasProducao()
     {
         try
@@ -122,6 +127,7 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<List<Planta>>ListarPlantasCrescimento()
     {
         try
@@ -145,6 +151,7 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<List<Planta>>ListarPlantasFloracao()
     {
         try
@@ -168,6 +175,7 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<List<Planta>>ListarPlantasFrutificacao()
     {
         try
@@ -191,6 +199,7 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<List<Planta>>ListarPlantasMaturacao()
     {
         try
@@ -214,6 +223,7 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<List<Planta>>ListarPlantasFimCiclo()
     {
         try
@@ -237,6 +247,7 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<Planta>BuscarPlantaPorId(Long id)
     {
         try
@@ -258,6 +269,7 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<Planta>BuscarPlantaPorCodigo(String codigo)
     {
         try
@@ -279,21 +291,31 @@ public class PlantaService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public void AdicionarNovaPlanta(String nomeCientifico,
+    @Override
+    public ResponseEntity<Planta> AdicionarNovaPlanta(String nomeCientifico,
                                             String nomePopular,
-                                            String instrucoes)
+                                            String instrucoes,
+                                            String codigoSubarea)
     {
         try
         {
-            if(nomeCientifico != null && nomePopular != null && instrucoes != null)
+            if(nomeCientifico != null && nomePopular != null && instrucoes != null && codigoSubarea != null)
             {
                 int dig = (int) (111 + Math.random() * 999);
                 String identificador = nomePopular.substring(0, 3);
                 String codigo = identificador+"_"+dig;
                 PlantaEntity entity = new PlantaEntity();
+                SubAreaPlantio subAreaPlantio = subareaPlantioService.BuscarSubAreaPorCodigo(codigoSubarea).getBody();
                 entity.SetInfoInicial(nomeCientifico,nomePopular,codigo,instrucoes);
+                Boolean validaAtribuicao = entity.ValidaAtribuicao(codigoSubarea);
+                if(validaAtribuicao.equals(Boolean.TRUE))
+                {
+                    entity.AtribuirSubArea(codigoSubarea,nomeCientifico);
+                }
                 plantaRepository.save(entity);
                 Planta response = plantaMapper.EntityToRecord(entity);
+                subareaPlantioService.AdicionarPlanta(response, subAreaPlantio);
+                return new ResponseEntity<>(response,HttpStatus.CREATED);
             }
             else {throw new NullargumentsException();}
         }
@@ -301,6 +323,35 @@ public class PlantaService {
         {
             e.getMessage();
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<Void> EditarInformacaoPlanta(Long id,
+                                                       String nomeCientifico,
+                                                       String nomePopular,
+                                                       String instrucoes)
+    {
+        try
+        {
+            if(id != null &&
+               nomeCientifico != null &&
+               nomePopular != null &&
+               instrucoes != null)
+            {
+               Planta planta = BuscarPlantaPorId(id).getBody();
+               PlantaEntity entity = plantaMapper.RecordToEntity(planta);
+               entity.SetInfo(nomeCientifico,nomePopular,instrucoes);
+               plantaRepository.save(entity);
+               return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     public Boolean SalvarAlteracao(Planta planta)
@@ -318,6 +369,7 @@ public class PlantaService {
         return Boolean.FALSE;
     }
 
+    @Override
     public Boolean AtualizaCiclo(String codigoPlanta, String codigoSubarea, String faseatual)
     {
         try
@@ -334,16 +386,6 @@ public class PlantaService {
                     subareaPlantioService.ResetarInformacoes(subAreaPlantio);
                     planta.FimCiclo();
                     plantaRepository.save(planta);
-                }
-                if(planta.getFaseatual().equals(AGUARDANDO) && subAreaPlantio.getDisponivel().equals(Boolean.TRUE))
-                {
-                    Boolean validacao = planta.ValidaAlteracaoCiclo(faseAtualConvertida);
-                    if(validacao.equals(Boolean.TRUE))
-                    {
-                        planta.AtribuirSubArea(subAreaPlantio.getCodigo(),subAreaPlantio.getNomeAreaPlantio());
-                        plantaRepository.save(planta);
-                        subareaPlantioService.AdicionarPlanta(planta,subAreaPlantio);
-                    }
                 }
                 if(planta.getLocalizacao() != null)
                 {
@@ -368,7 +410,8 @@ public class PlantaService {
                             subareaPlantioService.ResetarInformacoes(subAreaPlantioAtual);
                             planta.AtribuirSubArea(subAreaPlantio.getCodigo(),subAreaPlantio.getNomeAreaPlantio());
                             plantaRepository.save(planta);
-                            subareaPlantioService.AdicionarPlanta(planta, subAreaPlantio);
+                            Planta planta1 = plantaMapper.EntityToRecord(planta);
+                            subareaPlantioService.AdicionarPlanta(planta1, subAreaPlantio);
                         }
                     }
                 }

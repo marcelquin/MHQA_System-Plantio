@@ -44,7 +44,7 @@ return (
                         <tr>
                           <th scope="row">{data.nomePopular}</th>
                           <td>{data.faseatual}</td>
-                          <td>{data.numeroSubareaPlantio}</td>
+                          <td>{data.localizacao}</td>
                           <td>{data.areaPlantio}</td>
                           <td>{data.dataPlantio}</td>
                           <td>{data.dataAdubacao}</td>

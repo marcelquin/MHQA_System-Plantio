@@ -2,6 +2,8 @@ import '../../CSS/BodyStyle.css'
 import React, { useState, useEffect } from 'react';
 import AlterarCiclo from './AlterarCiclo';
 import RelatorioPlanta from './RelatorioPlanta';
+import EditarInfo from './EditarInfo';
+
 function Gerencia_Planta() {
 
   const [showModal, setShowModal] = useState(false);
@@ -35,6 +37,7 @@ function Gerencia_Planta() {
     'nomecientifico': '',
     'nomePopular': '',
     'codigoPlanta': '',
+    'instrucoes': '',
     'localizacao': '',
     'faseAtual': '',
     'inicioCiclo': '',
@@ -48,6 +51,7 @@ const handleRowSelect = (data) => {
     'nomeCientifico': data.nomeCientifico,
     'nomePopular': data.nomePopular,
     'codigoPlanta': data.codigo,
+    'instrucoes': data.instrucoes,
     'localizacao': data.localizacao,
     'areaPlantio': data.areaPlantio,
     'faseAtual': data.faseatual,
@@ -69,6 +73,7 @@ const handleRowSelect = (data) => {
                     <th scope="col">Ciclo Atual</th>
                     <th scope="col">Localização</th>
                     <th scope="col">Área de plantio</th>
+                    <th scope="col">Orientações</th>
                   </tr>
                 </thead>
                 {lista.map((data, i)=>{return(<>
@@ -80,7 +85,9 @@ const handleRowSelect = (data) => {
                     <td>{data.faseatual}</td>
                     <td>{data.localizacao}</td>
                     <td>{data.areaPlantio}</td>
+                    <td>{data.instrucoes}</td>
                     <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
+                    <td><a onClick={() => {handleOpenModal('Editar'); handleRowSelect(data); }} className='opcaoExtra'>Editar</a></td>
                     <td><a onClick={() => {handleOpenModal('maisInfo'); handleRowSelect(data); }} className='opcaoExtra'>Mais informações</a></td>
                   </tr>
                 </tbody>
@@ -102,6 +109,7 @@ const handleRowSelect = (data) => {
                         <div className="modal-body">
                             {modalContent === 'alterarCiclo' && <AlterarCiclo data={dataRequest}/>}
                             {modalContent === 'maisInfo' && <RelatorioPlanta data={dataRequest}/>}
+                            {modalContent === 'Editar' && <EditarInfo data={dataRequest}/>}
                         </div>
                     </div>
                 </div>

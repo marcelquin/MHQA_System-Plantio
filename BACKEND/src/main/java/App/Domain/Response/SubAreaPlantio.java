@@ -18,16 +18,11 @@ public class SubAreaPlantio {
 
     private Long id;
 
-    private String cor;
-
     private int eixoX;
 
     private int eixoY;
 
     private String codigo;
-
-    @Enumerated(EnumType.STRING)
-    private TAMANHO tamanho;
 
     private Planta planta;
 
@@ -49,13 +44,11 @@ public class SubAreaPlantio {
     public SubAreaPlantio() {
     }
 
-    public SubAreaPlantio(Long id, String cor, int eixoX, int eixoY, String codigo, TAMANHO tamanho, Planta planta, Boolean disponivel, String nomeAreaPlantio, LocalDate dataInicioCiclo, LocalDate dataAdubacao, List<String> notificacoes, LocalDateTime timeStamp) {
+    public SubAreaPlantio(Long id, int eixoX, int eixoY, String codigo, Planta planta, Boolean disponivel, String nomeAreaPlantio, LocalDate dataInicioCiclo, LocalDate dataAdubacao, List<String> notificacoes, LocalDateTime timeStamp) {
         this.id = id;
-        this.cor = cor;
         this.eixoX = eixoX;
         this.eixoY = eixoY;
         this.codigo = codigo;
-        this.tamanho = tamanho;
         this.planta = planta;
         this.disponivel = disponivel;
         this.nomeAreaPlantio = nomeAreaPlantio;
@@ -71,14 +64,6 @@ public class SubAreaPlantio {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getCor() {
-        return cor;
-    }
-
-    public void setCor(String cor) {
-        this.cor = cor;
     }
 
     public int getEixoX() {
@@ -103,14 +88,6 @@ public class SubAreaPlantio {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
-    }
-
-    public TAMANHO getTamanho() {
-        return tamanho;
-    }
-
-    public void setTamanho(TAMANHO tamanho) {
-        this.tamanho = tamanho;
     }
 
     public Planta getPlanta() {

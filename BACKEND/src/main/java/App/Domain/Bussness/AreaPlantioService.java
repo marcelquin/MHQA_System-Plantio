@@ -5,7 +5,9 @@ import App.Domain.Response.SubAreaPlantio;
 import App.Domain.Util.AreaPlantioMapper;
 import App.Domain.Util.SubareaPlantioMapper;
 import App.Infra.Exceptions.EntityNotFoundException;
+import App.Infra.Exceptions.IllegalActionException;
 import App.Infra.Exceptions.NullargumentsException;
+import App.Infra.Gateway.AreaPlantioGateway;
 import App.Infra.Persistence.Entity.AreaPlantioEntity;
 import App.Infra.Persistence.Entity.SubAreaPlantioEntity;
 import App.Infra.Persistence.Repository.AreaPlantioRepositoty;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AreaPlantioService {
+public class AreaPlantioService implements AreaPlantioGateway {
 
     private final AreaPlantioRepositoty areaPlantioRepositoty;
     private final AreaPlantioMapper areaPlantioMapper;
@@ -35,6 +37,7 @@ public class AreaPlantioService {
         this.subareaPlantioMapper = subareaPlantioMapper;
     }
 
+    @Override
     public ResponseEntity<List<AreaPlantio>> ListarAreas() {
         try {
             List<AreaPlantioEntity> list = areaPlantioRepositoty.findAll();
@@ -50,6 +53,7 @@ public class AreaPlantioService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<AreaPlantio> BuscarAreaPlantioPorId(Long id) {
         try {
             if (id != null) {
@@ -67,6 +71,7 @@ public class AreaPlantioService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<AreaPlantio> BuscarAreaPlantioPorNome(String nome) {
         try {
             if (nome != null) {
@@ -84,32 +89,53 @@ public class AreaPlantioService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<AreaPlantio> NovaAreaPlantio(String nomeIdentificador, String dimencao, String gps, int tamanhoEixoX, int tamanhoEixoY)
     {
         try {
+            if(tamanhoEixoX < 0) {throw new IllegalActionException();}
+            if(tamanhoEixoY < 0) {throw new IllegalActionException();}
             if (nomeIdentificador != null &&
                     dimencao != null &&
-                    gps != null) {
+                    gps != null &&
+                    tamanhoEixoX > 0 &&
+                    tamanhoEixoY > 0)
+            {
                 int dig = (int) (111 + Math.random() * 999);
                 String codigo = nomeIdentificador + "_" + dig;
                 AreaPlantioEntity entity = new AreaPlantioEntity();
-                System.out.println(entity.getEixoX());
                 entity.SetInfo(nomeIdentificador, dimencao, gps, codigo,tamanhoEixoX, tamanhoEixoY);
                 entity.SetListsIniciais();
-                System.out.println(entity.getEixoX());
+                areaPlantioRepositoty.save(entity);
+                int ROWS = tamanhoEixoY;
+                int COLS = tamanhoEixoX;
+                int[][] matrix = new int[ROWS][COLS];
+                int currentValue = 1;
+                for (int i = 0; i < ROWS; i++) {
+                    for (int j = 0; j < COLS; j++) {
+                        if (matrix[i][j] == 0) {
+                            matrix[i][j] = currentValue++;
+                            SubAreaPlantio subAreaPlantio = subareaPlantioService.AdicionarNovaSubArea(j+1,i+1, nomeIdentificador).getBody();
+                            SubAreaPlantioEntity subAreaPlantioEntity = subareaPlantioMapper.DtoToEntity(subAreaPlantio);
+                            entity.getSubareas().add(subAreaPlantioEntity);
+                        }
+                    }
+                }
                 areaPlantioRepositoty.save(entity);
                 AreaPlantio response = areaPlantioMapper.EntityToDto(entity);
                 return new ResponseEntity<>(response, HttpStatus.CREATED);
-            } else {
-                throw new NullargumentsException();
             }
+            else {throw new NullargumentsException();}
         } catch (Exception e) {
             e.getMessage();
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Void> SalvarAlteracaoAreaPlantio(AreaPlantio areaPlantio) {
+
+
+    public ResponseEntity<Void> SalvarAlteracaoAreaPlantio(AreaPlantio areaPlantio)
+    {
         try {
             AreaPlantioEntity entity = areaPlantioMapper.DtoToEntity(areaPlantio);
             areaPlantioRepositoty.save(entity);
@@ -140,6 +166,7 @@ public class AreaPlantioService {
         }
     }
 
+    @Override
     public ResponseEntity<Void> AdubacaoAreaPlantioGeral(String nomeIdentificador, String adubacao)
     {
         try

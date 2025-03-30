@@ -2,6 +2,9 @@ package App.Api;
 
 import App.Domain.Bussness.AreaPlantioService;
 import App.Domain.Response.AreaPlantio;
+import App.Infra.UseCase.AreaPlantio.UseCaseAreaPlantioGet;
+import App.Infra.UseCase.AreaPlantio.UseCaseAreaPlantioPost;
+import App.Infra.UseCase.AreaPlantio.UseCaseAreaPlantioPut;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,13 +22,18 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class AreaPlantioController {
 
-    private final AreaPlantioService areaPlantioService;
+    private final UseCaseAreaPlantioGet caseAreaPlantioGet;
+    private final UseCaseAreaPlantioPost caseAreaPlantioPost;
+    private final UseCaseAreaPlantioPut caseAreaPlantioPut;
 
-    public AreaPlantioController(AreaPlantioService areaPlantioService) {
-        this.areaPlantioService = areaPlantioService;
+    public AreaPlantioController(UseCaseAreaPlantioGet caseAreaPlantioGet, UseCaseAreaPlantioPost caseAreaPlantioPost, UseCaseAreaPlantioPut caseAreaPlantioPut) {
+        this.caseAreaPlantioGet = caseAreaPlantioGet;
+        this.caseAreaPlantioPost = caseAreaPlantioPost;
+        this.caseAreaPlantioPut = caseAreaPlantioPut;
     }
 
-    @Operation(summary = "Busca Registro da tabela", method = "GET")
+
+    @Operation(summary = "Lista Registros da tabela", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
@@ -34,7 +42,7 @@ public class AreaPlantioController {
     })
     @GetMapping("/ListarAreas")
     public ResponseEntity<List<AreaPlantio>> ListarAreas()
-    {return areaPlantioService.ListarAreas();}
+    {return caseAreaPlantioGet.ListarAreas();}
 
     @Operation(summary = "Busca Registro da tabela", method = "GET")
     @ApiResponses(value = {
@@ -45,7 +53,7 @@ public class AreaPlantioController {
     })
     @GetMapping("/BuscarAreaPlantioPorId")
     public ResponseEntity<AreaPlantio> BuscarAreaPlantioPorId(Long id)
-    {return areaPlantioService.BuscarAreaPlantioPorId(id);}
+    {return caseAreaPlantioGet.BuscarAreaPlantioPorId(id);}
 
     @Operation(summary = "Busca Registro da tabela", method = "GET")
     @ApiResponses(value = {
@@ -56,7 +64,7 @@ public class AreaPlantioController {
     })
     @GetMapping("/BuscarAreaPlantioPorNome")
     public ResponseEntity<AreaPlantio> BuscarAreaPlantioPorNome(String nome)
-    {return areaPlantioService.BuscarAreaPlantioPorNome(nome);}
+    {return caseAreaPlantioGet.BuscarAreaPlantioPorNome(nome);}
 
     @Operation(summary = "Salva novo Registro na tabela", method = "POST")
     @ApiResponses(value = {
@@ -71,9 +79,9 @@ public class AreaPlantioController {
                                                        @RequestParam String gps,
                                                        @RequestParam int tamanhoEixoX,
                                                        @RequestParam int tamanhoEixoY)
-    {return areaPlantioService.NovaAreaPlantio(nomeIdentificador, dimencao, gps,tamanhoEixoX,tamanhoEixoY);}
+    {return caseAreaPlantioPost.NovaAreaPlantio(nomeIdentificador, dimencao, gps,tamanhoEixoX,tamanhoEixoY);}
 
-    @Operation(summary = "Salva novo Registro na tabela", method = "PUT")
+    @Operation(summary = "Edita Registro na tabela", method = "PUT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
@@ -83,5 +91,5 @@ public class AreaPlantioController {
     @PutMapping("/AdubacaoAreaPlantioGeral")
     public ResponseEntity<Void> AdubacaoAreaPlantioGeral(@RequestParam String nomeIdentificador,
                                                          @RequestParam String adubacao)
-    {return areaPlantioService.AdubacaoAreaPlantioGeral(nomeIdentificador, adubacao);}
+    {return caseAreaPlantioPut.AdubacaoAreaPlantioGeral(nomeIdentificador, adubacao);}
 }
