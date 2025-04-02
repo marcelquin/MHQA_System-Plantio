@@ -1,10 +1,18 @@
 import '../../CSS/BodyStyle.css'
 import React, { useState, useEffect } from 'react';
 import AdubacaoIndividual from './AdubacaoSubArea';
+import GerenciarSubAreaDisponiveis from './GerenciarSubAreaDisponiveis';
+import GerenciarSubAreaUltilizados from './GerenciarSubAreaUltilizados';
+import GerenciarSubAreaTodos from './GerenciarSubAreaTodos';
 
 function Gerencia_SubareaPlantio() {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
+  const [checkboxDisponivel, setCheckboxDisponivel] = useState('disponivel');
+
+  const handleChangeDisponivel = (e) => {
+    setCheckboxDisponivel(e.target.checked ? e.target.value: 'Todos');
+  }
 
   const handleOpenModal = (content) => {
       setModalContent(content);
@@ -43,55 +51,36 @@ function Gerencia_SubareaPlantio() {
 
   return (
     <>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Código</th>
-                    <th scope="col">Localização X</th>
-                    <th scope="col">Localização Y</th>
-                    <th scope="col">Área de plantio</th>
-                    <th scope="col">Nome Popular</th>
-                    <th scope="col">Fase Atual</th>
-                  </tr>
-                </thead>
-              
-              {lista.map((data, i)=>{return(<>
-                
-                
-                <tbody key={i}>
-                  <tr>
-                    <td>{data.codigo}</td>
-                    <td>{data.eixoX}</td>
-                    <td>{data.eixoY}</td>
-                    <td>{data.nomeAreaPlantio}</td>
-                    {data.planta !== null ? (<><td>{data.planta.nomePopular}</td>
-                    <td>{data.planta.faseatual}</td>
-                    </>) : (<><td></td><td></td></>)}       
-                    <td><a onClick={() => {handleRowSelect(data); handleOpenModal('AddAdubacao')}} className='opcaoExtra'>Adicionar Adubaçao</a></td>
-                  </tr>
-                </tbody>
-             
-              
-              </>)})}
-              </table>
-            
-              {showModal && (
-                    <div className="modal-overlay">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <button 
-                                className="modal-close-button"
-                                onClick={() => setShowModal(false)}
-                            >
-                                ✕
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            {modalContent === 'AddAdubacao' && <AdubacaoIndividual data={dataRequest}/>}
-                        </div>
-                    </div>
-                </div>
-                )}
+        <div className="form-check">
+          <input 
+            className="form-check-input" 
+            type="checkbox" 
+            id="flexCheckDefault"
+            value="indisponivel"
+            checked={checkboxDisponivel === 'indisponivel'}
+            onChange={handleChangeDisponivel}
+          />
+          <label className="form-check-label" htmlFor="flexCheckDefault">
+            Utilizado
+          </label>
+        </div>
+        <div className="form-check">
+          <input 
+            className="form-check-input" 
+            type="checkbox" 
+            id="flexCheckDefault"
+            checked={checkboxDisponivel === 'disponivel'}
+            value="disponivel"
+            onChange={handleChangeDisponivel}
+          />
+          <label className="form-check-label" htmlFor="flexCheckDefault">
+            Disponivel
+          </label>
+        </div>
+        <br/>
+        {checkboxDisponivel === "Todos" ?(<><GerenciarSubAreaTodos/></>) : (<></>)}
+        {checkboxDisponivel === "disponivel" ?(<><GerenciarSubAreaDisponiveis/></>) : (<></>)}
+        {checkboxDisponivel === "indisponivel" ?(<><GerenciarSubAreaUltilizados/></>) : (<></>)}
     </>
   );
 }

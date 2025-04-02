@@ -15,21 +15,29 @@ function Gerencia_AreaPlantio() {
   };
 
   const UrlGetList = "http://localhost:8080/areaPlantio/ListarAreas"
-  const [listaAreas, setListaAreas] = useState([]);
+  const [listAll, setlistAll] = useState([]);
+  const [pesquisaInput, setPesquisaInput] = useState('')
 
-
-  const getListaAreas = async () => {
+  const getListaAll = async () => {
     try {
       const response = await fetch(UrlGetList);
       const data = await response.json();
-      setListaAreas(data);
+      setlistAll(data);
     } catch (error) {
       console.error('Erro ao buscar lista de subáreas:', error);
     }
   };
 
+  const handleChange = (e) => {
+    setPesquisaInput(e.target.value);
+  }
+
+  const response = pesquisaInput.length > 0 ?
+  listAll.filter(dados => dados.nomeIdentificador.includes(pesquisaInput)) :
+  []
+
   useEffect(() => {
-    getListaAreas();
+    getListaAll();
   }, []);
 
   const navigate = useNavigate();
@@ -60,6 +68,10 @@ function Gerencia_AreaPlantio() {
 
   return (
     <>
+      <div class="input-group mb-3">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon1">Nome Popular</button>
+        <input type="text" class="form-control" name="pesquisaInput" onChange={handleChange} placeholder="Digite o nome para pesquisa" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+      </div>
        <table class="table">
                       <thead>
                         <tr>
@@ -69,20 +81,39 @@ function Gerencia_AreaPlantio() {
                           <th scope="col">GPS</th>
                         </tr>
                       </thead>
+       {pesquisaInput.length > 0 ?(<>
        
-       {listaAreas.map((data, i)=>{return(<>
+        {response.map((data, i)=>{return(<>
                   
-                      <tbody>
-                      <tr>
-                        <th scope="row">{data.nomeIdentificador}</th>
-                        <td>{data.codigo}</td>
-                        <td>{data.dimencao}</td>
-                        <td>{data.gps}</td>
-                        <td><a className='opcaoExtra' onClick={() => handleOpenModal('Adubacao')} >Adubação</a></td>
-                        <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('teste'); }}>Relatório</a></td>
-                      </tr>
-                      </tbody>
-              </>)})}
+                  <tbody>
+                  <tr>
+                    <th scope="row">{data.nomeIdentificador}</th>
+                    <td>{data.codigo}</td>
+                    <td>{data.dimencao}</td>
+                    <td>{data.gps}</td>
+                    <td><a className='opcaoExtra' onClick={() => handleOpenModal('Adubacao')} >Adubação</a></td>
+                    <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('teste'); }}>Relatório</a></td>
+                  </tr>
+                  </tbody>
+          </>)})}
+
+       </>) : (<>
+
+        {listAll.map((data, i)=>{return(<>
+                  
+                  <tbody>
+                  <tr>
+                    <th scope="row">{data.nomeIdentificador}</th>
+                    <td>{data.codigo}</td>
+                    <td>{data.dimencao}</td>
+                    <td>{data.gps}</td>
+                    <td><a className='opcaoExtra' onClick={() => handleOpenModal('Adubacao')} >Adubação</a></td>
+                    <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('teste'); }}>Relatório</a></td>
+                  </tr>
+                  </tbody>
+          </>)})}
+       
+       </>)}
               </table>
        {showModal && (
                     <div className="modal-overlay">

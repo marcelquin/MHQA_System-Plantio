@@ -18,6 +18,12 @@ public class UseCaseSubareaPlantioGet {
     public ResponseEntity<List<SubAreaPlantio>> ListarSubareas()
     {return subareaGateway.ListarSubareas();}
 
+    public ResponseEntity<List<SubAreaPlantio>> ListarSubareasIndisponiveis()
+    {return subareaGateway.ListarSubareasIndisponiveis();}
+
+    public ResponseEntity<List<SubAreaPlantio>> ListarSubareasDisponiveis()
+    { return subareaGateway.ListarSubareasDisponiveis();}
+
     public ResponseEntity<SubAreaPlantio> BuscarSubAreaPorId(@RequestParam Long id)
     {return subareaGateway.BuscarSubAreaPorId(id);}
 

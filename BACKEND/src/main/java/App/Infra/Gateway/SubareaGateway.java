@@ -10,6 +10,10 @@ public interface SubareaGateway {
 
     public ResponseEntity<List<SubAreaPlantio>> ListarSubareas();
 
+    public ResponseEntity<List<SubAreaPlantio>> ListarSubareasIndisponiveis();
+
+    public ResponseEntity<List<SubAreaPlantio>> ListarSubareasDisponiveis();
+
     public ResponseEntity<SubAreaPlantio> BuscarSubAreaPorId(@RequestParam Long id);
 
     public ResponseEntity<SubAreaPlantio> BuscarSubAreaPorCodigo(String codigo);

@@ -63,6 +63,54 @@ public class SubareaPlantioService implements SubareaGateway {
     }
 
     @Override
+    public ResponseEntity<List<SubAreaPlantio>> ListarSubareasIndisponiveis()
+    {
+        try
+        {
+            List<SubAreaPlantioEntity> list = subareaPlantioRepositoty.findAll();
+            List<SubAreaPlantio> response = new ArrayList<>();
+            for(SubAreaPlantioEntity entity : list)
+            {
+                if(entity.getDisponivel().equals(Boolean.FALSE))
+                {
+                    SubAreaPlantio dto = subareaPlantioMapper.EntityToDto(entity);
+                    response.add(dto);
+                }
+            }
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<List<SubAreaPlantio>> ListarSubareasDisponiveis()
+    {
+        try
+        {
+            List<SubAreaPlantioEntity> list = subareaPlantioRepositoty.findAll();
+            List<SubAreaPlantio> response = new ArrayList<>();
+            for(SubAreaPlantioEntity entity : list)
+            {
+                if(entity.getDisponivel().equals(Boolean.TRUE))
+                {
+                    SubAreaPlantio dto = subareaPlantioMapper.EntityToDto(entity);
+                    response.add(dto);
+                }
+            }
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
     public ResponseEntity<SubAreaPlantio> BuscarSubAreaPorId(Long id)
     {
         try

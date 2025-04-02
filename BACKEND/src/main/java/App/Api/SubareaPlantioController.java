@@ -42,6 +42,28 @@ public class SubareaPlantioController {
     public ResponseEntity<List<SubAreaPlantio>> ListarSubareas()
     {return caseSubareaPlantioGet.ListarSubareas();}
 
+    @Operation(summary = "Lista Registros da tabela", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @GetMapping("/ListarSubareasIndisponiveis")
+    public ResponseEntity<List<SubAreaPlantio>> ListarSubareasIndisponiveis()
+    { return  caseSubareaPlantioGet.ListarSubareasIndisponiveis();}
+
+    @Operation(summary = "Lista Registros da tabela", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @GetMapping("/ListarSubareasDisponiveis")
+    public ResponseEntity<List<SubAreaPlantio>> ListarSubareasDisponiveis()
+    {return caseSubareaPlantioGet.ListarSubareasDisponiveis();}
+
     @Operation(summary = "Busca Registro da tabela", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),

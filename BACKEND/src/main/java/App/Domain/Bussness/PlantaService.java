@@ -310,7 +310,7 @@ public class PlantaService implements PlantaGateway {
                 Boolean validaAtribuicao = entity.ValidaAtribuicao(codigoSubarea);
                 if(validaAtribuicao.equals(Boolean.TRUE))
                 {
-                    entity.AtribuirSubArea(codigoSubarea,nomeCientifico);
+                    entity.AtribuirSubArea(codigoSubarea,subAreaPlantio.getNomeAreaPlantio());
                 }
                 plantaRepository.save(entity);
                 Planta response = plantaMapper.EntityToRecord(entity);

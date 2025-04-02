@@ -15,9 +15,24 @@
 
 .BoxHome, .boxAdicionarGerenciar
 {
-    width: 80%;
+    width: 90%;
     height: auto;
     margin: 0 auto;
+}
+
+.BoxHome .boxopcao
+{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+    font-size: 16px;
+}
+
+.BoxHome .boxTable
+{
+    width: 100%;
+    height: auto;
 }
 
 .boxAdicionarGerenciar
