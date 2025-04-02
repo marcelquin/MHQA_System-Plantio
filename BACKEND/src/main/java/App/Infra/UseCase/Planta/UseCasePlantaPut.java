@@ -23,4 +23,7 @@ public class UseCasePlantaPut {
                                  @RequestParam String faseatual)
     {return plantaGateway.AtualizaCiclo(codigoPlanta, codigoSubarea, faseatual);}
 
+
+    public void setNovaInfo()
+    { plantaGateway.setNovaInfo();}
 }

@@ -60,11 +60,12 @@ return (
                   <th scope="col">Área Plantio</th>
                   <th scope="col">Inicio de Ciclo</th>
                   <th scope="col">Última Adubação</th>
+                  <th scope="col">Último Ciclo</th>
+                  <th scope="col">Ciclo Atual</th>
                 </tr>
               </thead> 
 
               {pesquisaInput.length > 0 ?(<>
-              
                 {response.map((data, i)=>{return(<>
                 <tbody key={i}>
                   <tr>
@@ -74,6 +75,8 @@ return (
                     <td>{data.areaPlantio}</td>
                     <td>{data.dataPlantio}</td>
                     <td>{data.dataAdubacao}</td>
+                    <td>{data.dataUltimoCiclo}</td>
+                    <td>{data.dataCicloAtual}</td>
                   </tr>
                 </tbody>
               </>)})}
@@ -89,6 +92,8 @@ return (
                     <td>{data.areaPlantio}</td>
                     <td>{data.dataPlantio}</td>
                     <td>{data.dataAdubacao}</td>
+                    <td>{data.dataUltimoCiclo}</td>
+                    <td>{data.dataCicloAtual}</td>
                   </tr>
                 </tbody>
               </>)})}

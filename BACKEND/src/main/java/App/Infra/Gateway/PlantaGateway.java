@@ -44,4 +44,6 @@ public interface PlantaGateway {
                                  @RequestParam String codigoSubarea,
                                  @RequestParam String faseatual);
 
+    public void setNovaInfo();
+
 }

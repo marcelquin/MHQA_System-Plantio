@@ -82,6 +82,8 @@ function GerenciarPlantaTodos(){
               <th scope="col">Nome Popular</th>
               <th scope="col">Código</th>
               <th scope="col">Ciclo Atual</th>
+              <th scope="col">Data Último Ciclo</th>
+              <th scope="col">Data Ciclo Atual</th>
               <th scope="col">Localização</th>
               <th scope="col">Área de plantio</th>
               <th scope="col">Orientações</th>
@@ -97,6 +99,8 @@ function GerenciarPlantaTodos(){
                     <td>{data.nomePopular}</td>
                     <td>{data.codigo}</td>
                     <td>{data.faseatual}</td>
+                    <td>{data.dataUltimoCiclo}</td>
+                    <td>{data.dataCicloAtual}</td>
                     <td>{data.localizacao}</td>
                     <td>{data.areaPlantio}</td>
                     <td>{data.instrucoes}</td>
@@ -116,6 +120,8 @@ function GerenciarPlantaTodos(){
                     <td>{data.nomePopular}</td>
                     <td>{data.codigo}</td>
                     <td>{data.faseatual}</td>
+                    <td>{data.dataUltimoCiclo}</td>
+                    <td>{data.dataCicloAtual}</td>
                     <td>{data.localizacao}</td>
                     <td>{data.areaPlantio}</td>
                     <td>{data.instrucoes}</td>

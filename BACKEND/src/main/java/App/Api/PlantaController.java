@@ -198,5 +198,15 @@ public class PlantaController {
                                  @RequestParam String faseatual)
     { return casePlantaPut.AtualizaCiclo(codigoPlanta,codigoSubarea, faseatual);}
 
+    /*@Operation(summary = "Edita Registro na tabela", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @PutMapping("/setNovaInfo")
+    public void setNovaInfo()
+    { casePlantaPut.setNovaInfo();}*/
 
 }

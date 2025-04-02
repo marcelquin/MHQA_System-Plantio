@@ -391,9 +391,7 @@ public class PlantaService implements PlantaGateway {
                 {
                     if(planta.getLocalizacao().equals(subAreaPlantio.getCodigo()))
                     {
-                        System.out.println(faseAtualConvertida);
                         Boolean validacao = planta.ValidaAlteracaoCiclo(faseAtualConvertida);
-                        System.out.println(validacao);
                         if(validacao.equals(Boolean.TRUE))
                         {
                             planta.SetNovoCiclo(faseAtualConvertida);
@@ -468,5 +466,16 @@ public class PlantaService implements PlantaGateway {
             e.getMessage();
         }
         return null;
+    }
+
+    @Override
+    public void setNovaInfo()
+    {
+        /*List<PlantaEntity> plantaEntities = plantaRepository.findAll();
+        for(PlantaEntity entity : plantaEntities)
+        {
+            entity.SetNovaInfo();
+            plantaRepository.save(entity);
+        }*/
     }
 }

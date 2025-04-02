@@ -39,6 +39,12 @@ public class PlantaEntity {
     private LocalDate dataPlantio;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataUltimoCiclo;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataCicloAtual;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataAdubacao;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
@@ -49,7 +55,7 @@ public class PlantaEntity {
     public PlantaEntity() {
     }
 
-    public PlantaEntity(Long id, String nomeCientifico, String nomePopular, String codigo, String localizacao, String areaPlantio, FASEATUAL faseatual, String instrucoes, LocalDate dataPlantio, LocalDate dataAdubacao, LocalDateTime timeStamp, List<String> notificacoes) {
+    public PlantaEntity(Long id, String nomeCientifico, String nomePopular, String codigo, String localizacao, String areaPlantio, FASEATUAL faseatual, String instrucoes, LocalDate dataPlantio, LocalDate dataUltimoCiclo, LocalDate dataCicloAtual, LocalDate dataAdubacao, LocalDateTime timeStamp, List<String> notificacoes) {
         this.id = id;
         this.nomeCientifico = nomeCientifico;
         this.nomePopular = nomePopular;
@@ -59,6 +65,8 @@ public class PlantaEntity {
         this.faseatual = faseatual;
         this.instrucoes = instrucoes;
         this.dataPlantio = dataPlantio;
+        this.dataUltimoCiclo = dataUltimoCiclo;
+        this.dataCicloAtual = dataCicloAtual;
         this.dataAdubacao = dataAdubacao;
         this.timeStamp = timeStamp;
         this.notificacoes = notificacoes;
@@ -160,6 +168,22 @@ public class PlantaEntity {
         this.notificacoes = notificacoes;
     }
 
+    public LocalDate getDataUltimoCiclo() {
+        return dataUltimoCiclo;
+    }
+
+    public void setDataUltimoCiclo(LocalDate dataUltimoCiclo) {
+        this.dataUltimoCiclo = dataUltimoCiclo;
+    }
+
+    public LocalDate getDataCicloAtual() {
+        return dataCicloAtual;
+    }
+
+    public void setDataCicloAtual(LocalDate dataCicloAtual) {
+        this.dataCicloAtual = dataCicloAtual;
+    }
+
     public void AtribuirSubArea(String codigoSubArea , String nomeAreaPlantio)
     {
         this.localizacao = codigoSubArea;
@@ -167,14 +191,19 @@ public class PlantaEntity {
         this.faseatual = FASEATUAL.GERMINACAO;
         this.timeStamp = LocalDateTime.now();
         this.dataPlantio = LocalDate.now();
+        this.dataCicloAtual = LocalDate.now();
     }
 
     public Boolean SetNovoCiclo(FASEATUAL faseatual)
     {
         this.faseatual = faseatual;
         this.timeStamp = LocalDateTime.now();
+        this.dataUltimoCiclo = this.dataCicloAtual;
+        this.dataCicloAtual = LocalDate.now();
         return Boolean.TRUE;
     }
+
+    public void SetNovaInfo(){this.dataCicloAtual = LocalDate.now();}
 
     public void Adubacao(String mensagem)
     {
@@ -192,6 +221,7 @@ public class PlantaEntity {
         this.nomeCientifico = nomeCientifico;
         this.instrucoes = instrucoes;
         this.timeStamp = LocalDateTime.now();
+        this.dataCicloAtual = LocalDate.now();
     }
 
     public void SetInfoInicial(String nomeCientifico, String nomePopular, String codigo, String instrucoes)
@@ -220,6 +250,7 @@ public class PlantaEntity {
         this.timeStamp = LocalDateTime.now();
         this.localizacao = null;
         this.areaPlantio = null;
+        this.dataCicloAtual = LocalDate.now();
     }
 
     public Boolean ValidaAtribuicao(String localizacao)

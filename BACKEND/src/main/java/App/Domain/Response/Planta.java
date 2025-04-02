@@ -33,6 +33,12 @@ public class Planta {
         private LocalDate dataPlantio;
 
         @JsonFormat(pattern = "dd/MM/yyyy")
+        private LocalDate dataUltimoCiclo;
+
+        @JsonFormat(pattern = "dd/MM/yyyy")
+        private LocalDate dataCicloAtual;
+
+        @JsonFormat(pattern = "dd/MM/yyyy")
         private LocalDate dataAdubacao;
 
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
@@ -43,7 +49,7 @@ public class Planta {
         public Planta() {
         }
 
-        public Planta(Long id, String nomeCientifico, String nomePopular, String codigo, String localizacao, String areaPlantio, FASEATUAL faseatual, String instrucoes, LocalDate dataPlantio, LocalDate dataAdubacao, LocalDateTime timeStamp, List<String> notificacoes) {
+        public Planta(Long id, String nomeCientifico, String nomePopular, String codigo, String localizacao, String areaPlantio, FASEATUAL faseatual, String instrucoes, LocalDate dataPlantio, LocalDate dataUltimoCiclo, LocalDate dataCicloAtual, LocalDate dataAdubacao, LocalDateTime timeStamp, List<String> notificacoes) {
                 this.id = id;
                 this.nomeCientifico = nomeCientifico;
                 this.nomePopular = nomePopular;
@@ -53,6 +59,8 @@ public class Planta {
                 this.faseatual = faseatual;
                 this.instrucoes = instrucoes;
                 this.dataPlantio = dataPlantio;
+                this.dataUltimoCiclo = dataUltimoCiclo;
+                this.dataCicloAtual = dataCicloAtual;
                 this.dataAdubacao = dataAdubacao;
                 this.timeStamp = timeStamp;
                 this.notificacoes = notificacoes;
@@ -138,6 +146,21 @@ public class Planta {
                 this.dataAdubacao = dataAdubacao;
         }
 
+        public LocalDate getDataUltimoCiclo() {
+                return dataUltimoCiclo;
+        }
+
+        public void setDataUltimoCiclo(LocalDate dataUltimoCiclo) {
+                this.dataUltimoCiclo = dataUltimoCiclo;
+        }
+
+        public LocalDate getDataCicloAtual() {
+                return dataCicloAtual;
+        }
+
+        public void setDataCicloAtual(LocalDate dataCicloAtual) {
+                this.dataCicloAtual = dataCicloAtual;
+        }
 
         public LocalDateTime getTimeStamp() {
                 return timeStamp;
