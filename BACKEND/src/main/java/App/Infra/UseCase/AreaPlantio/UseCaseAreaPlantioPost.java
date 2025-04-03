@@ -14,10 +14,10 @@ public class UseCaseAreaPlantioPost {
     }
 
     public ResponseEntity<AreaPlantio> NovaAreaPlantio(@RequestParam String nomeIdentificador,
-                                                       @RequestParam String dimencao,
+                                                       @RequestParam String dimensao,
                                                        @RequestParam String gps,
                                                        @RequestParam int tamanhoEixoX,
                                                        @RequestParam int tamanhoEixoY)
-    { return areaPlantioGateway.NovaAreaPlantio(nomeIdentificador, dimencao, gps, tamanhoEixoX, tamanhoEixoY);}
+    { return areaPlantioGateway.NovaAreaPlantio(nomeIdentificador, dimensao, gps, tamanhoEixoX, tamanhoEixoY);}
 
 }

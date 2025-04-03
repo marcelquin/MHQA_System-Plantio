@@ -75,11 +75,11 @@ public class AreaPlantioController {
     })
     @PostMapping("/NovaAreaPlantio")
     public ResponseEntity<AreaPlantio> NovaAreaPlantio(@RequestParam String nomeIdentificador,
-                                                       @RequestParam String dimencao,
+                                                       @RequestParam String dimensao,
                                                        @RequestParam String gps,
                                                        @RequestParam int tamanhoEixoX,
                                                        @RequestParam int tamanhoEixoY)
-    {return caseAreaPlantioPost.NovaAreaPlantio(nomeIdentificador, dimencao, gps,tamanhoEixoX,tamanhoEixoY);}
+    {return caseAreaPlantioPost.NovaAreaPlantio(nomeIdentificador, dimensao, gps,tamanhoEixoX,tamanhoEixoY);}
 
     @Operation(summary = "Edita Registro na tabela", method = "PUT")
     @ApiResponses(value = {
@@ -92,4 +92,56 @@ public class AreaPlantioController {
     public ResponseEntity<Void> AdubacaoAreaPlantioGeral(@RequestParam String nomeIdentificador,
                                                          @RequestParam String adubacao)
     {return caseAreaPlantioPut.AdubacaoAreaPlantioGeral(nomeIdentificador, adubacao);}
+
+
+    @Operation(summary = "Edita Registro na tabela", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @PutMapping("/EditarAreaPlantio")
+    public ResponseEntity<Void> EditarAreaPlantio(@RequestParam Long id,
+                                                  @RequestParam String nomeIdentificador,
+                                                  @RequestParam String dimensao,
+                                                  @RequestParam String gps,
+                                                  @RequestParam int eixoX,
+                                                  @RequestParam int eixoY)
+    { return caseAreaPlantioPut.EditarAreaPlantio(id, nomeIdentificador, dimensao, gps, eixoX, eixoY);}
+
+    @Operation(summary = "Edita Registro na tabela", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @PutMapping("/teste")
+    public  void teste(@RequestParam int rows, @RequestParam int cols)
+    {
+        int basex = 3;
+        int[][] matrix = new int[rows][cols];
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                if(basex > i)
+                {
+                    System.out.println("menor:");
+                    int eixoX = i+1;
+                    int eixoY = j+1;
+                    System.out.println("eixo x: "+eixoX);
+                    System.out.println("eixo y: "+eixoY);
+                }
+                else
+                {
+                    System.out.println("maior:");
+                    int eixoX = i+1;
+                    int eixoY = j+1;
+                    System.out.println("eixo x: "+eixoX);
+                    System.out.println("eixo y: "+eixoY);
+                }
+                //System.out.println("padrão: "+i+"---"+j);
+            }
+        }
+    }
 }

@@ -20,7 +20,7 @@ public class AreaPlantioEntity {
 
     private String codigo;
 
-    private String dimencao;
+    private String dimensao;
 
     private String gps;
 
@@ -41,17 +41,61 @@ public class AreaPlantioEntity {
     public AreaPlantioEntity() {
     }
 
-    public AreaPlantioEntity(Long id, String nomeIdentificador, String codigo, String dimencao, String gps, int eixoX, int eixoy, int maxQuantidadeSubareas, List<String> notificacoes, List<SubAreaPlantioEntity> subareas, LocalDateTime timeStamp) {
+    public AreaPlantioEntity(Long id, String nomeIdentificador, String codigo, String dimensao, String gps, int eixoX, int eixoy, int maxQuantidadeSubareas, List<String> notificacoes, List<SubAreaPlantioEntity> subareas, LocalDateTime timeStamp) {
         this.id = id;
         this.nomeIdentificador = nomeIdentificador;
         this.codigo = codigo;
-        this.dimencao = dimencao;
+        this.dimensao = dimensao;
         this.gps = gps;
         this.eixoX = eixoX;
         this.eixoy = eixoy;
         this.maxQuantidadeSubareas = maxQuantidadeSubareas;
         this.notificacoes = notificacoes;
         this.subareas = subareas;
+        this.timeStamp = timeStamp;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNomeIdentificador(String nomeIdentificador) {
+        this.nomeIdentificador = nomeIdentificador;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public void setDimensao(String dimensao) {
+        this.dimensao = dimensao;
+    }
+
+    public void setGps(String gps) {
+        this.gps = gps;
+    }
+
+    public void setEixoX(int eixoX) {
+        this.eixoX = eixoX;
+    }
+
+    public void setEixoy(int eixoy) {
+        this.eixoy = eixoy;
+    }
+
+    public void setMaxQuantidadeSubareas(int maxQuantidadeSubareas) {
+        this.maxQuantidadeSubareas = maxQuantidadeSubareas;
+    }
+
+    public void setNotificacoes(List<String> notificacoes) {
+        this.notificacoes = notificacoes;
+    }
+
+    public void setSubareas(List<SubAreaPlantioEntity> subareas) {
+        this.subareas = subareas;
+    }
+
+    public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
     }
 
@@ -79,8 +123,8 @@ public class AreaPlantioEntity {
         return codigo;
     }
 
-    public String getDimencao() {
-        return dimencao;
+    public String getDimensao() {
+        return dimensao;
     }
 
     public String getGps() {
@@ -99,11 +143,11 @@ public class AreaPlantioEntity {
         return timeStamp;
     }
 
-    public void SetInfo(String nomeIdentificador, String dimencao, String gps, String codigo, int eixoXrequest, int eixoYrequest)
+    public void SetInfo(String nomeIdentificador, String dimensao, String gps, String codigo, int eixoXrequest, int eixoYrequest)
     {
         this.gps = gps;
         this.nomeIdentificador = nomeIdentificador;
-        this.dimencao = dimencao;
+        this.dimensao = dimensao;
         this.codigo = codigo;
         this.timeStamp = LocalDateTime.now();
         this.eixoX = eixoXrequest;

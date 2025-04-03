@@ -9,7 +9,7 @@ function Cad_AreaPlantio() {
 
   const [dataPost, serdataPost] = useState({
     nomeIdentificador: "",
-    dimencao: "",
+    dimensao: "",
     gps: "",
     tamanhoEixoX: "",
     tamanhoEixoY: ""
@@ -28,7 +28,7 @@ function Cad_AreaPlantio() {
         },    
         body: new URLSearchParams({
           nomeIdentificador: dataPost.nomeIdentificador,
-          dimencao: dataPost.dimencao,
+          dimensao: dataPost.dimensao,
           gps: dataPost.gps,
           tamanhoEixoX: dataPost.tamanhoEixoX,
           tamanhoEixoY: dataPost.tamanhoEixoY
@@ -36,7 +36,7 @@ function Cad_AreaPlantio() {
     .then(navigate("/gerenciar")) 
     serdataPost({
       nomeIdentificador: "",
-      dimencao: "",
+      dimensao: "",
       gps: "",
       tamanhoEixoX: "",
       tamanhoEixoY: ""
@@ -62,8 +62,8 @@ function Cad_AreaPlantio() {
             </tr>
             <td>
               <div class="input-group mb-3">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Dimenção</button>
-                <input type="text" name="dimencao" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Dimensão</button>
+                <input type="text" name="dimensao" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
               </div>
               </td>
             <tr>

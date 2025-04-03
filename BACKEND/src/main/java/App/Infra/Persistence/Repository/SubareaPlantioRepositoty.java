@@ -11,4 +11,5 @@ public interface SubareaPlantioRepositoty extends JpaRepository<SubAreaPlantioEn
 
     Optional<SubAreaPlantioEntity> findBycodigo(String codigo);
 
+    boolean existsBycodigo(String codigo);
 }

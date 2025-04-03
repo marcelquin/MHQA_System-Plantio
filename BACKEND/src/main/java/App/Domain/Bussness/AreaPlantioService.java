@@ -90,13 +90,13 @@ public class AreaPlantioService implements AreaPlantioGateway {
     }
 
     @Override
-    public ResponseEntity<AreaPlantio> NovaAreaPlantio(String nomeIdentificador, String dimencao, String gps, int tamanhoEixoX, int tamanhoEixoY)
+    public ResponseEntity<AreaPlantio> NovaAreaPlantio(String nomeIdentificador, String dimensao, String gps, int tamanhoEixoX, int tamanhoEixoY)
     {
         try {
             if(tamanhoEixoX < 0) {throw new IllegalActionException();}
             if(tamanhoEixoY < 0) {throw new IllegalActionException();}
             if (nomeIdentificador != null &&
-                    dimencao != null &&
+                    dimensao != null &&
                     gps != null &&
                     tamanhoEixoX > 0 &&
                     tamanhoEixoY > 0)
@@ -104,7 +104,7 @@ public class AreaPlantioService implements AreaPlantioGateway {
                 int dig = (int) (111 + Math.random() * 999);
                 String codigo = nomeIdentificador + "_" + dig;
                 AreaPlantioEntity entity = new AreaPlantioEntity();
-                entity.SetInfo(nomeIdentificador, dimencao, gps, codigo,tamanhoEixoX, tamanhoEixoY);
+                entity.SetInfo(nomeIdentificador, dimensao, gps, codigo,tamanhoEixoX, tamanhoEixoY);
                 entity.SetListsIniciais();
                 areaPlantioRepositoty.save(entity);
                 int ROWS = tamanhoEixoY;
@@ -132,7 +132,62 @@ public class AreaPlantioService implements AreaPlantioGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
+    public ResponseEntity<Void> EditarAreaPlantio(Long id, String nomeIdentificador, String dimensao, String gps, int eixoX, int eixoY)
+    {
+        try {
+            if(eixoX < 0) {throw new IllegalActionException();}
+            if(eixoY < 0) {throw new IllegalActionException();}
+            if (id != null && eixoX > 0 && eixoY > 0 && nomeIdentificador != null && dimensao != null && gps != null)
+            {
+                AreaPlantio areaPlantio = BuscarAreaPlantioPorId(id).getBody();
+                AreaPlantioEntity entity = areaPlantioMapper.DtoToEntity(areaPlantio);
+                int dig = (int) (111 + Math.random() * 999);
+                String cod = nomeIdentificador+"_"+dig;
+                entity.SetInfo(nomeIdentificador,dimensao,gps,cod,eixoX,eixoY);
+                int ROWS = eixoY;
+                int COLS = eixoX;
+                int[][] matrix = new int[ROWS][COLS];
+                int currentValue = 1;
+                for (int i = 0; i < ROWS; i++)
+                {
+                    for (int j = 0; j < COLS; j++)
+                    {
+                        if (matrix[i][j] == 0)
+                        {
+                            matrix[i][j] = currentValue++;
 
+                            int eixoXAtual = i+1;
+                            int eixoYAtual = j+1;
+                            String codigo = areaPlantio.getNomeIdentificador()+"_"+eixoXAtual+"x"+eixoYAtual;
+                            Boolean validaCodigo = subareaPlantioService.verificaSubarea(codigo);
+                            if(validaCodigo.equals(Boolean.FALSE))
+                            {
+                                ResponseEntity<SubAreaPlantio> subAreaPlantio = subareaPlantioService.AdicionarNovaSubArea(eixoXAtual,eixoYAtual,nomeIdentificador);
+                                SubAreaPlantioEntity subAreaPlantioEntity = subareaPlantioMapper.DtoToEntity(subAreaPlantio.getBody());
+                                subAreaPlantioEntity.setNomeAreaPlantio(entity.getNomeIdentificador());
+                                entity.SetNovaSubArea(subAreaPlantioEntity);
+                            }
+                            else
+                            {
+                                ResponseEntity<SubAreaPlantio> subAreaPlantio = subareaPlantioService.AdicionarNovaSubArea(eixoXAtual,eixoYAtual,areaPlantio.getNomeIdentificador());
+                                SubAreaPlantioEntity subAreaPlantioEntity = subareaPlantioMapper.DtoToEntity(subAreaPlantio.getBody());
+                                subAreaPlantioEntity.setNomeAreaPlantio(entity.getNomeIdentificador());
+                                SubAreaPlantio request = subareaPlantioMapper.EntityToDto(subAreaPlantioEntity);
+                                subareaPlantioService.SalvarAlteracao(request);
+                            }
+                        }
+                    }
+                }
+                areaPlantioRepositoty.save(entity);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {throw new NullargumentsException();}
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
     public ResponseEntity<Void> SalvarAlteracaoAreaPlantio(AreaPlantio areaPlantio)
     {
@@ -194,4 +249,6 @@ public class AreaPlantioService implements AreaPlantioGateway {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+
 }

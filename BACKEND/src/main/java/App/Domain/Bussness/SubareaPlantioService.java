@@ -165,9 +165,9 @@ public class SubareaPlantioService implements SubareaGateway {
             if(eixoX > 0 && eixoY > 0 )
             {
                 AreaPlantio areaPlantio = areaPlantioService.BuscarAreaPlantioPorNome(nomeAreaPlantio).getBody();
-                if(areaPlantio.getEixoX() < eixoX){throw new IllegalActionException();}
-                if(areaPlantio.getEixoy() < eixoY){throw new IllegalActionException();}
-                List<SubAreaPlantio> subAreaPlantios = ListarSubareas().getBody();
+                //if(areaPlantio.getEixoX() < eixoX){throw new IllegalActionException();}
+                //if(areaPlantio.getEixoy() < eixoY){throw new IllegalActionException();}
+                //List<SubAreaPlantio> subAreaPlantios = ListarSubareas().getBody();
                 SubAreaPlantioEntity entity = new SubAreaPlantioEntity();
                 String codigo = areaPlantio.getNomeIdentificador()+"_"+eixoX+"x"+eixoY;
                 List<String> list = new ArrayList<>();
@@ -279,5 +279,19 @@ public class SubareaPlantioService implements SubareaGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-
+    public Boolean verificaSubarea(String codigo)
+    {
+        try
+        {
+            if(subareaPlantioRepositoty.existsBycodigo(codigo))
+            {
+                return Boolean.TRUE;
+            }
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return Boolean.FALSE;
+    }
 }

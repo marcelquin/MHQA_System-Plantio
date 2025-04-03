@@ -16,4 +16,12 @@ public class UseCaseAreaPlantioPut {
                                                          @RequestParam String adubacao)
     { return areaPlantioGateway.AdubacaoAreaPlantioGeral(nomeIdentificador, adubacao);}
 
+    public ResponseEntity<Void> EditarAreaPlantio(@RequestParam Long id,
+                                                  @RequestParam String nomeIdentificador,
+                                                  @RequestParam String dimensao,
+                                                  @RequestParam String gps,
+                                                  @RequestParam int eixoX,
+                                                  @RequestParam int eixoY)
+    { return areaPlantioGateway.EditarAreaPlantio(id, nomeIdentificador, dimensao, gps, eixoX, eixoY);}
+
 }

@@ -15,11 +15,18 @@ public interface AreaPlantioGateway {
     public ResponseEntity<AreaPlantio> BuscarAreaPlantioPorNome(@RequestParam String nome);
 
     public ResponseEntity<AreaPlantio> NovaAreaPlantio(@RequestParam String nomeIdentificador,
-                                                       @RequestParam String dimencao,
+                                                       @RequestParam String dimensao,
                                                        @RequestParam String gps,
                                                        @RequestParam int tamanhoEixoX,
                                                        @RequestParam int tamanhoEixoY);
 
+
+    public ResponseEntity<Void> EditarAreaPlantio(@RequestParam Long id,
+                                                  @RequestParam String nomeIdentificador,
+                                                  @RequestParam String dimensao,
+                                                  @RequestParam String gps,
+                                                  @RequestParam int eixoX,
+                                                  @RequestParam int eixoY);
 
     public ResponseEntity<Void> AdubacaoAreaPlantioGeral(@RequestParam String nomeIdentificador,
                                                          @RequestParam String adubacao);

@@ -15,7 +15,7 @@ public class AreaPlantio {
 
     private String codigo;
 
-    private String dimencao;
+    private String dimensao;
 
     private int eixoX;
 
@@ -35,11 +35,11 @@ public class AreaPlantio {
     public AreaPlantio() {
     }
 
-    public AreaPlantio(Long id, String nomeIdentificador, String codigo, String dimencao, int eixoX, int eixoy, int maxQuantidadeSubareas, String gps, List<String> notificacoes, List<SubAreaPlantio> subareas, LocalDateTime timeStamp) {
+    public AreaPlantio(Long id, String nomeIdentificador, String codigo, String dimensao, int eixoX, int eixoy, int maxQuantidadeSubareas, String gps, List<String> notificacoes, List<SubAreaPlantio> subareas, LocalDateTime timeStamp) {
         this.id = id;
         this.nomeIdentificador = nomeIdentificador;
         this.codigo = codigo;
-        this.dimencao = dimencao;
+        this.dimensao = dimensao;
         this.eixoX = eixoX;
         this.eixoy = eixoy;
         this.maxQuantidadeSubareas = maxQuantidadeSubareas;
@@ -73,12 +73,12 @@ public class AreaPlantio {
         this.codigo = codigo;
     }
 
-    public String getDimencao() {
-        return dimencao;
+    public String getDimensao() {
+        return dimensao;
     }
 
-    public void setDimencao(String dimencao) {
-        this.dimencao = dimencao;
+    public void setDimensao(String dimensao) {
+        this.dimensao = dimensao;
     }
 
     public List<String> getNotificacoes() {
