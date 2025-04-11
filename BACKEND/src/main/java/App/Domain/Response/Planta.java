@@ -1,184 +1,117 @@
 package App.Domain.Response;
 
-import App.Infra.Exceptions.IllegalActionException;
-import App.Infra.Persistence.Enum.FASEATUAL;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static App.Infra.Persistence.Enum.FASEATUAL.*;
-
-
 public class Planta {
 
-        private Long id;
+    private Long id;
 
-        private String nomeCientifico;
+    private String nomeCimentifico;
 
-        private String nomePopular;
+    private String nomePopular;
 
-        private String codigo;
+    private String instrucoes;
 
-        private String localizacao;
+    private List<String> notificacoes;
 
-        private String areaPlantio;
+    private Localizacao localizacao;
 
-        private FASEATUAL faseatual;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate DataPlantio;
 
-        private String instrucoes;
+    private Ciclo ciclo;
 
-        @JsonFormat(pattern = "dd/MM/yyyy")
-        private LocalDate dataPlantio;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime timeStamp;
 
-        @JsonFormat(pattern = "dd/MM/yyyy")
-        private LocalDate dataUltimoCiclo;
+    public Planta() {
+    }
 
-        @JsonFormat(pattern = "dd/MM/yyyy")
-        private LocalDate dataCicloAtual;
+    public Planta(Long id, String nomeCimentifico, String nomePopular, String instrucoes, List<String> notificacoes, Localizacao localizacao, LocalDate dataPlantio, Ciclo ciclo, LocalDateTime timeStamp) {
+        this.id = id;
+        this.nomeCimentifico = nomeCimentifico;
+        this.nomePopular = nomePopular;
+        this.instrucoes = instrucoes;
+        this.notificacoes = notificacoes;
+        this.localizacao = localizacao;
+        DataPlantio = dataPlantio;
+        this.ciclo = ciclo;
+        this.timeStamp = timeStamp;
+    }
 
-        @JsonFormat(pattern = "dd/MM/yyyy")
-        private LocalDate dataAdubacao;
+    public LocalDate getDataPlantio() {
+        return DataPlantio;
+    }
 
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
-        private LocalDateTime timeStamp;
+    public void setDataPlantio(LocalDate dataPlantio) {
+        DataPlantio = dataPlantio;
+    }
 
-        private List<String> notificacoes;
+    public String getInstrucoes() {
+        return instrucoes;
+    }
 
-        public Planta() {
-        }
+    public void setInstrucoes(String instrucoes) {
+        this.instrucoes = instrucoes;
+    }
 
-        public Planta(Long id, String nomeCientifico, String nomePopular, String codigo, String localizacao, String areaPlantio, FASEATUAL faseatual, String instrucoes, LocalDate dataPlantio, LocalDate dataUltimoCiclo, LocalDate dataCicloAtual, LocalDate dataAdubacao, LocalDateTime timeStamp, List<String> notificacoes) {
-                this.id = id;
-                this.nomeCientifico = nomeCientifico;
-                this.nomePopular = nomePopular;
-                this.codigo = codigo;
-                this.localizacao = localizacao;
-                this.areaPlantio = areaPlantio;
-                this.faseatual = faseatual;
-                this.instrucoes = instrucoes;
-                this.dataPlantio = dataPlantio;
-                this.dataUltimoCiclo = dataUltimoCiclo;
-                this.dataCicloAtual = dataCicloAtual;
-                this.dataAdubacao = dataAdubacao;
-                this.timeStamp = timeStamp;
-                this.notificacoes = notificacoes;
-        }
+    public Long getId() {
+        return id;
+    }
 
-        public Long getId() {
-                return id;
-        }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-        public void setId(Long id) {
-                this.id = id;
-        }
+    public String getNomeCimentifico() {
+        return nomeCimentifico;
+    }
 
-        public String getNomeCientifico() {
-                return nomeCientifico;
-        }
+    public void setNomeCimentifico(String nomeCimentifico) {
+        this.nomeCimentifico = nomeCimentifico;
+    }
 
-        public void setNomeCientifico(String nomeCientifico) {
-                this.nomeCientifico = nomeCientifico;
-        }
+    public String getNomePopular() {
+        return nomePopular;
+    }
 
-        public String getNomePopular() {
-                return nomePopular;
-        }
+    public void setNomePopular(String nomePopular) {
+        this.nomePopular = nomePopular;
+    }
 
-        public void setNomePopular(String nomePopular) {
-                this.nomePopular = nomePopular;
-        }
+    public List<String> getNotificacoes() {
+        return notificacoes;
+    }
 
-        public String getCodigo() {
-                return codigo;
-        }
+    public void setNotificacoes(List<String> notificacoes) {
+        this.notificacoes = notificacoes;
+    }
 
-        public void setCodigo(String codigo) {
-                this.codigo = codigo;
-        }
+    public Localizacao getLocalizacao() {
+        return localizacao;
+    }
 
-        public String getLocalizacao() {
-                return localizacao;
-        }
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
 
-        public void setLocalizacao(String localizacao) {
-                this.localizacao = localizacao;
-        }
+    public Ciclo getCiclo() {
+        return ciclo;
+    }
 
-        public String getAreaPlantio() {
-                return areaPlantio;
-        }
+    public void setCiclo(Ciclo ciclo) {
+        this.ciclo = ciclo;
+    }
 
-        public void setAreaPlantio(String areaPlantio) {
-                this.areaPlantio = areaPlantio;
-        }
+    public LocalDateTime getTimeStamp() {
+        return timeStamp;
+    }
 
-        public FASEATUAL getFaseatual() {
-                return faseatual;
-        }
-
-        public void setFaseatual(FASEATUAL faseatual) {
-                this.faseatual = faseatual;
-        }
-
-        public String getInstrucoes() {
-                return instrucoes;
-        }
-
-        public void setInstrucoes(String instrucoes) {
-                this.instrucoes = instrucoes;
-        }
-
-        public LocalDate getDataPlantio() {
-                return dataPlantio;
-        }
-
-        public void setDataPlantio(LocalDate dataPlantio) {
-                this.dataPlantio = dataPlantio;
-        }
-
-        public LocalDate getDataAdubacao() {
-                return dataAdubacao;
-        }
-
-        public void setDataAdubacao(LocalDate dataAdubacao) {
-                this.dataAdubacao = dataAdubacao;
-        }
-
-        public LocalDate getDataUltimoCiclo() {
-                return dataUltimoCiclo;
-        }
-
-        public void setDataUltimoCiclo(LocalDate dataUltimoCiclo) {
-                this.dataUltimoCiclo = dataUltimoCiclo;
-        }
-
-        public LocalDate getDataCicloAtual() {
-                return dataCicloAtual;
-        }
-
-        public void setDataCicloAtual(LocalDate dataCicloAtual) {
-                this.dataCicloAtual = dataCicloAtual;
-        }
-
-        public LocalDateTime getTimeStamp() {
-                return timeStamp;
-        }
-
-        public void setTimeStamp(LocalDateTime timeStamp) {
-                this.timeStamp = timeStamp;
-        }
-
-        public List<String> getNotificacoes() {
-                return notificacoes;
-        }
-
-        public void setNotificacoes(List<String> notificacoes) {
-                this.notificacoes = notificacoes;
-        }
-
-
-
-
+    public void setTimeStamp(LocalDateTime timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 }

@@ -3,7 +3,7 @@ import AdubacaoIndividual from './AdubacaoSubArea';
 
 function GerenciarSubAreaTodos(){
 
-  const UrlGetList = "http://localhost:8080/subareaPlantio/ListarSubareas"
+  const UrlGetList = "http://localhost:8080/Localizacao/ListarLocalizacoes"
   const [lista, setLista] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);  
@@ -48,22 +48,17 @@ function GerenciarSubAreaTodos(){
               <th scope="col">Código</th>
               <th scope="col">Localização X</th>
               <th scope="col">Localização Y</th>
-              <th scope="col">Área de plantio</th>
-              <th scope="col">Nome Popular</th>
-              <th scope="col">Fase Atual</th>
+              <th scope="col">Disponivel</th>
             </tr>
           </thead>
           {lista.map((data, i)=>{return(<>               
                 <tbody key={i}>
                   <tr>
-                    <td>{data.codigo}</td>
+                    <td>{data.referencia}</td>
                     <td>{data.eixoX}</td>
                     <td>{data.eixoY}</td>
-                    <td>{data.nomeAreaPlantio}</td>
-                    {data.planta !== null ? (<><td>{data.planta.nomePopular}</td>
-                    <td>{data.planta.faseatual}</td>
-                    </>) : (<><td></td><td></td></>)}       
-                    <td><a onClick={() => {handleRowSelect(data); handleOpenModal('AddAdubacao')}} className='opcaoExtra'>Adicionar Adubaçao</a></td>
+                    <td>{data.area}</td>
+                    <td>{data.disponivel ? (<>Disponivel</>) : (<>Utilizado</>)}</td>       
                   </tr>
                 </tbody>
               </>)})}  

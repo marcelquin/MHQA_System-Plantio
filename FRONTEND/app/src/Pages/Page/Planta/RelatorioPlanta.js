@@ -8,12 +8,15 @@ function RelatorioPlanta({data}) {
                    <br/>
                    <p className='infoItem'>Nome Cientifico:  <span className='infoTexto'>{data.nomeCientifico}</span></p>
                    <p className='infoItem'>Nome Popular:  <span className='infoTexto'>{data.nomePopular}</span></p>
-                   <p className='infoItem'>Código:  <span className='infoTexto'>{data.codigoPlanta}</span></p>
-                   <p className='infoItem'>Área plantio:  <span className='infoTexto'>{data.areaPlantio}</span></p>
-                   <p className='infoItem'>Localização:  <span className='infoTexto'>{data.localizacao}</span></p>
-                   <p className='infoItem'>Fase Atual:  <span className='infoTexto'>{data.faseAtual}</span></p>
-                   <p className='infoItem'>Data de Plantio:  <span className='infoTexto'>{data.inicioCiclo}</span></p>
-                   <p className='infoItem'>Ultima Adubação :  <span className='infoTexto'>{data.adubacao}</span></p>
+                   {data.localizacao && data.localizacao.area && (
+                     <p className='infoItem'>Área plantio:  <span className='infoTexto'>{data.localizacao.area}</span></p>
+                   )}
+                   {data.localizacao && data.localizacao.referencia && (
+                     <p className='infoItem'>Localização:  <span className='infoTexto'>{data.localizacao.referencia}</span></p>
+                   )}
+                   <p className='infoItem'>Fase Atual:  <span className='infoTexto'>{data.ciclo.ciclo}</span></p>
+                   <p className='infoItem'>Data de Plantio:  <span className='infoTexto'>{data.DataPlantio}</span></p>
+                   <p className='infoItem'>Ultima Adubação :  <span className='infoTexto'></span></p>
                    <p className='infoItem'>notificações:</p>
                    {data.notificacoes !== null ? (<>
                         {data.notificacoes.map((data, i)=>{return(<>

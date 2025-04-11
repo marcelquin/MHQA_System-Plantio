@@ -7,12 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "Gerencia de Horta",
-		version = "1",
-		description = "Manipula informaçoes e organiza fases atuais de plantio"))
-public class GerhottalicaApplication {
+		version = "2",
+		description = "Gerencia de Plantio de pequeno porte"))
+public class Gerhortav2Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GerhottalicaApplication.class, args);
+		SpringApplication.run(Gerhortav2Application.class, args);
 	}
 
 }

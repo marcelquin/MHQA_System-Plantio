@@ -11,8 +11,7 @@ function Edit_AreaPlantio({data}) {
     nomeIdentificador: data.nomeIdentificador,
     dimensao: data.dimensao,
     gps: data.gps,
-    eixoX: data.eixoX,
-    eixoY: data.eixoY
+    eixos: data.eixos
   });
 
   const handleChanage = (e) => {
@@ -33,16 +32,14 @@ function Edit_AreaPlantio({data}) {
           nomeIdentificador: dataPost.nomeIdentificador,
           dimensao: dataPost.dimensao,
           gps: dataPost.gps,
-          eixoX: parseInt(dataPost.eixoX),
-          eixoY: parseInt(dataPost.eixoY)
+          eixos: parseInt(dataPost.eixos)
     })})
     .then(navigate("/gerenciar")) 
     .then({
       nomeIdentificador: data.nomeIdentificador,
       dimensao: data.dimensao,
       gps: data.gps,
-      eixoX: data.eixoX,
-      eixoY: data.eixoY
+      eixos: data.eixos
     })
     }catch (err){
       console.log("erro")
@@ -74,25 +71,9 @@ function Edit_AreaPlantio({data}) {
               </tr>
               <tr>
                 <td>
-                  <div className="input-group mb-3">
-                    <button className="btn btn-outline-secondary" type="button" id="button-addon1">GPS</button>
-                    <input type="text" name="gps" value={dataPost.gps} onChange={handleChanage} className="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="input-group mb-3">
-                    <button className="btn btn-outline-secondary" type="button" id="button-addon1">Eixo X</button>
-                    <input type="number" name="eixoX" value={dataPost.eixoX} onChange={handleChanage} className="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="input-group mb-3">
-                    <button className="btn btn-outline-secondary" type="button" id="button-addon1">Eixo Y</button>
-                    <input type="number" name="eixoY" value={dataPost.eixoY} onChange={handleChanage} className="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                  <div class="input-group mb-3">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon1">Eixos </button>
+                    <input type="number" name="eixos" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                   </div>
                 </td>
               </tr>

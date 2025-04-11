@@ -19,7 +19,7 @@ function Gerencia_SubareaPlantio() {
       setShowModal(true);
   };
 
-  const UrlGetList = "http://localhost:8080/subareaPlantio/ListarSubareas"
+  const UrlGetList = "http://localhost:8080/Localizacao/ListarSubareas"
   const [lista, setLista] = useState([]);
 
   

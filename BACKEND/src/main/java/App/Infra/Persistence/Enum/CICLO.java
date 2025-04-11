@@ -1,6 +1,7 @@
 package App.Infra.Persistence.Enum;
 
-public enum FASEATUAL {
+public enum CICLO {
+
     AGUARDANDO,
     GERMINACAO,
     MUDA,

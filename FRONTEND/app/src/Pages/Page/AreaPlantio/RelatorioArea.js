@@ -7,10 +7,10 @@ function RelatorioArea({data})
           <div class="card-body">
             <h1 className='infoTitulo'>{data.nomeIdentificador}</h1>
             <br/>
-            <p className='infoItem'>GPS: <span className='infoTexto'>{data.gps}</span></p>
-            <p className='infoItem'>Dimensão: <span className='infoTexto'>{data.dimensao}</span></p>        
-            <p className='infoItem'>Quantidade de Sub Áreas: <span className='infoTexto'>{data.tamanhoMax} sendo {data.eixoX} no eixo X por {data.eixoY} no eixo Y</span></p>        
-
+            <p className='infoItem'>
+              Contendo <span className='infoTexto'>{data.dimensao}</span>, {data.localizacoes ? data.localizacoes.length : 0} locais cadastrados, 
+              dentre eles {data.localizacoes ? data.localizacoes.filter(loc => loc.disponivel).length : 0} disponíveis neste momento.
+            </p>        
             <p className='infoItem'>Notificações:</p>
             {data.notificacoes != null ?(<>
                 {data.notificacoes.map((data, i)=>{return(<>

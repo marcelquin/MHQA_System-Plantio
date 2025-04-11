@@ -13,9 +13,11 @@ public class PlantaConfig {
     @Bean
     UseCasePlantaGet useCasePlantaGet(PlantaGateway plantaGateway)
     {return new UseCasePlantaGet(plantaGateway);}
+
     @Bean
     UseCasePlantaPost useCasePlantaPost(PlantaGateway plantaGateway)
     {return new UseCasePlantaPost(plantaGateway);}
+
     @Bean
     UseCasePlantaPut useCasePlantaPut(PlantaGateway plantaGateway)
     {return new UseCasePlantaPut(plantaGateway);}

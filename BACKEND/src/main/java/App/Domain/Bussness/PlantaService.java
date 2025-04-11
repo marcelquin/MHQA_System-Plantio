@@ -1,54 +1,63 @@
 package App.Domain.Bussness;
 
 import App.Domain.Response.*;
-import App.Domain.Util.PlantaMapper;
 import App.Infra.Exceptions.EntityNotFoundException;
 import App.Infra.Exceptions.IllegalActionException;
 import App.Infra.Exceptions.NullargumentsException;
 import App.Infra.Gateway.PlantaGateway;
-import App.Infra.Persistence.Entity.PlantaEntity;
-import App.Infra.Persistence.Enum.FASEATUAL;
+import App.Infra.Mapper.*;
+import App.Infra.Persistence.Entity.*;
+import App.Infra.Persistence.Enum.CICLO;
 import App.Infra.Persistence.Repository.PlantaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static App.Infra.Persistence.Enum.FASEATUAL.*;
+import static App.Infra.Persistence.Enum.CICLO.*;
 
 @Service
 public class PlantaService implements PlantaGateway {
 
     private final PlantaRepository plantaRepository;
     private final PlantaMapper plantaMapper;
-    private final SubareaPlantioService subareaPlantioService;
+    private final AreaService areaService;
+    private final AreaMapper areaMapper;
+    private final CicloMapper cicloMapper;
+    private final CicloService cicloService;
+    private final LocalizacaoMapper localizacaoMapper;
+    private final LocalizacaoService localizacaoService;
 
-    public PlantaService(PlantaRepository plantaRepository, PlantaMapper plantaMapper,@Lazy SubareaPlantioService subareaPlantioService) {
+    public PlantaService(PlantaRepository plantaRepository, PlantaMapper plantaMapper, @Lazy AreaService areaService, AreaMapper areaMapper, CicloMapper cicloMapper,@Lazy CicloService cicloService, LocalizacaoMapper localizacaoMapper,@Lazy LocalizacaoService localizacaoService) {
         this.plantaRepository = plantaRepository;
         this.plantaMapper = plantaMapper;
-        this.subareaPlantioService = subareaPlantioService;
+        this.areaService = areaService;
+        this.areaMapper = areaMapper;
+        this.cicloMapper = cicloMapper;
+        this.cicloService = cicloService;
+        this.localizacaoMapper = localizacaoMapper;
+        this.localizacaoService = localizacaoService;
     }
 
     @Override
-    public ResponseEntity<List<Planta>>ListarPlantas()
+    public ResponseEntity<List<Planta>> ListarPlantas()
     {
         try
         {
-            List<Planta> response = new ArrayList<>();
             List<PlantaEntity> plantaEntities = plantaRepository.findAll();
+            List<Planta> response = new ArrayList<>();
             for(PlantaEntity entity : plantaEntities)
             {
-                Planta dto = plantaMapper.EntityToRecord(entity);
-                response.add(dto);
+                Planta planta = plantaMapper.EntityToDto(entity);
+                response.add(planta);
             }
             return new ResponseEntity<>(response,HttpStatus.OK);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.getMessage();
         }
@@ -56,23 +65,22 @@ public class PlantaService implements PlantaGateway {
     }
 
     @Override
-    public ResponseEntity<List<Planta>>ListarPlantasGerminacao()
+    public ResponseEntity<List<Planta>> ListarPlantasGerminacao()
     {
         try
         {
-            List<Planta> response = new ArrayList<>();
             List<PlantaEntity> plantaEntities = plantaRepository.findAll();
+            List<Planta> response = new ArrayList<>();
             for(PlantaEntity entity : plantaEntities)
             {
-                if(entity.getFaseatual().equals(FASEATUAL.GERMINACAO))
+                if(entity.getCiclo().getCiclo().equals(GERMINACAO))
                 {
-                    Planta dto = plantaMapper.EntityToRecord(entity);
-                    response.add(dto);
+                    Planta planta = plantaMapper.EntityToDto(entity);
+                    response.add(planta);
                 }
             }
             return new ResponseEntity<>(response,HttpStatus.OK);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.getMessage();
         }
@@ -80,23 +88,22 @@ public class PlantaService implements PlantaGateway {
     }
 
     @Override
-    public ResponseEntity<List<Planta>>ListarPlantasMudas()
+    public ResponseEntity<List<Planta>> ListarPlantasMuda()
     {
         try
         {
-            List<Planta> response = new ArrayList<>();
             List<PlantaEntity> plantaEntities = plantaRepository.findAll();
+            List<Planta> response = new ArrayList<>();
             for(PlantaEntity entity : plantaEntities)
             {
-                if(entity.getFaseatual().equals(FASEATUAL.MUDA))
+                if(entity.getCiclo().getCiclo().equals(MUDA))
                 {
-                    Planta dto = plantaMapper.EntityToRecord(entity);
-                    response.add(dto);
+                    Planta planta = plantaMapper.EntityToDto(entity);
+                    response.add(planta);
                 }
             }
             return new ResponseEntity<>(response,HttpStatus.OK);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.getMessage();
         }
@@ -104,23 +111,22 @@ public class PlantaService implements PlantaGateway {
     }
 
     @Override
-    public ResponseEntity<List<Planta>>ListarPlantasProducao()
+    public ResponseEntity<List<Planta>> ListarPlantasCrescimento()
     {
         try
         {
-            List<Planta> response = new ArrayList<>();
             List<PlantaEntity> plantaEntities = plantaRepository.findAll();
+            List<Planta> response = new ArrayList<>();
             for(PlantaEntity entity : plantaEntities)
             {
-                if(entity.getFaseatual().equals(FRUTIFICACAO))
+                if(entity.getCiclo().getCiclo().equals(CRESCIMENTO))
                 {
-                    Planta dto = plantaMapper.EntityToRecord(entity);
-                    response.add(dto);
+                    Planta planta = plantaMapper.EntityToDto(entity);
+                    response.add(planta);
                 }
             }
             return new ResponseEntity<>(response,HttpStatus.OK);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.getMessage();
         }
@@ -128,23 +134,22 @@ public class PlantaService implements PlantaGateway {
     }
 
     @Override
-    public ResponseEntity<List<Planta>>ListarPlantasCrescimento()
+    public ResponseEntity<List<Planta>> ListarPlantasFloracao()
     {
         try
         {
-            List<Planta> response = new ArrayList<>();
             List<PlantaEntity> plantaEntities = plantaRepository.findAll();
+            List<Planta> response = new ArrayList<>();
             for(PlantaEntity entity : plantaEntities)
             {
-                if(entity.getFaseatual().equals(FASEATUAL.CRESCIMENTO))
+                if(entity.getCiclo().getCiclo().equals(FLORACAO))
                 {
-                    Planta dto = plantaMapper.EntityToRecord(entity);
-                    response.add(dto);
+                    Planta planta = plantaMapper.EntityToDto(entity);
+                    response.add(planta);
                 }
             }
             return new ResponseEntity<>(response,HttpStatus.OK);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.getMessage();
         }
@@ -152,23 +157,22 @@ public class PlantaService implements PlantaGateway {
     }
 
     @Override
-    public ResponseEntity<List<Planta>>ListarPlantasFloracao()
+    public ResponseEntity<List<Planta>> ListarPlantasFrutificacao()
     {
         try
         {
-            List<Planta> response = new ArrayList<>();
             List<PlantaEntity> plantaEntities = plantaRepository.findAll();
+            List<Planta> response = new ArrayList<>();
             for(PlantaEntity entity : plantaEntities)
             {
-                if(entity.getFaseatual().equals(FLORACAO))
+                if(entity.getCiclo().getCiclo().equals(FRUTIFICACAO))
                 {
-                    Planta dto = plantaMapper.EntityToRecord(entity);
-                    response.add(dto);
+                    Planta planta = plantaMapper.EntityToDto(entity);
+                    response.add(planta);
                 }
             }
             return new ResponseEntity<>(response,HttpStatus.OK);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.getMessage();
         }
@@ -176,23 +180,22 @@ public class PlantaService implements PlantaGateway {
     }
 
     @Override
-    public ResponseEntity<List<Planta>>ListarPlantasFrutificacao()
+    public ResponseEntity<List<Planta>> ListarPlantasMaturacao()
     {
         try
         {
-            List<Planta> response = new ArrayList<>();
             List<PlantaEntity> plantaEntities = plantaRepository.findAll();
+            List<Planta> response = new ArrayList<>();
             for(PlantaEntity entity : plantaEntities)
             {
-                if(entity.getFaseatual().equals(FRUTIFICACAO))
+                if(entity.getCiclo().getCiclo().equals(MATURACAO))
                 {
-                    Planta dto = plantaMapper.EntityToRecord(entity);
-                    response.add(dto);
+                    Planta planta = plantaMapper.EntityToDto(entity);
+                    response.add(planta);
                 }
             }
             return new ResponseEntity<>(response,HttpStatus.OK);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.getMessage();
         }
@@ -200,55 +203,31 @@ public class PlantaService implements PlantaGateway {
     }
 
     @Override
-    public ResponseEntity<List<Planta>>ListarPlantasMaturacao()
+    public ResponseEntity<List<Planta>> ListarPlantasFimCiclo()
     {
         try
         {
-            List<Planta> response = new ArrayList<>();
             List<PlantaEntity> plantaEntities = plantaRepository.findAll();
+            List<Planta> response = new ArrayList<>();
             for(PlantaEntity entity : plantaEntities)
             {
-                if(entity.getFaseatual().equals(MATURACAO))
+                if(entity.getCiclo().getCiclo().equals(FIM))
                 {
-                    Planta dto = plantaMapper.EntityToRecord(entity);
-                    response.add(dto);
+                    Planta planta = plantaMapper.EntityToDto(entity);
+                    response.add(planta);
                 }
             }
             return new ResponseEntity<>(response,HttpStatus.OK);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.getMessage();
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @Override
-    public ResponseEntity<List<Planta>>ListarPlantasFimCiclo()
-    {
-        try
-        {
-            List<Planta> response = new ArrayList<>();
-            List<PlantaEntity> plantaEntities = plantaRepository.findAll();
-            for(PlantaEntity entity : plantaEntities)
-            {
-                if(entity.getFaseatual().equals(FIM))
-                {
-                    Planta dto = plantaMapper.EntityToRecord(entity);
-                    response.add(dto);
-                }
-            }
-            return new ResponseEntity<>(response,HttpStatus.OK);
-        }
-        catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
 
     @Override
-    public ResponseEntity<Planta>BuscarPlantaPorId(Long id)
+    public ResponseEntity<Planta> BuscarPlantaPorId(Long id)
     {
         try
         {
@@ -257,12 +236,11 @@ public class PlantaService implements PlantaGateway {
                 PlantaEntity entity = plantaRepository.findById(id).orElseThrow(
                         EntityNotFoundException::new
                 );
-                Planta response = plantaMapper.EntityToRecord(entity);
+                Planta response = plantaMapper.EntityToDto(entity);
                 return new ResponseEntity<>(response,HttpStatus.OK);
             }
             else {throw new NullargumentsException();}
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.getMessage();
         }
@@ -270,195 +248,110 @@ public class PlantaService implements PlantaGateway {
     }
 
     @Override
-    public ResponseEntity<Planta>BuscarPlantaPorCodigo(String codigo)
+    public ResponseEntity<Planta> NovaPlanta(Long areaId, Long localizacaoId, String nomeCientifico, String nomePopular, String instrucoes)
     {
         try
         {
-            if(codigo != null)
-            {
-                PlantaEntity entity = plantaRepository.findBycodigo(codigo).orElseThrow(
-                        EntityNotFoundException::new
-                );
-                Planta response = plantaMapper.EntityToRecord(entity);
-                return new ResponseEntity<>(response,HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
-        }
-        catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    @Override
-    public ResponseEntity<Planta> AdicionarNovaPlanta(String nomeCientifico,
-                                            String nomePopular,
-                                            String instrucoes,
-                                            String codigoSubarea)
-    {
-        try
-        {
-            if(nomeCientifico != null && nomePopular != null && instrucoes != null && codigoSubarea != null)
-            {
-                int dig = (int) (111 + Math.random() * 999);
-                String identificador = nomePopular.substring(0, 3);
-                String codigo = identificador+"_"+dig;
-                PlantaEntity entity = new PlantaEntity();
-                SubAreaPlantio subAreaPlantio = subareaPlantioService.BuscarSubAreaPorCodigo(codigoSubarea).getBody();
-                entity.SetInfoInicial(nomeCientifico,nomePopular,codigo,instrucoes);
-                Boolean validaAtribuicao = entity.ValidaAtribuicao(codigoSubarea);
-                if(validaAtribuicao.equals(Boolean.TRUE))
-                {
-                    entity.AtribuirSubArea(codigoSubarea,subAreaPlantio.getNomeAreaPlantio());
-                }
-                plantaRepository.save(entity);
-                Planta response = plantaMapper.EntityToRecord(entity);
-                subareaPlantioService.AdicionarPlanta(response, subAreaPlantio);
-                return new ResponseEntity<>(response,HttpStatus.CREATED);
-            }
-            else {throw new NullargumentsException();}
-        }
-        catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    @Override
-    public ResponseEntity<Void> EditarInformacaoPlanta(Long id,
-                                                       String nomeCientifico,
-                                                       String nomePopular,
-                                                       String instrucoes)
-    {
-        try
-        {
-            if(id != null &&
-               nomeCientifico != null &&
+            if(nomeCientifico != null &&
                nomePopular != null &&
-               instrucoes != null)
+               instrucoes != null &&
+               areaId != null)
             {
-               Planta planta = BuscarPlantaPorId(id).getBody();
-               PlantaEntity entity = plantaMapper.RecordToEntity(planta);
-               entity.SetInfo(nomeCientifico,nomePopular,instrucoes);
-               plantaRepository.save(entity);
-               return new ResponseEntity<>(HttpStatus.OK);
+                Area area = areaService.BuscarAreaPorId(areaId).getBody();
+                AreaEntity areaEntity = areaMapper.toToEntity(area);
+                PlantaEntity entity = new PlantaEntity();
+                Ciclo ciclo = cicloService.NovoCiclo().getBody();
+                cicloService.AlterarCiclo(ciclo.getId(),CICLO.GERMINACAO);
+                CicloEntity cicloEntity = cicloMapper.DtoToEntity(ciclo);
+                entity.setCiclo(cicloEntity);
+                Localizacao localizacao = localizacaoService.BuscarLocalizacaoPorId(localizacaoId).getBody();
+                LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
+                entity.setLocalizacao(localizacaoEntity);
+                localizacaoEntity.SetPlanta();
+                Localizacao localizacaoRequest = localizacaoMapper.EntityToDto(localizacaoEntity);
+                localizacaoService.SalvarAlteracao(localizacaoRequest);
+                entity.SetInfo(nomePopular,nomeCientifico,instrucoes);
+                plantaRepository.save(entity);
+                Planta response = plantaMapper.EntityToDto(entity);
+                areaEntity.getPlantas().add(entity);
+                Area request = areaMapper.EntityToDto(areaEntity);
+                areaService.SalvarAlteracao(request);
+                return  new ResponseEntity<>(response, HttpStatus.CREATED);
             }
             else {throw new NullargumentsException();}
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.getMessage();
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public Boolean SalvarAlteracao(Planta planta)
+    @Override
+    public ResponseEntity<Planta> EditarPlanta(Long plantaId, String nomeCientifico, String nomePopular,String instrucoes)
     {
         try
         {
-            PlantaEntity entity = plantaMapper.RecordToEntity(planta);
-            plantaRepository.save(entity);
-            return Boolean.TRUE;
-        }
-        catch (Exception e)
+            if(plantaId != null && nomePopular != null && nomeCientifico != null)
+            {
+                Planta planta = BuscarPlantaPorId(plantaId).getBody();
+                PlantaEntity entity = plantaMapper.DtoToEntity(planta);
+                entity.SetInfo(nomePopular,nomeCientifico,instrucoes);
+                plantaRepository.save(entity);
+                return new ResponseEntity<>(planta, HttpStatus.OK);
+            }
+            else {throw new NullargumentsException();}
+        } catch (Exception e)
         {
             e.getMessage();
         }
-        return Boolean.FALSE;
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @Override
-    public Boolean AtualizaCiclo(String codigoPlanta, String codigoSubarea, String faseatual)
+    public ResponseEntity<Planta> AlterarCiclo(Long id, String ciclo)
     {
         try
         {
-            if(codigoPlanta != null && codigoSubarea != null && faseatual != null)
-            {
-                PlantaEntity planta = plantaRepository.findBycodigo(codigoPlanta).orElseThrow(
-                        EntityNotFoundException::new
-                );
-                SubAreaPlantio subAreaPlantio = subareaPlantioService.BuscarSubAreaPorCodigo(codigoSubarea).getBody();
-                FASEATUAL faseAtualConvertida = RetornaFaseAtual(faseatual);
-                if(faseAtualConvertida.equals(FIM))
-                {
-                    subareaPlantioService.ResetarInformacoes(subAreaPlantio);
-                    planta.FimCiclo();
-                    plantaRepository.save(planta);
-                }
-                if(planta.getLocalizacao() != null)
-                {
-                    if(planta.getLocalizacao().equals(subAreaPlantio.getCodigo()))
-                    {
-                        Boolean validacao = planta.ValidaAlteracaoCiclo(faseAtualConvertida);
-                        if(validacao.equals(Boolean.TRUE))
-                        {
-                            planta.SetNovoCiclo(faseAtualConvertida);
-                            plantaRepository.save(planta);
-                        }
-                    }
-                    else
-                    {
-                        if(faseAtualConvertida != CRESCIMENTO){throw new IllegalActionException();}
-                        Boolean validacao = planta.ValidaAlteracaoCiclo(faseAtualConvertida);
-                        if(validacao.equals(Boolean.TRUE))
-                        {
-                            SubAreaPlantio subAreaPlantioAtual = subareaPlantioService.BuscarSubAreaPorCodigo(planta.getLocalizacao()).getBody();
-                            subareaPlantioService.ResetarInformacoes(subAreaPlantioAtual);
-                            planta.AtribuirSubArea(subAreaPlantio.getCodigo(),subAreaPlantio.getNomeAreaPlantio());
-                            plantaRepository.save(planta);
-                            Planta planta1 = plantaMapper.EntityToRecord(planta);
-                            subareaPlantioService.AdicionarPlanta(planta1, subAreaPlantio);
-                        }
-                    }
-                }
-                return Boolean.TRUE;
-            }
-            else{throw new NullargumentsException();}
-        }
-        catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return Boolean.FALSE;
-    }
-
-    public void SetAdubacao(Long id, String mensagem)
-    {
-        try
-        {
-            if(id != null && mensagem != null)
+            if(id != null)
             {
                 Planta planta = BuscarPlantaPorId(id).getBody();
-                PlantaEntity entity = plantaMapper.RecordToEntity(planta);
-                entity.Adubacao(mensagem);
+                PlantaEntity entity = plantaMapper.DtoToEntity(planta);
+                CICLO cicloConvertido = RetornaCicloAtual(ciclo);
+                cicloService.AlterarCiclo(entity.getCiclo().getId(), cicloConvertido);
+                Localizacao localizacao = localizacaoService.BuscarLocalizacaoPorId(entity.getLocalizacao().getId()).getBody();
+                localizacao.setDisponivel(Boolean.TRUE);
+                localizacao.setTimeStamp(LocalDateTime.now());
+                localizacaoService.SalvarAlteracao(localizacao);
+                entity.FimCiclo();
                 plantaRepository.save(entity);
+                Planta response = plantaMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response,HttpStatus.OK);
             }
-        }
-        catch (Exception e)
+            else {throw new NullargumentsException();}
+        } catch (Exception e)
         {
             e.getMessage();
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public FASEATUAL RetornaFaseAtual(String faseAtual)
+    public CICLO RetornaCicloAtual(String ciclo)
     {
         try
         {
-            if(faseAtual.equals("G"))
+            if(ciclo.equals("GERMINACAO"))
             { return GERMINACAO;}
-            if(faseAtual.equals("M"))
+            if(ciclo.equals("MUDA"))
             { return MUDA;}
-            if(faseAtual.equals("C"))
+            if(ciclo.equals("CRESCIMENTO"))
             { return CRESCIMENTO;}
-            if(faseAtual.equals("FL"))
+            if(ciclo.equals("FLORACAO"))
             { return FLORACAO;}
-            if(faseAtual.equals("FR"))
+            if(ciclo.equals("FRUTIFICACAO"))
             { return FRUTIFICACAO;}
-            if(faseAtual.equals("MA"))
+            if(ciclo.equals("MATURACAO"))
             { return MATURACAO;}
-            if(faseAtual.equals("F"))
+            if(ciclo.equals("FIM"))
             { return FIM;}
         }
         catch (Exception e)
@@ -468,14 +361,4 @@ public class PlantaService implements PlantaGateway {
         return null;
     }
 
-    @Override
-    public void setNovaInfo()
-    {
-        /*List<PlantaEntity> plantaEntities = plantaRepository.findAll();
-        for(PlantaEntity entity : plantaEntities)
-        {
-            entity.SetNovaInfo();
-            plantaRepository.save(entity);
-        }*/
-    }
 }

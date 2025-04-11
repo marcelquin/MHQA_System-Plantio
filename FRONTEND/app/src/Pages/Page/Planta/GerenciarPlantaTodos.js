@@ -6,7 +6,11 @@ import React, { useState, useEffect } from 'react';
 
 function GerenciarPlantaTodos(){
 
-  const UrlGetList = "http://localhost:8080/planta/ListarPlantas"
+  //<td><a onClick={() => {handleOpenModal('Editar'); handleRowSelect(data); }} className='opcaoExtra'>Editar</a></td>
+  //<td><a onClick={() => {handleOpenModal('maisInfo'); handleRowSelect(data); }} className='opcaoExtra'>Mais informações</a></td>
+  
+
+  const UrlGetList = "http://localhost:8080/Planta/ListarPlantas"
   const [listAll, setListAll] = useState([]);
   const [pesquisaInput, setPesquisaInput] = useState('')
   const [showModal, setShowModal] = useState(false);
@@ -44,12 +48,11 @@ function GerenciarPlantaTodos(){
         'idPlanta': '',
         'nomecientifico': '',
         'nomePopular': '',
-        'codigoPlanta': '',
         'instrucoes': '',
         'localizacao': '',
+        'areaPlantio': '',
         'faseAtual': '',
         'inicioCiclo': '',
-        'adubacao': '',
         'notificacoes': '',
     })
     
@@ -58,13 +61,11 @@ function GerenciarPlantaTodos(){
         'idPlanta': data.id,
         'nomeCientifico': data.nomeCientifico,
         'nomePopular': data.nomePopular,
-        'codigoPlanta': data.codigo,
         'instrucoes': data.instrucoes,
-        'localizacao': data.localizacao,
-        'areaPlantio': data.areaPlantio,
-        'faseAtual': data.faseatual,
+        'localizacao': data.localizacao.referencia,
+        'areaPlantio': data.localizacao.area,
+        'faseAtual': data.ciclo.ciclo,
         'inicioCiclo': data.dataPlantio,
-        'adubacao': data.dataAdubacao,
         'notificacoes': data.notificacoes,
       });
     }
@@ -78,9 +79,7 @@ function GerenciarPlantaTodos(){
       <table class="table">
         <thead>
             <tr>
-              <th scope="col">Inicio Ciclo</th>
               <th scope="col">Nome Popular</th>
-              <th scope="col">Código</th>
               <th scope="col">Ciclo Atual</th>
               <th scope="col">Data Último Ciclo</th>
               <th scope="col">Data Ciclo Atual</th>
@@ -95,18 +94,14 @@ function GerenciarPlantaTodos(){
                 {response.map((data, i)=>{return(<>
                   <tbody key={i}>
                   <tr>
-                    <th scope="row">{data.dataPlantio} </th>
                     <td>{data.nomePopular}</td>
-                    <td>{data.codigo}</td>
-                    <td>{data.faseatual}</td>
-                    <td>{data.dataUltimoCiclo}</td>
-                    <td>{data.dataCicloAtual}</td>
-                    <td>{data.localizacao}</td>
-                    <td>{data.areaPlantio}</td>
+                    <td>{data.ciclo.ciclo}</td>
+                    <td>{data.ciclo.dataUltimoCiclo}</td>
+                    <td>{data.ciclo.dataCicloAtual}</td>
+                    <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
+                    <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<></>)}</td>
                     <td>{data.instrucoes}</td>
                     <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
-                    <td><a onClick={() => {handleOpenModal('Editar'); handleRowSelect(data); }} className='opcaoExtra'>Editar</a></td>
-                    <td><a onClick={() => {handleOpenModal('maisInfo'); handleRowSelect(data); }} className='opcaoExtra'>Mais informações</a></td>
                   </tr>
                 </tbody>
                 </>)})}
@@ -116,18 +111,14 @@ function GerenciarPlantaTodos(){
                 {listAll.map((data, i)=>{return(<>
                   <tbody key={i}>
                   <tr>
-                    <th scope="row">{data.dataPlantio} </th>
                     <td>{data.nomePopular}</td>
-                    <td>{data.codigo}</td>
-                    <td>{data.faseatual}</td>
-                    <td>{data.dataUltimoCiclo}</td>
-                    <td>{data.dataCicloAtual}</td>
-                    <td>{data.localizacao}</td>
-                    <td>{data.areaPlantio}</td>
+                    <td>{data.ciclo.ciclo}</td>
+                    <td>{data.ciclo.dataUltimoCiclo}</td>
+                    <td>{data.ciclo.dataCicloAtual}</td>
+                    <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
+                    <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<></>)}</td>
                     <td>{data.instrucoes}</td>
                     <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
-                    <td><a onClick={() => {handleOpenModal('Editar'); handleRowSelect(data); }} className='opcaoExtra'>Editar</a></td>
-                    <td><a onClick={() => {handleOpenModal('maisInfo'); handleRowSelect(data); }} className='opcaoExtra'>Mais informações</a></td>
                   </tr>
                 </tbody>
                 </>)})}

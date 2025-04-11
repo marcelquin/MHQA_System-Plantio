@@ -3,7 +3,7 @@ package App.Infra.Exceptions;
 public class IllegalActionException extends RuntimeException {
 
     public IllegalActionException() {
-        super("Ops...Algo errado");
+        super("Ops, algo deu errado.");
     }
 
     public IllegalActionException(String message) {

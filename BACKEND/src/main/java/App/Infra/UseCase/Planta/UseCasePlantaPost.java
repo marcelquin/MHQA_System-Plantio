@@ -13,10 +13,11 @@ public class UseCasePlantaPost {
         this.plantaGateway = plantaGateway;
     }
 
-    public ResponseEntity<Planta> AdicionarNovaPlanta(@RequestParam String nomeCientifico,
-                                                      @RequestParam String nomePopular,
-                                                      @RequestParam String instrucoes,
-                                                      @RequestParam String codigoSubarea)
-    {return plantaGateway.AdicionarNovaPlanta(nomeCientifico, nomePopular, instrucoes, codigoSubarea);}
+    public ResponseEntity<Planta> NovaPlanta(@RequestParam Long plantioId,
+                                             @RequestParam Long localizacaoId,
+                                             @RequestParam String nomeCientifico,
+                                             @RequestParam String nomePopular,
+                                             @RequestParam String instrucoes)
+    {return plantaGateway.NovaPlanta(plantioId, localizacaoId, nomeCientifico, nomePopular, instrucoes);}
 
 }

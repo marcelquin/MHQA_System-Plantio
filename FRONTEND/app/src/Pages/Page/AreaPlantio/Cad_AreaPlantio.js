@@ -3,16 +3,15 @@ import { data, useNavigate } from 'react-router-dom';
 
 function Cad_AreaPlantio() {
 
-  const UrlPost = "http://localhost:8080/areaPlantio/NovaAreaPlantio"
+  const UrlPost = "http://localhost:8080/Area/NovaArea"
   const navigate = useNavigate();
 
 
   const [dataPost, serdataPost] = useState({
     nomeIdentificador: "",
     dimensao: "",
-    gps: "",
-    tamanhoEixoX: "",
-    tamanhoEixoY: ""
+    eixoX: "",
+    eixoY: ""
   });
 
   const handleChanage = (e) => {
@@ -30,17 +29,18 @@ function Cad_AreaPlantio() {
           nomeIdentificador: dataPost.nomeIdentificador,
           dimensao: dataPost.dimensao,
           gps: dataPost.gps,
-          tamanhoEixoX: dataPost.tamanhoEixoX,
-          tamanhoEixoY: dataPost.tamanhoEixoY
-    })})
-    .then(navigate("/gerenciar")) 
-    serdataPost({
-      nomeIdentificador: "",
-      dimensao: "",
-      gps: "",
-      tamanhoEixoX: "",
-      tamanhoEixoY: ""
-    })
+          eixoX: parseInt(dataPost.eixoX),
+          eixoY: parseInt(dataPost.eixoY)
+        })
+      })
+      .then(navigate("/gerenciar")) 
+      serdataPost({
+        nomeIdentificador: '',
+        dimensao: '',
+        gps: '',
+        eixoX: '',
+        eixoY: ''
+      })
     }catch (err){
       console.log("erro")
     }
@@ -60,33 +60,27 @@ function Cad_AreaPlantio() {
               </div>
               </td>
             </tr>
-            <td>
+            <tr>
+              <td>
               <div class="input-group mb-3">
                 <button class="btn btn-outline-secondary" type="button" id="button-addon1">Dimensão</button>
                 <input type="text" name="dimensao" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
               </div>
               </td>
+            </tr>
             <tr>
               <td>
               <div class="input-group mb-3">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon1">GPS</button>
-                <input type="text" name="gps" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Eixo X </button>
+                <input type="number" name="eixoX" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
               </div>
               </td>
             </tr>
             <tr>
               <td>
               <div class="input-group mb-3">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Eixo X</button>
-                <input type="number" name="tamanhoEixoX" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
-              </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-              <div class="input-group mb-3">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Eixo Y</button>
-                <input type="number" name="tamanhoEixoY" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Eixo Y </button>
+                <input type="number" name="eixoY" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
               </div>
               </td>
             </tr>

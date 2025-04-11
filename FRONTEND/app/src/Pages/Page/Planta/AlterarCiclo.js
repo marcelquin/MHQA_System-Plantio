@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 
 
 function AlterarCiclo({ data }) {
-    const UrlPut = "http://localhost:8080/planta/AtualizaCiclo"
+    const UrlPut = "http://localhost:8080/Planta/AlterarCiclo"
     const [alterarLocalizacao, setalterarLocalizacao ] = useState('')
     const navigate = useNavigate();
     const [dataPost, setDataPost] = useState({
-      codigoPlanta: data.codigoPlanta,
       localizacao: data.localizacao,
-      faseatual: ''
+      ciclo: '',
+      id: Number(data.idPlanta),
     })
 
     const handleChanage = (e) => {
@@ -25,16 +25,16 @@ function AlterarCiclo({ data }) {
             'Content-Type': 'application/x-www-form-urlencoded'
           },    
           body: new URLSearchParams({
-            codigoPlanta: dataPost.codigoPlanta,
-            codigoSubarea: dataPost.localizacao,
-            faseatual: dataPost.faseatual
-      })})
-      .then(navigate("/gerenciar")) 
-      setDataPost({
-        codigoPlanta: data.codigoPlanta,
-        localizacao: data.localizacao,
-        faseatual: ''
-      })
+            id: dataPost.id,
+            ciclo: dataPost.ciclo
+          })
+        })
+        .then(navigate("/gerenciar")) 
+        setDataPost({
+          localizacao: data.localizacao,
+          ciclo: '',
+          id: Number(data.idPlanta),
+        })
       }catch (err){
         console.log("erro")
       }
@@ -57,14 +57,6 @@ function AlterarCiclo({ data }) {
                     </td>
                   </tr>
                   <tr>
-                    <td>
-                        <div class="input-group mb-3">
-                          <button class="btn btn-outline-secondary" type="button" id="button-addon1">Código</button>
-                          <input type="text" name="codigoPlanta" value={data.codigoPlanta} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
-                        </div>
-                    </td>
-                  </tr>
-                  <tr>
                         <td>
                         <br/>
                           <div class="input-group mb-3">
@@ -81,34 +73,7 @@ function AlterarCiclo({ data }) {
                             <input type="text" value={data.localizacao}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                           </div>
                         </td>
-                      </tr>
-                  <tr>
-                    <td>
-                      <div class="form-check">
-                        <input 
-                          class="form-check-input" 
-                          type="checkbox" 
-                          checked={alterarLocalizacao === "ok"}
-                          onChange={(e) => setalterarLocalizacao(e.target.checked ? "ok" : "")} 
-                          id="flexCheckIndeterminate"
-                        />
-                        <label class="form-check-label" for="flexCheckIndeterminate">
-                          Alterar Localização
-                        </label>
-                      </div>
-                    </td>
-                  </tr>      
-                    {alterarLocalizacao.length > 0 ? (<>
-                      <tr>
-                        <td>
-                        <br/>
-                          <div class="input-group mb-3">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon1">Localização</button>
-                            <input type="text" name="codigoSubarea" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
-                          </div>
-                        </td>
-                      </tr>
-                    </>) : (<></>)}        
+                  </tr>     
                   <tr>
                     <td>
                     <br/>
@@ -123,17 +88,18 @@ function AlterarCiclo({ data }) {
                       <select 
                         class="form-select" 
                         aria-label="Default select example"
-                        name="faseatual"
+                        name="ciclo"
+                        value={dataPost.ciclo}
                         onChange={handleChanage}
                       >
                         <option value="">Selecione a opção desejada</option>
-                        <option value="G">Germinação</option>
-                        <option value="M">Muda</option>
-                        <option value="C">Crescimento</option>
-                        <option value="FL">Floração</option>
-                        <option value="FR">Frutificação</option>
-                        <option value="MA">Maturação</option>
-                        <option value="F">Fim de Ciclo</option>
+                        <option value="GERMINACAO">Germinação</option>
+                        <option value="MUDA">Muda</option>
+                        <option value="CRESCIMENTO">Crescimento</option>
+                        <option value="FLORACAO">Floração</option>
+                        <option value="FRUTIFICACAO">Frutificação</option>
+                        <option value="MATURACAO">Maturação</option>
+                        <option value="FIM">Fim de Ciclo</option>
                       </select>
                       <br/>
                     </td>

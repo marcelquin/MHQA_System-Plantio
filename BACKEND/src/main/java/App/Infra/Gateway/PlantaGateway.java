@@ -1,6 +1,7 @@
 package App.Infra.Gateway;
 
 import App.Domain.Response.Planta;
+import App.Infra.Persistence.Enum.CICLO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -10,40 +11,34 @@ public interface PlantaGateway {
 
     public ResponseEntity<List<Planta>> ListarPlantas();
 
-    public ResponseEntity<List<Planta>>ListarPlantasGerminacao();
+    public ResponseEntity<List<Planta>> ListarPlantasGerminacao();
 
-    public ResponseEntity<List<Planta>>ListarPlantasMudas();
+    public ResponseEntity<List<Planta>> ListarPlantasMuda();
 
-    public ResponseEntity<List<Planta>>ListarPlantasProducao();
+    public ResponseEntity<List<Planta>> ListarPlantasCrescimento();
 
-    public ResponseEntity<List<Planta>>ListarPlantasFimCiclo();
+    public ResponseEntity<List<Planta>> ListarPlantasFloracao();
 
-    public ResponseEntity<List<Planta>>ListarPlantasCrescimento();
+    public ResponseEntity<List<Planta>> ListarPlantasFrutificacao();
 
-    public ResponseEntity<List<Planta>>ListarPlantasMaturacao();
+    public ResponseEntity<List<Planta>> ListarPlantasMaturacao();
 
-    public ResponseEntity<List<Planta>>ListarPlantasFloracao();
+    public ResponseEntity<List<Planta>> ListarPlantasFimCiclo();
 
-    public ResponseEntity<List<Planta>>ListarPlantasFrutificacao();
+    public ResponseEntity<Planta> BuscarPlantaPorId(@RequestParam Long id);
 
-    public ResponseEntity<Planta>BuscarPlantaPorId(@RequestParam Long id);
+    public ResponseEntity<Planta> NovaPlanta(@RequestParam Long plantioId,
+                                             @RequestParam Long localizacaoId,
+                                             @RequestParam String nomeCientifico,
+                                             @RequestParam String nomePopular,
+                                             @RequestParam String instrucoes);
 
-    public ResponseEntity<Planta>BuscarPlantaPorCodigo(@RequestParam String codigo);
+    public ResponseEntity<Planta> EditarPlanta(@RequestParam Long plantaId,
+                                               @RequestParam String nomeCientifico,
+                                               @RequestParam String nomePopular,
+                                               @RequestParam String instrucoes);
 
-    public ResponseEntity<Planta> AdicionarNovaPlanta(@RequestParam String nomeCientifico,
-                                    @RequestParam String nomePopular,
-                                    @RequestParam String instrucoes,
-                                    @RequestParam String codigoSubarea);
-
-    public ResponseEntity<Void> EditarInformacaoPlanta(@RequestParam Long id,
-                                                       @RequestParam String nomeCientifico,
-                                                       @RequestParam String nomePopular,
-                                                       @RequestParam String instrucoes);
-
-    public Boolean AtualizaCiclo(@RequestParam String codigoPlanta,
-                                 @RequestParam String codigoSubarea,
-                                 @RequestParam String faseatual);
-
-    public void setNovaInfo();
+    public ResponseEntity<Planta> AlterarCiclo(@RequestParam Long id,
+                                               @RequestParam String ciclo);
 
 }

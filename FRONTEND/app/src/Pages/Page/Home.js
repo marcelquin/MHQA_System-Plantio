@@ -5,14 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 function Home() {
 
-  const UrlGetList = "http://localhost:8080/planta/ListarPlantas"
-  const UrlGetListGerminacao = "http://localhost:8080/planta/ListarPlantasGerminacao"
-  const UrlGetListMuda = "http://localhost:8080/planta/ListarPlantasMudas"
-  const UrlGetListCrescimento = "http://localhost:8080/planta/ListarPlantasCrescimento"
-  const UrlGetListFloracao = "http://localhost:8080/planta/ListarPlantasFloracao"
-  const UrlGetListFrutificacao = "http://localhost:8080/planta/ListarPlantasFrutificacao"
-  const UrlGetListMaturacao = "http://localhost:8080/planta/ListarPlantasMaturacao"
-  const UrlGetLisFim = "http://localhost:8080/planta/ListarPlantasFimCiclo"
+  const UrlGetList = "http://localhost:8080/Planta/ListarPlantas"
+
 
   const [listAll, setlistAll] = useState([]);
   const [pesquisaInput, setPesquisaInput] = useState('')
@@ -55,13 +49,13 @@ return (
               <thead>
                 <tr>
                   <th scope="col">Nome Popular</th>
-                  <th scope="col">Fase Atual</th>
                   <th scope="col">Localização</th>
-                  <th scope="col">Área Plantio</th>
-                  <th scope="col">Inicio de Ciclo</th>
-                  <th scope="col">Última Adubação</th>
-                  <th scope="col">Último Ciclo</th>
+                  <th scope="col">Área</th>
                   <th scope="col">Ciclo Atual</th>
+                  <th scope="col">Data de Plantio</th>
+                  <th scope="col">Ciclo Anterior</th>
+                  <th scope="col">Ciclo Atual</th>                  
+                  <th scope="col">Última Adubação</th>
                 </tr>
               </thead> 
 
@@ -70,13 +64,12 @@ return (
                 <tbody key={i}>
                   <tr>
                     <th scope="row">{data.nomePopular}</th>
-                    <td>{data.faseatual}</td>
-                    <td>{data.localizacao}</td>
-                    <td>{data.areaPlantio}</td>
-                    <td>{data.dataPlantio}</td>
-                    <td>{data.dataAdubacao}</td>
-                    <td>{data.dataUltimoCiclo}</td>
-                    <td>{data.dataCicloAtual}</td>
+                    <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
+                    <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<></>)}</td>
+                    <td>{data.ciclo.ciclo}</td>
+                    <td>{data.DataPlantio}</td>
+                    <td>{data.ciclo.dataUltimoCiclo}</td>
+                    <td>{data.ciclo.dataCicloAtual}</td>
                   </tr>
                 </tbody>
               </>)})}
@@ -86,14 +79,13 @@ return (
                 {listAll.map((data, i)=>{return(<>
                 <tbody key={i}>
                   <tr>
-                    <th scope="row">{data.nomePopular}</th>
-                    <td>{data.faseatual}</td>
-                    <td>{data.localizacao}</td>
-                    <td>{data.areaPlantio}</td>
-                    <td>{data.dataPlantio}</td>
-                    <td>{data.dataAdubacao}</td>
-                    <td>{data.dataUltimoCiclo}</td>
-                    <td>{data.dataCicloAtual}</td>
+                  <th scope="row">{data.nomePopular}</th>
+                  <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
+                  <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<></>)}</td>
+                    <td>{data.ciclo.ciclo}</td>
+                    <td>{data.DataPlantio}</td>
+                    <td>{data.ciclo.dataUltimoCiclo}</td>
+                    <td>{data.ciclo.dataCicloAtual}</td>
                   </tr>
                 </tbody>
               </>)})}

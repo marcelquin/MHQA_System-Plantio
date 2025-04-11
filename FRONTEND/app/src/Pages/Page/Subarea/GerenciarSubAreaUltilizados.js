@@ -3,7 +3,7 @@ import AdubacaoIndividual from './AdubacaoSubArea';
 
 function GerenciarSubAreaUltilizados(){
 
-    const UrlGetList = "http://localhost:8080/subareaPlantio/ListarSubareasIndisponiveis"
+    const UrlGetList = "http://localhost:8080/Localizacao/ListarLocalizacoesIndisponiveis"
     const [lista, setLista] = useState([]);
     const [pesquisaInput, setPesquisaInput] = useState('')
     const [showModal, setShowModal] = useState(false);
@@ -19,7 +19,7 @@ function GerenciarSubAreaUltilizados(){
   }
 
   const response = pesquisaInput.length > 0 ?
-  lista.filter(dados => dados.nomeAreaPlantio.includes(pesquisaInput)) :
+  lista.filter(dados => dados.area.includes(pesquisaInput)) :
   []
 
     const getLista = async () => {
@@ -61,9 +61,7 @@ function GerenciarSubAreaUltilizados(){
               <th scope="col">Código</th>
               <th scope="col">Localização X</th>
               <th scope="col">Localização Y</th>
-              <th scope="col">Área de plantio</th>
-              <th scope="col">Nome Popular</th>
-              <th scope="col">Fase Atual</th>
+              <th scope="col">Disponivel</th>
             </tr>
           </thead>
           {pesquisaInput.length > 0 ?(<>
@@ -73,14 +71,11 @@ function GerenciarSubAreaUltilizados(){
             
             <tbody key={i}>
               <tr>
-                <td>{data.codigo}</td>
+                <td>{data.referencia}</td>
                 <td>{data.eixoX}</td>
                 <td>{data.eixoY}</td>
-                <td>{data.nomeAreaPlantio}</td>
-                {data.planta !== null ? (<><td>{data.planta.nomePopular}</td>
-                <td>{data.planta.faseatual}</td>
-                </>) : (<><td></td><td></td></>)}       
-                <td><a onClick={() => {handleRowSelect(data); handleOpenModal('AddAdubacao')}} className='opcaoExtra'>Adicionar Adubaçao</a></td>
+                <td>{data.area}</td>
+                <td>{data.disponivel ? (<>Disponivel</>) : (<>Utilizado</>)}</td>      
               </tr>
             </tbody>
          
@@ -92,14 +87,11 @@ function GerenciarSubAreaUltilizados(){
             {lista.map((data, i)=>{return(<>               
             <tbody key={i}>
               <tr>
-                <td>{data.codigo}</td>
+                <td>{data.referencia}</td>
                 <td>{data.eixoX}</td>
                 <td>{data.eixoY}</td>
-                <td>{data.nomeAreaPlantio}</td>
-                {data.planta !== null ? (<><td>{data.planta.nomePopular}</td>
-                <td>{data.planta.faseatual}</td>
-                </>) : (<><td></td><td></td></>)}       
-                <td><a onClick={() => {handleRowSelect(data); handleOpenModal('AddAdubacao')}} className='opcaoExtra'>Adicionar Adubaçao</a></td>
+                <td>{data.area}</td>
+                <td>{data.disponivel ? (<>Disponivel</>) : (<>Utilizado</>)}</td>  
               </tr>
             </tbody>
           </>)})}    
