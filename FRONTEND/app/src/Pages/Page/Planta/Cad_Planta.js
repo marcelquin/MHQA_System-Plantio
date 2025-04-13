@@ -70,10 +70,6 @@ function Cad_Planta() {
   return (
     <>
         <div className="boxForm">
-          {dataPost.areaId ? (<>{dataPost.areaId}</>):(<>vazio</>)}
-          {dataPost.localizacaoId ? (<>{dataPost.localizacaoId}</>):(<>vazio</>)}
-          {dataPost.nomeCientifico ? (<>{dataPost.nomeCientifico}</>):(<>vazio</>)}
-          {dataPost.nomePopular ? (<>{dataPost.nomePopular}</>):(<>vazio</>)}
           <form onSubmit={handleClick}>
               <table>
                 <tr>

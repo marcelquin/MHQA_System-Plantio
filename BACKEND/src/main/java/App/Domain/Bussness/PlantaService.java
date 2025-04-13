@@ -318,11 +318,14 @@ public class PlantaService implements PlantaGateway {
                 PlantaEntity entity = plantaMapper.DtoToEntity(planta);
                 CICLO cicloConvertido = RetornaCicloAtual(ciclo);
                 cicloService.AlterarCiclo(entity.getCiclo().getId(), cicloConvertido);
-                Localizacao localizacao = localizacaoService.BuscarLocalizacaoPorId(entity.getLocalizacao().getId()).getBody();
-                localizacao.setDisponivel(Boolean.TRUE);
-                localizacao.setTimeStamp(LocalDateTime.now());
-                localizacaoService.SalvarAlteracao(localizacao);
-                entity.FimCiclo();
+                if(cicloConvertido.equals(FIM))
+                {
+                    Localizacao localizacao = localizacaoService.BuscarLocalizacaoPorId(entity.getLocalizacao().getId()).getBody();
+                    localizacao.setDisponivel(Boolean.TRUE);
+                    localizacao.setTimeStamp(LocalDateTime.now());
+                    localizacaoService.SalvarAlteracao(localizacao);
+                    entity.FimCiclo();
+                }
                 plantaRepository.save(entity);
                 Planta response = plantaMapper.EntityToDto(entity);
                 return new ResponseEntity<>(response,HttpStatus.OK);

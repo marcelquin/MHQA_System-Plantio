@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 
 function GerenciarPlantaMuda(){
 
-  const UrlGetList = "http://localhost:8080/Planta/ListarPlantasMudas"
+  const UrlGetList = "http://localhost:8080/Planta/ListarPlantasMuda"
   const [listAll, setListAll] = useState([]);
   const [pesquisaInput, setPesquisaInput] = useState('')
   const [showModal, setShowModal] = useState(false);

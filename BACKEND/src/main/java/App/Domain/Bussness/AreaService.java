@@ -120,8 +120,8 @@ public class AreaService implements AreaGateway {
                         if (matrix[i][j] == 0)
                         {
                             matrix[i][j] = currentValue++;
-                            int eixoXAtual = i + 1;
-                            int eixoYAtual = j + 1;
+                            int eixoXAtual = j + 1;
+                            int eixoYAtual = i + 1;
                             //"C "+eixoX+" x L "+eixoY
                             Localizacao localizacao = localizacaoService.NovaLocalizacao(nomeIdentificador,eixoXAtual,eixoYAtual).getBody();
                             localizacaoList.add(localizacao);
