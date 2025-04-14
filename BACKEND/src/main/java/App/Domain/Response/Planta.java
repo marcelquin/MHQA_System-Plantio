@@ -10,7 +10,7 @@ public class Planta {
 
     private Long id;
 
-    private String nomeCimentifico;
+    private String nomeCientifico;
 
     private String nomePopular;
 
@@ -33,9 +33,9 @@ public class Planta {
     public Planta() {
     }
 
-    public Planta(Long id, String nomeCimentifico, String nomePopular, String instrucoes, List<String> notificacoes, Localizacao localizacao, Bloco bloco, LocalDate dataPlantio, Ciclo ciclo, LocalDateTime timeStamp) {
+    public Planta(Long id, String nomeCientifico, String nomePopular, String instrucoes, List<String> notificacoes, Localizacao localizacao, Bloco bloco, LocalDate dataPlantio, Ciclo ciclo, LocalDateTime timeStamp) {
         this.id = id;
-        this.nomeCimentifico = nomeCimentifico;
+        this.nomeCientifico = nomeCientifico;
         this.nomePopular = nomePopular;
         this.instrucoes = instrucoes;
         this.notificacoes = notificacoes;
@@ -78,12 +78,12 @@ public class Planta {
         this.id = id;
     }
 
-    public String getNomeCimentifico() {
-        return nomeCimentifico;
+    public String getNomeCientifico() {
+        return nomeCientifico;
     }
 
-    public void setNomeCimentifico(String nomeCimentifico) {
-        this.nomeCimentifico = nomeCimentifico;
+    public void setNomeCientifico(String nomeCientifico) {
+        this.nomeCientifico = nomeCientifico;
     }
 
     public String getNomePopular() {

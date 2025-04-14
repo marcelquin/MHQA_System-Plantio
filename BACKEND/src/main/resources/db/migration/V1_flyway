@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS ciclo (
 -- Create Planta table
 CREATE TABLE IF NOT EXISTS planta (
     id BIGSERIAL PRIMARY KEY,
-    nome_cimentifico VARCHAR(255) NOT NULL,
+    nome_cientifico VARCHAR(255) NOT NULL,
     nome_popular VARCHAR(255) NOT NULL,
     instrucoes TEXT NOT NULL,
     data_plantio DATE NOT NULL,

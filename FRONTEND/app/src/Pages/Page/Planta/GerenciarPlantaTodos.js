@@ -62,8 +62,8 @@ function GerenciarPlantaTodos(){
         'nomeCientifico': data.nomeCientifico,
         'nomePopular': data.nomePopular,
         'instrucoes': data.instrucoes,
-        'localizacao': data.localizacao.referencia,
-        'areaPlantio': data.localizacao.area,
+        'localizacao': data.localizacao ? data.localizacao.referencia : data.bloco ? data.bloco.referencia : '-',
+        'areaPlantio': data.localizacao ? data.localizacao.area : data.bloco ? data.bloco.area : '-',
         'faseAtual': data.ciclo.ciclo,
         'inicioCiclo': data.dataPlantio,
         'notificacoes': data.notificacoes,
@@ -98,17 +98,17 @@ function GerenciarPlantaTodos(){
                     <td>{data.ciclo.ciclo}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>
                     <td>{data.ciclo.dataCicloAtual}</td>
-                    {data.localizacao ? (<>
-                      <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<>{data.bloco.referencia}</>)}</td>
-                      <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<>{data.bloco.area}</>)}</td>
-                      </>) : (<>
-                    <td>{data.bloco.referencia}</td>
-                    <td>{data.bloco.area}</td>
-                    </>)}
-                      <td>{data.bloco && data.bloco.referencia ? (<>{data.bloco.referencia}</>) : (<></>)}</td>
-                      <td>{data.bloco && data.bloco.area ? (<>{data.bloco.area}</>) : (<></>)}</td>
+                    <td>
+                      {data.localizacao ? data.localizacao.referencia : 
+                       data.bloco ? data.bloco.referencia : '-'}
+                    </td>
+                    <td>
+                      {data.localizacao ? data.localizacao.area : 
+                       data.bloco ? data.bloco.area : '-'}
+                    </td>
                     <td>{data.instrucoes}</td>
                     <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
+                    <td><a onClick={() =>{handleOpenModal('Editar'); handleRowSelect(data);} } className='opcaoExtra'>Editar informações</a></td>
                   </tr>
                 </tbody>
                 </>)})}
@@ -122,15 +122,17 @@ function GerenciarPlantaTodos(){
                     <td>{data.ciclo.ciclo}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>
                     <td>{data.ciclo.dataCicloAtual}</td>
-                    {data.localizacao ? (<>
-                      <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<>{data.bloco.referencia}</>)}</td>
-                      <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<>{data.bloco.area}</>)}</td>
-                      </>) : (<>
-                    <td>{data.bloco.referencia}</td>
-                    <td>{data.bloco.area}</td>
-                    </>)}
+                    <td>
+                      {data.localizacao ? data.localizacao.referencia : 
+                       data.bloco ? data.bloco.referencia : '-'}
+                    </td>
+                    <td>
+                      {data.localizacao ? data.localizacao.area : 
+                       data.bloco ? data.bloco.area : '-'}
+                    </td>
                     <td>{data.instrucoes}</td>
                     <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
+                    <td><a onClick={() =>{handleOpenModal('Editar'); handleRowSelect(data);} } className='opcaoExtra'>Editar informações</a></td>
                   </tr>
                 </tbody>
                 </>)})}

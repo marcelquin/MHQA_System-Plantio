@@ -3,11 +3,11 @@ import { data, useNavigate } from 'react-router-dom';
 
 function EditarInfo({data}){
 
-    const Url = "http://localhost:8080/planta/EditarInformacaoPlanta"
+    const Url = "http://localhost:8080/Planta/EditarPlanta"
     const navigate = useNavigate();
 
     const [dataPost, serdataPost] = useState({
-        id: data.idPlanta,
+        plantaId: data.idPlanta,
         nomeCientifico: data.nomeCientifico,
         nomePopular: data.nomePopular,
         instrucoes: data.instrucoes,
@@ -25,7 +25,7 @@ function EditarInfo({data}){
               'Content-Type': 'application/x-www-form-urlencoded'
             },    
             body: new URLSearchParams({
-              id: dataPost.id,
+              plantaId: dataPost.plantaId,
               nomeCientifico: dataPost.nomeCientifico,
               nomePopular: dataPost.nomePopular,
               instrucoes: dataPost.instrucoes

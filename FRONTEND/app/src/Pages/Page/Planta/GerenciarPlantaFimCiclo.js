@@ -103,6 +103,7 @@ function GerenciarPlantaFimCiclo(){
                     </>)}
                     <td>{data.instrucoes}</td>
                     <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
+                    <td><a onClick={() =>{handleOpenModal('Editar'); handleRowSelect(data);} } className='opcaoExtra'>Editar informações</a></td>
                   </tr>
                 </tbody>
                 </>)})}
@@ -125,6 +126,7 @@ function GerenciarPlantaFimCiclo(){
                     </>)}
                     <td>{data.instrucoes}</td>
                     <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
+                    <td><a onClick={() =>{handleOpenModal('Editar'); handleRowSelect(data);} } className='opcaoExtra'>Editar informações</a></td>
                   </tr>
                 </tbody>
                 </>)})}

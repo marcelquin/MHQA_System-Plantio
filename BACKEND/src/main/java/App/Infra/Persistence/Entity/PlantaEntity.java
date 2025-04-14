@@ -19,7 +19,7 @@ public class PlantaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nomeCimentifico;
+    private String nomeCientifico;
 
     private String nomePopular;
 
@@ -48,15 +48,15 @@ public class PlantaEntity {
     public PlantaEntity() {
     }
 
-    public PlantaEntity(Long id, String nomeCimentifico, String nomePopular, String instrucoes, List<String> notificacoes, LocalizacaoEntity localizacao, BlocoEntity bloco, LocalDate dataPlantio, CicloEntity ciclo, LocalDateTime timeStamp) {
+    public PlantaEntity(Long id, String nomeCientifico, String nomePopular, String instrucoes, List<String> notificacoes, LocalizacaoEntity localizacao, BlocoEntity bloco, LocalDate dataPlantio, CicloEntity ciclo, LocalDateTime timeStamp) {
         this.id = id;
-        this.nomeCimentifico = nomeCimentifico;
+        this.nomeCientifico = nomeCientifico;
         this.nomePopular = nomePopular;
         this.instrucoes = instrucoes;
         this.notificacoes = notificacoes;
         this.localizacao = localizacao;
         this.bloco = bloco;
-        this.DataPlantio = dataPlantio;
+        DataPlantio = dataPlantio;
         this.ciclo = ciclo;
         this.timeStamp = timeStamp;
     }
@@ -85,12 +85,12 @@ public class PlantaEntity {
         this.id = id;
     }
 
-    public String getNomeCimentifico() {
-        return nomeCimentifico;
+    public String getNomeCientifico() {
+        return nomeCientifico;
     }
 
-    public void setNomeCimentifico(String nomeCimentifico) {
-        this.nomeCimentifico = nomeCimentifico;
+    public void setNomeCientifico(String nomeCientifico) {
+        this.nomeCientifico = nomeCientifico;
     }
 
     public String getNomePopular() {
@@ -141,21 +141,21 @@ public class PlantaEntity {
         this.timeStamp = timeStamp;
     }
 
-    public void SetInfo(String nomePopular, String nomeCimentifico, String instrucoes)
+    public void SetInfo(String nomePopular, String nomeCientifico, String instrucoes)
     {
         List<String> list = new ArrayList<>();
         this.nomePopular = nomePopular;
         this.instrucoes = instrucoes;
-        this.nomeCimentifico = nomeCimentifico;
+        this.nomeCientifico = nomeCientifico;
         this.notificacoes = list;
         this.timeStamp = LocalDateTime.now();
         this.setDataPlantio(LocalDate.now());
     }
 
-    public void EditInfo(String nomePopular, String nomeCimentifico, String instrucoes)
+    public void EditInfo(String nomePopular, String nomeCientifico, String instrucoes)
     {
         this.nomePopular = nomePopular;
-        this.nomeCimentifico = nomeCimentifico;
+        this.nomeCientifico = nomeCientifico;
         this.instrucoes = instrucoes;
         this.timeStamp = LocalDateTime.now();
     }

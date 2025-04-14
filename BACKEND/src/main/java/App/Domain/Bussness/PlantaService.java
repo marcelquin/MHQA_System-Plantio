@@ -60,6 +60,7 @@ public class PlantaService implements PlantaGateway {
             {
                 Planta planta = plantaMapper.EntityToDto(entity);
                 response.add(planta);
+
             }
             return new ResponseEntity<>(response,HttpStatus.OK);
         } catch (Exception e)
