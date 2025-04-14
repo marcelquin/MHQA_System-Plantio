@@ -15,5 +15,10 @@ public interface AreaGateway {
     public ResponseEntity<Area> NovaArea(@RequestParam String dimensao,
                                          @RequestParam String nomeIdentificador,
                                          @RequestParam int eixoX,
-                                         @RequestParam int eixoY);
+                                         @RequestParam int eixoY,
+                                         @RequestParam  int quantidadeBlocos);
+
+    public ResponseEntity<Area> EditarArea(@RequestParam Long id,
+                                           @RequestParam String dimensao,
+                                           @RequestParam String nomeIdentificador);
 }

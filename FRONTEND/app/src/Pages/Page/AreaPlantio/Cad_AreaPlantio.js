@@ -10,8 +10,9 @@ function Cad_AreaPlantio() {
   const [dataPost, serdataPost] = useState({
     nomeIdentificador: "",
     dimensao: "",
-    eixoX: "",
-    eixoY: ""
+    eixoX: 0,
+    eixoY: 0,
+    quantidadeBlocos: 0
   });
 
   const handleChanage = (e) => {
@@ -30,7 +31,8 @@ function Cad_AreaPlantio() {
           dimensao: dataPost.dimensao,
           gps: dataPost.gps,
           eixoX: parseInt(dataPost.eixoX),
-          eixoY: parseInt(dataPost.eixoY)
+          eixoY: parseInt(dataPost.eixoY),
+          quantidadeBlocos : parseInt(dataPost.quantidadeBlocos)
         })
       })
       .then(navigate("/gerenciar")) 
@@ -38,8 +40,9 @@ function Cad_AreaPlantio() {
         nomeIdentificador: '',
         dimensao: '',
         gps: '',
-        eixoX: '',
-        eixoY: ''
+        eixoX: 0,
+        eixoY: 0,
+        quantidadeBlocos: 0
       })
     }catch (err){
       console.log("erro")
@@ -83,6 +86,15 @@ function Cad_AreaPlantio() {
                 <input type="number" name="eixoY" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
               </div>
               </td>
+            </tr>
+            <tr>
+              <td>
+              <div class="input-group mb-3">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1">quantidade de Blocos </button>
+                <input type="number" name="quantidadeBlocos" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+              </div>
+              </td>
+              <br/>
             </tr>
             <tr>
               <td><button type="submit" onClick={handleClick} class="btn btn-success">Salvar</button></td>

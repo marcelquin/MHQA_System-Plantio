@@ -31,6 +31,10 @@ public class PlantaEntity {
     @JoinColumn(name = "localizacaoEntity_id", referencedColumnName = "id")
     private LocalizacaoEntity localizacao;
 
+    @OneToOne
+    @JoinColumn(name = "blocoEntity_id", referencedColumnName = "id")
+    private BlocoEntity bloco;
+
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate DataPlantio;
 
@@ -44,16 +48,25 @@ public class PlantaEntity {
     public PlantaEntity() {
     }
 
-    public PlantaEntity(Long id, String nomeCimentifico, String nomePopular, String instrucoes, List<String> notificacoes, LocalizacaoEntity localizacao, LocalDate dataPlantio, CicloEntity ciclo, LocalDateTime timeStamp) {
+    public PlantaEntity(Long id, String nomeCimentifico, String nomePopular, String instrucoes, List<String> notificacoes, LocalizacaoEntity localizacao, BlocoEntity bloco, LocalDate dataPlantio, CicloEntity ciclo, LocalDateTime timeStamp) {
         this.id = id;
         this.nomeCimentifico = nomeCimentifico;
         this.nomePopular = nomePopular;
         this.instrucoes = instrucoes;
         this.notificacoes = notificacoes;
         this.localizacao = localizacao;
-        DataPlantio = dataPlantio;
+        this.bloco = bloco;
+        this.DataPlantio = dataPlantio;
         this.ciclo = ciclo;
         this.timeStamp = timeStamp;
+    }
+
+    public BlocoEntity getBloco() {
+        return bloco;
+    }
+
+    public void setBloco(BlocoEntity bloco) {
+        this.bloco = bloco;
     }
 
     public LocalDate getDataPlantio() {
@@ -139,10 +152,11 @@ public class PlantaEntity {
         this.setDataPlantio(LocalDate.now());
     }
 
-    public void EditInfo(String nomePopular, String nomeCimentifico)
+    public void EditInfo(String nomePopular, String nomeCimentifico, String instrucoes)
     {
         this.nomePopular = nomePopular;
         this.nomeCimentifico = nomeCimentifico;
+        this.instrucoes = instrucoes;
         this.timeStamp = LocalDateTime.now();
     }
 

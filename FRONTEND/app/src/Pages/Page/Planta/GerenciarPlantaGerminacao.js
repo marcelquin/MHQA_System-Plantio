@@ -93,8 +93,13 @@ function GerenciarPlantaGerminacao(){
                     <td>{data.ciclo.ciclo}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>
                     <td>{data.ciclo.dataCicloAtual}</td>
-                    <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
-                    <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<></>)}</td>
+                    {data.localizacao ? (<>
+                      <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<>{data.bloco.referencia}</>)}</td>
+                      <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<>{data.bloco.area}</>)}</td>
+                      </>) : (<>
+                    <td>{data.bloco.referencia}</td>
+                    <td>{data.bloco.area}</td>
+                    </>)}
                     <td>{data.instrucoes}</td>
                     <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
                   </tr>
@@ -110,8 +115,13 @@ function GerenciarPlantaGerminacao(){
                     <td>{data.ciclo.ciclo}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>
                     <td>{data.ciclo.dataCicloAtual}</td>
-                    <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
-                    <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<></>)}</td>
+                     {data.localizacao ? (<>
+                      <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<>{data.bloco.referencia}</>)}</td>
+                      <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<>{data.bloco.area}</>)}</td>
+                      </>) : (<>
+                    <td>{data.bloco.referencia}</td>
+                    <td>{data.bloco.area}</td>
+                    </>)}
                     <td>{data.instrucoes}</td>
                     <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
                   </tr>

@@ -20,6 +20,8 @@ public class Planta {
 
     private Localizacao localizacao;
 
+    private Bloco bloco;
+
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate DataPlantio;
 
@@ -31,16 +33,25 @@ public class Planta {
     public Planta() {
     }
 
-    public Planta(Long id, String nomeCimentifico, String nomePopular, String instrucoes, List<String> notificacoes, Localizacao localizacao, LocalDate dataPlantio, Ciclo ciclo, LocalDateTime timeStamp) {
+    public Planta(Long id, String nomeCimentifico, String nomePopular, String instrucoes, List<String> notificacoes, Localizacao localizacao, Bloco bloco, LocalDate dataPlantio, Ciclo ciclo, LocalDateTime timeStamp) {
         this.id = id;
         this.nomeCimentifico = nomeCimentifico;
         this.nomePopular = nomePopular;
         this.instrucoes = instrucoes;
         this.notificacoes = notificacoes;
         this.localizacao = localizacao;
+        this.bloco = bloco;
         DataPlantio = dataPlantio;
         this.ciclo = ciclo;
         this.timeStamp = timeStamp;
+    }
+
+    public Bloco getBloco() {
+        return bloco;
+    }
+
+    public void setBloco(Bloco bloco) {
+        this.bloco = bloco;
     }
 
     public LocalDate getDataPlantio() {

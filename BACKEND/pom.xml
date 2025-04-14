@@ -87,6 +87,18 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Flyway-->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>10.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+			<version>10.11.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -110,6 +122,20 @@
 							<version>1.5.5.Final</version>
 						</path>
 					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>10.11.0</version>
+				<configuration>
+					<url>jdbc:postgresql://localhost:5433/postgres</url>
+					<user>mhqa</user>
+					<password>mh8q23pr99</password>
+					<locations>
+						<location>classpath:db/migration</location>
+					</locations>
 				</configuration>
 			</plugin>
 

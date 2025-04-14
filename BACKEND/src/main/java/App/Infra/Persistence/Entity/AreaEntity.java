@@ -28,6 +28,9 @@ public class AreaEntity {
     @OneToMany
     private List<LocalizacaoEntity> localizacoes;
 
+    @OneToMany
+    private List<BlocoEntity> blocos;
+
     private List<String> notificacoes;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
@@ -39,15 +42,24 @@ public class AreaEntity {
     public AreaEntity() {
     }
 
-    public AreaEntity(Long id, String nomeIdentificador, String dimensao, List<PlantaEntity> plantas, List<LocalizacaoEntity> localizacoes, List<String> notificacoes, LocalDateTime dataCadastro, LocalDateTime timeStamp) {
+    public AreaEntity(Long id, String nomeIdentificador, String dimensao, List<PlantaEntity> plantas, List<LocalizacaoEntity> localizacoes, List<BlocoEntity> blocos, List<String> notificacoes, LocalDateTime dataCadastro, LocalDateTime timeStamp) {
         this.id = id;
         this.nomeIdentificador = nomeIdentificador;
         this.dimensao = dimensao;
         this.plantas = plantas;
         this.localizacoes = localizacoes;
+        this.blocos = blocos;
         this.notificacoes = notificacoes;
         this.dataCadastro = dataCadastro;
         this.timeStamp = timeStamp;
+    }
+
+    public List<BlocoEntity> getBlocos() {
+        return blocos;
+    }
+
+    public void setBlocos(List<BlocoEntity> blocos) {
+        this.blocos = blocos;
     }
 
     public Long getId() {
@@ -118,9 +130,11 @@ public class AreaEntity {
     {
         List<String> list = new ArrayList<>();
         List<LocalizacaoEntity> list2 = new ArrayList<>();
+        List<BlocoEntity> list5 = new ArrayList<>();
         List<PlantaEntity> list3 = new ArrayList<>();
         this.notificacoes = list;
         this.localizacoes = list2;
+        this.blocos = list5;
         this.plantas = list3;
         this.dataCadastro = LocalDateTime.now();
         this.timeStamp = LocalDateTime.now();

@@ -1,14 +1,17 @@
 package App.Domain.Bussness;
 
 import App.Domain.Response.Area;
+import App.Domain.Response.Bloco;
 import App.Domain.Response.Localizacao;
 import App.Infra.Exceptions.EntityNotFoundException;
 import App.Infra.Exceptions.IllegalActionException;
 import App.Infra.Exceptions.NullargumentsException;
 import App.Infra.Gateway.AreaGateway;
 import App.Infra.Mapper.AreaMapper;
+import App.Infra.Mapper.BlocoMapper;
 import App.Infra.Mapper.LocalizacaoMapper;
 import App.Infra.Persistence.Entity.AreaEntity;
+import App.Infra.Persistence.Entity.BlocoEntity;
 import App.Infra.Persistence.Entity.LocalizacaoEntity;
 import App.Infra.Persistence.Repository.AreaRepository;
 import org.springframework.context.annotation.Lazy;
@@ -16,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +29,18 @@ public class AreaService implements AreaGateway {
     private final AreaRepository areaRepository;
     private final AreaMapper areaMapper;
     private final LocalizacaoService localizacaoService;
+    private final BlocoService blocoService;
     private final LocalizacaoMapper localizacaoMapper;
+    private final BlocoMapper blocoMapper;
 
 
-    public AreaService(AreaRepository areaRepository, AreaMapper areaMapper, @Lazy LocalizacaoService localizacaoService, LocalizacaoMapper localizacaoMapper) {
+    public AreaService(AreaRepository areaRepository, AreaMapper areaMapper, @Lazy LocalizacaoService localizacaoService, BlocoService blocoService, LocalizacaoMapper localizacaoMapper, BlocoMapper blocoMapper) {
         this.areaRepository = areaRepository;
         this.areaMapper = areaMapper;
         this.localizacaoService = localizacaoService;
+        this.blocoService = blocoService;
         this.localizacaoMapper = localizacaoMapper;
+        this.blocoMapper = blocoMapper;
     }
 
     @Override
@@ -97,35 +105,48 @@ public class AreaService implements AreaGateway {
     }
 
     @Override
-    public ResponseEntity<Area> NovaArea(String dimensao,String nomeIdentificador, int eixoX, int eixoY)
+    public ResponseEntity<Area> NovaArea(String dimensao,String nomeIdentificador, int eixoX, int eixoY, int quantidadeBlocos)
     {
         try
         {
             if(eixoX < 0){throw new IllegalActionException();}
             if(eixoY < 0){throw new IllegalActionException();}
+            if(quantidadeBlocos < 0){throw new IllegalActionException();}
             if (dimensao != null &&
-                nomeIdentificador != null &&
-                eixoX > 0 &&
-                eixoY > 0)
+                nomeIdentificador != null)
             {
                 List<Localizacao> localizacaoList = new ArrayList<>();
-                int ROWS = eixoY;
-                int COLS = eixoX;
-                int[][] matrix = new int[ROWS][COLS];
-                int currentValue = 1;
-                for (int i = 0; i < ROWS; i++)
+                List<Bloco> blocoList = new ArrayList<>();
+                if(eixoX > 0 && eixoY >0)
                 {
-                    for (int j = 0; j < COLS; j++)
+                    int ROWS = eixoY;
+                    int COLS = eixoX;
+                    int[][] matrix = new int[ROWS][COLS];
+                    int currentValue = 1;
+                    for (int i = 0; i < ROWS; i++)
                     {
-                        if (matrix[i][j] == 0)
+                        for (int j = 0; j < COLS; j++)
                         {
-                            matrix[i][j] = currentValue++;
-                            int eixoXAtual = j + 1;
-                            int eixoYAtual = i + 1;
-                            //"C "+eixoX+" x L "+eixoY
-                            Localizacao localizacao = localizacaoService.NovaLocalizacao(nomeIdentificador,eixoXAtual,eixoYAtual).getBody();
-                            localizacaoList.add(localizacao);
+                            if (matrix[i][j] == 0)
+                            {
+                                matrix[i][j] = currentValue++;
+                                int eixoXAtual = j + 1;
+                                int eixoYAtual = i + 1;
+                                //"C "+eixoX+" x L "+eixoY
+                                Localizacao localizacao = localizacaoService.NovaLocalizacao(nomeIdentificador,eixoXAtual,eixoYAtual).getBody();
+                                localizacaoList.add(localizacao);
+                            }
                         }
+                    }
+                }
+                if(quantidadeBlocos > 0)
+                {
+                    int referencia = 1;
+                    for(int i= 0; i < quantidadeBlocos; i++)
+                    {
+                        Bloco bloco = blocoService.NovoBloco(nomeIdentificador,referencia).getBody();
+                        blocoList.add(bloco);
+                        referencia ++;
                     }
                 }
                 AreaEntity entity = new AreaEntity();
@@ -134,6 +155,11 @@ public class AreaService implements AreaGateway {
                 {
                     LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
                     entity.getLocalizacoes().add(localizacaoEntity);
+                }
+                for(Bloco bloco : blocoList)
+                {
+                    BlocoEntity blocoEntity = blocoMapper.DtoToEntity(bloco);
+                    entity.getBlocos().add(blocoEntity);
                 }
                 areaRepository.save(entity);
                 Area response = areaMapper.EntityToDto(entity);
@@ -165,8 +191,8 @@ public class AreaService implements AreaGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    /*
-    public ResponseEntity<Area> EditarArea(Long id, String dimensao, String nomeIdentificador, int eixos)
+
+    public ResponseEntity<Area> EditarArea(Long id, String dimensao, String nomeIdentificador)
     {
         try
         {
@@ -174,37 +200,24 @@ public class AreaService implements AreaGateway {
                 id != null)
             {
                 Area area = BuscarAreaPorId(id).getBody();
-                List<String> cods = new ArrayList<>();
-                List<String> codsInterno = new ArrayList<>();
-                if(codsInterno.size() > cods.size())
+                AreaEntity entity = areaMapper.toToEntity(area);
+                entity.EditInfo(dimensao, nomeIdentificador);
+                areaRepository.save(entity);
+                Area response = areaMapper.EntityToDto(entity);
+                for(Localizacao localizacao : area.getLocalizacoes())
                 {
-                    int ROWS = eixos;
-                    int COLS = eixos;
-                    int[][] matrix = new int[ROWS][COLS];
-                    int currentValue = 1;
-                    for (int i = 0; i < ROWS; i++)
-                    {
-                        for (int j = 0; j < COLS; j++)
-                        {
-                            if (matrix[i][j] == 0)
-                            {
-                                matrix[i][j] = currentValue++;
-                                int eixoXAtual = i + 1;
-                                int eixoYAtual = j + 1;
-                                String cod = "C "+eixoXAtual+" x L "+eixoYAtual;
-                                System.out.println(cod);
-                                Boolean verifica = localizacaoService.verificaReferencia(cod).getBody();
-                                System.out.println(verifica);
-                            }
-                        }
-                    }
-                    System.out.println("remove");
+                    localizacao.setArea(nomeIdentificador);
+                    localizacao.setTimeStamp(LocalDateTime.now());
+                    localizacaoService.SalvarAlteracao(localizacao);
                 }
-                if(codsInterno.size() < cods.size())
+                for(Bloco bloco : area.getBlocos())
                 {
-                    System.out.println("add");
+                    bloco.setArea(nomeIdentificador);
+                    bloco.setTimeStamp(LocalDateTime.now());
+                    blocoService.SalvarAlteracoes(bloco);
                 }
-                return new ResponseEntity<>(HttpStatus.OK);
+
+                return new ResponseEntity<>(response,HttpStatus.OK);
             }
             else {throw new NullargumentsException(); }
         } catch (Exception e)
@@ -214,5 +227,5 @@ public class AreaService implements AreaGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-     */
+
 }

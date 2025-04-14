@@ -17,6 +17,8 @@ public class Area {
 
     private List<Localizacao> localizacoes;
 
+    private List<Bloco> blocos;
+
     private List<String> notificacoes;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
@@ -28,15 +30,24 @@ public class Area {
     public Area() {
     }
 
-    public Area(Long id, String dimensao, String nomeIdentificador, List<Planta> plantas, List<Localizacao> localizacoes, List<String> notificacoes, LocalDateTime dataCadastro, LocalDateTime timeStamp) {
+    public Area(Long id, String dimensao, String nomeIdentificador, List<Planta> plantas, List<Localizacao> localizacoes, List<Bloco> blocos, List<String> notificacoes, LocalDateTime dataCadastro, LocalDateTime timeStamp) {
         this.id = id;
         this.dimensao = dimensao;
         this.nomeIdentificador = nomeIdentificador;
         this.plantas = plantas;
         this.localizacoes = localizacoes;
+        this.blocos = blocos;
         this.notificacoes = notificacoes;
         this.dataCadastro = dataCadastro;
         this.timeStamp = timeStamp;
+    }
+
+    public List<Bloco> getBlocos() {
+        return blocos;
+    }
+
+    public void setBlocos(List<Bloco> blocos) {
+        this.blocos = blocos;
     }
 
     public List<String> getNotificacoes() {

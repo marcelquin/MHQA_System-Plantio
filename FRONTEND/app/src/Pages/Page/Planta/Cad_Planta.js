@@ -14,12 +14,13 @@ function Cad_Planta() {
       const data = await response.json();
       setDadosGetAreas(data);
     } catch (error) {
-      console.error('Erro ao buscar lista de subáreas:', error);
+      console.error('Erro ao buscar lista de áreas:', error);
     }
   };
 
 
   const [dadosGetAreas, setDadosGetAreas] = useState([])
+  const [areaSelecionada, setAreaSelecionada] = useState(null);
 
   const [dataPost, serdataPost] = useState({
     areaId: '',
@@ -27,38 +28,54 @@ function Cad_Planta() {
     nomePopular: '',
     instrucoes: '',
     localizacaoId: '',
+    blocoId: '',
   });
 
 
   const handleChanage = (e) => {
-      serdataPost(prev => ({...prev, [e.target.name]: e.target.value}));
+    const { name, value } = e.target;
+    serdataPost(prev => ({...prev, [name]: value}));
+    
+    if (name === 'areaId') {
+      const area = dadosGetAreas.find(a => a.id === Number(value));
+      setAreaSelecionada(area);
+      // Reset localizacaoId and blocoId when area changes
+      serdataPost(prev => ({
+        ...prev,
+        localizacaoId: '',
+        blocoId: ''
+      }));
+    }
   }
 
-  const handleClick=async (e)=>{
-    try{
+  const handleClick = async (e) => {
+    //e.preventDefault();
+    try {
       fetch(UrlPost, {
         method: 'POST',
-        headers:{
+        headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },    
         body: new URLSearchParams({
           areaId: Number(dataPost.areaId),
           localizacaoId: Number(dataPost.localizacaoId),
+          blocoId: Number(dataPost.blocoId),
           nomeCientifico: dataPost.nomeCientifico,
           nomePopular: dataPost.nomePopular,
           instrucoes: dataPost.instrucoes,
         })
       })
-      .then(navigate("/gerenciar")) 
+      .then(() => navigate("/gerenciar")) 
       serdataPost({
         areaId: '',
         localizacaoId: '',
+        blocoId: '',
         nomeCientifico: '',
         nomePopular: '',
         instrucoes: '',
       })
-    }catch (err){
-      console.log("erro")
+    } catch (err) {
+      console.log("erro", err)
     }
   }
 
@@ -125,17 +142,41 @@ function Cad_Planta() {
                         value={dataPost.localizacaoId || ''}
                         onChange={handleChanage}
                       >
-                        <option value="">Localizações disponiveis</option>
-                        {dadosGetAreas && dadosGetAreas.map((area) => (
-                          area.localizacoes && area.localizacoes.length > 0 && 
-                          area.localizacoes.map((localizacao, index) => (
+                        <option value="">Localizações disponíveis</option>
+                        {areaSelecionada && areaSelecionada.localizacoes && 
+                          areaSelecionada.localizacoes.map((localizacao) => (
                             localizacao.disponivel && (
-                              <option key={index} value={localizacao.id}>
+                              <option key={localizacao.id} value={localizacao.id}>
                                 {localizacao.referencia}
                               </option>
                             )
                           ))
-                        ))}
+                        }
+                      </select>
+                  </td>
+                  
+                </tr>
+                <br/>
+                <tr>
+                  
+                  <td>
+                      <select 
+                        class="form-select" 
+                        aria-label="Default select example"
+                        name="blocoId"
+                        value={dataPost.blocoId || ''}
+                        onChange={handleChanage}
+                      >
+                        <option value="">Blocos disponíveis</option>
+                        {areaSelecionada && areaSelecionada.blocos && 
+                          areaSelecionada.blocos.map((bloco) => (
+                            bloco.disponivel && (
+                              <option key={bloco.id} value={bloco.id}>
+                                {bloco.referencia}
+                              </option>
+                            )
+                          ))
+                        }
                       </select>
                   </td>
                 </tr>

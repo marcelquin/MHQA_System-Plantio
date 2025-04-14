@@ -29,6 +29,7 @@ public interface PlantaGateway {
 
     public ResponseEntity<Planta> NovaPlanta(@RequestParam Long plantioId,
                                              @RequestParam Long localizacaoId,
+                                             @RequestParam Long blocoId,
                                              @RequestParam String nomeCientifico,
                                              @RequestParam String nomePopular,
                                              @RequestParam String instrucoes);

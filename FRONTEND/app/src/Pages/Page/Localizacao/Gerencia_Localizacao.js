@@ -1,11 +1,11 @@
 import '../../CSS/BodyStyle.css'
 import React, { useState, useEffect } from 'react';
-import AdubacaoIndividual from './AdubacaoSubArea';
-import GerenciarSubAreaDisponiveis from './GerenciarSubAreaDisponiveis';
-import GerenciarSubAreaUltilizados from './GerenciarSubAreaUltilizados';
-import GerenciarSubAreaTodos from './GerenciarSubAreaTodos';
+import GerenciarLocalizacaoDisponiveis from './GerenciarLocalizacaoDisponiveis';
+import GerenciarLocalizacaoUltilizados from './GerenciarLocalizacaoUltilizados';
+import GerenciarLocalizacaoTodos from './GerenciarLocalizacaoTodos'
 
-function Gerencia_SubareaPlantio() {
+
+function Gerencia_Localizacao() {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
   const [checkboxDisponivel, setCheckboxDisponivel] = useState('disponivel');
@@ -78,11 +78,11 @@ function Gerencia_SubareaPlantio() {
           </label>
         </div>
         <br/>
-        {checkboxDisponivel === "Todos" ?(<><GerenciarSubAreaTodos/></>) : (<></>)}
-        {checkboxDisponivel === "disponivel" ?(<><GerenciarSubAreaDisponiveis/></>) : (<></>)}
-        {checkboxDisponivel === "indisponivel" ?(<><GerenciarSubAreaUltilizados/></>) : (<></>)}
+        {checkboxDisponivel === "Todos" ?(<><GerenciarLocalizacaoTodos/></>) : (<></>)}
+        {checkboxDisponivel === "disponivel" ?(<><GerenciarLocalizacaoDisponiveis/></>) : (<></>)}
+        {checkboxDisponivel === "indisponivel" ?(<><GerenciarLocalizacaoUltilizados/></>) : (<></>)}
     </>
   );
 }
 
-export default Gerencia_SubareaPlantio;
+export default Gerencia_Localizacao;

@@ -1,0 +1,88 @@
+-- Create enum type for CICLO
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'ciclo_enum') THEN
+        CREATE TYPE ciclo_enum AS ENUM ('AGUARDANDO', 'GERMINACAO', 'MUDA', 'CRESCIMENTO', 'FLORACAO', 'FRUTIFICACAO', 'MATURACAO', 'FIM');
+    END IF;
+END $$;
+
+-- Create Area table
+CREATE TABLE IF NOT EXISTS area (
+    id BIGSERIAL PRIMARY KEY,
+    nome_identificador VARCHAR(255) NOT NULL,
+    dimensao VARCHAR(255) NOT NULL,
+    data_cadastro TIMESTAMP NOT NULL,
+    time_stamp TIMESTAMP NOT NULL
+);
+
+-- Drop existing bloco table if exists
+DROP TABLE IF EXISTS area_blocos;
+DROP TABLE IF EXISTS bloco;
+
+-- Create Bloco table
+CREATE TABLE bloco (
+    id BIGSERIAL PRIMARY KEY,
+    area VARCHAR(255) NOT NULL,
+    referencia VARCHAR(255) NOT NULL,
+    disponivel BOOLEAN DEFAULT TRUE,
+    time_stamp TIMESTAMP NOT NULL
+);
+
+-- Create AreaBlocos join table
+CREATE TABLE area_blocos (
+    area_id BIGINT NOT NULL,
+    blocos_id BIGINT NOT NULL,
+    PRIMARY KEY (area_id, blocos_id),
+    CONSTRAINT fk_area_blocos_area FOREIGN KEY (area_id) REFERENCES area(id),
+    CONSTRAINT fk_area_blocos_bloco FOREIGN KEY (blocos_id) REFERENCES bloco(id)
+);
+
+-- Create Localizacao table
+CREATE TABLE IF NOT EXISTS localizacao (
+    id BIGSERIAL PRIMARY KEY,
+    area VARCHAR(255) NOT NULL,
+    eixo_x INTEGER NOT NULL,
+    eixo_y INTEGER NOT NULL,
+    referencia VARCHAR(255) NOT NULL,
+    disponivel BOOLEAN DEFAULT TRUE,
+    time_stamp TIMESTAMP,
+    CONSTRAINT unique_referencia UNIQUE (referencia)
+);
+
+-- Create Ciclo table
+CREATE TABLE IF NOT EXISTS ciclo (
+    id BIGSERIAL PRIMARY KEY,
+    ciclo ciclo_enum NOT NULL,
+    data_ultimo_ciclo DATE NOT NULL,
+    data_ciclo_atual DATE NOT NULL,
+    time_stamp TIMESTAMP NOT NULL
+);
+
+-- Create Planta table
+CREATE TABLE IF NOT EXISTS planta (
+    id BIGSERIAL PRIMARY KEY,
+    nome_cimentifico VARCHAR(255) NOT NULL,
+    nome_popular VARCHAR(255) NOT NULL,
+    instrucoes TEXT NOT NULL,
+    data_plantio DATE NOT NULL,
+    time_stamp TIMESTAMP NOT NULL,
+    localizacao_id BIGINT REFERENCES localizacao(id),
+    bloco_id BIGINT REFERENCES bloco(id),
+    ciclo_id BIGINT REFERENCES ciclo(id)
+);
+
+-- Create Notificacao table
+CREATE TABLE IF NOT EXISTS notificacao (
+    id BIGSERIAL PRIMARY KEY,
+    mensagem TEXT NOT NULL,
+    data_notificacao TIMESTAMP NOT NULL,
+    planta_id BIGINT,
+    CONSTRAINT fk_notificacao_planta FOREIGN KEY (planta_id) REFERENCES planta(id)
+);
+
+-- Create indexes for better performance
+CREATE INDEX IF NOT EXISTS idx_planta_localizacao ON planta(localizacao_id);
+CREATE INDEX IF NOT EXISTS idx_planta_bloco ON planta(bloco_id);
+CREATE INDEX IF NOT EXISTS idx_planta_ciclo ON planta(ciclo_id);
+CREATE INDEX IF NOT EXISTS idx_localizacao_referencia ON localizacao(referencia);
+CREATE INDEX IF NOT EXISTS idx_area_blocos_area ON area_blocos(area_id);
+CREATE INDEX IF NOT EXISTS idx_area_blocos_bloco ON area_blocos(blocos_id);

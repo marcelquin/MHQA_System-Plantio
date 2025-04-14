@@ -15,9 +15,10 @@ public class UseCasePlantaPost {
 
     public ResponseEntity<Planta> NovaPlanta(@RequestParam Long plantioId,
                                              @RequestParam Long localizacaoId,
+                                             @RequestParam Long blocoId,
                                              @RequestParam String nomeCientifico,
                                              @RequestParam String nomePopular,
                                              @RequestParam String instrucoes)
-    {return plantaGateway.NovaPlanta(plantioId, localizacaoId, nomeCientifico, nomePopular, instrucoes);}
+    {return plantaGateway.NovaPlanta(plantioId, localizacaoId, blocoId, nomeCientifico, nomePopular, instrucoes);}
 
 }

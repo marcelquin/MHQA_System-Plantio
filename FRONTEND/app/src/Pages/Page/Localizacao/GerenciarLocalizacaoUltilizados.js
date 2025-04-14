@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import AdubacaoIndividual from './AdubacaoSubArea';
 
-function GerenciarSubAreaUltilizados(){
+function GerenciarLocalizacaoUltilizados(){
 
     const UrlGetList = "http://localhost:8080/Localizacao/ListarLocalizacoesIndisponiveis"
     const [lista, setLista] = useState([]);
@@ -97,25 +96,7 @@ function GerenciarSubAreaUltilizados(){
           </>)})}    
         </>)}  
           </table>
-                        
-              {showModal && (
-                    <div className="modal-overlay">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <button 
-                                className="modal-close-button"
-                                onClick={() => setShowModal(false)}
-                            >
-                                ✕
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            {modalContent === 'AddAdubacao' && <AdubacaoIndividual data={dataRequest}/>}
-                        </div>
-                    </div>
-                </div>
-                )}
-    </>)
+     </>)
 };
 
-export default GerenciarSubAreaUltilizados
+export default GerenciarLocalizacaoUltilizados

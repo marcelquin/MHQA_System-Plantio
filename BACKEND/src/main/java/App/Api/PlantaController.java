@@ -140,10 +140,11 @@ public class PlantaController {
     @PostMapping("NovaPlanta")
     public ResponseEntity<Planta> NovaPlanta(@RequestParam Long areaId,
                                              @RequestParam Long localizacaoId,
+                                             @RequestParam Long blocoId,
                                              @RequestParam String nomeCientifico,
                                              @RequestParam String nomePopular,
                                              @RequestParam String instrucoes)
-    {return casePlantaPost.NovaPlanta(areaId, localizacaoId, nomeCientifico, nomePopular, instrucoes);}
+    {return casePlantaPost.NovaPlanta(areaId, localizacaoId, blocoId, nomeCientifico, nomePopular, instrucoes);}
 
     @Operation(summary = "Edita Registros na tabela", method = "PUT")
     @ApiResponses(value = {

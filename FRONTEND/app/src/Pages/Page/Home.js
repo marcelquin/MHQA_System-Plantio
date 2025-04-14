@@ -64,8 +64,13 @@ return (
                 <tbody key={i}>
                   <tr>
                     <th scope="row">{data.nomePopular}</th>
-                    <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
-                    <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<></>)}</td>
+                    {data.localizacao ? (<>
+                      <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<>{data.bloco.referencia}</>)}</td>
+                      <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<>{data.bloco.area}</>)}</td>
+                      </>) : (<>
+                    <td>{data.bloco.referencia}</td>
+                    <td>{data.bloco.area}</td>
+                    </>)}
                     <td>{data.ciclo.ciclo}</td>
                     <td>{data.DataPlantio}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>
@@ -80,8 +85,13 @@ return (
                 <tbody key={i}>
                   <tr>
                   <th scope="row">{data.nomePopular}</th>
-                  <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
-                  <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<></>)}</td>
+                  {data.localizacao ? (<>
+                    <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<>{data.bloco.referencia}</>)}</td>
+                    <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<>{data.bloco.area}</>)}</td>
+                    </>) : (<>
+                    <td>{data.bloco.referencia}</td>
+                    <td>{data.bloco.area}</td>
+                    </>)}
                     <td>{data.ciclo.ciclo}</td>
                     <td>{data.DataPlantio}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,10 @@ public class PlantaService implements PlantaGateway {
     private final CicloService cicloService;
     private final LocalizacaoMapper localizacaoMapper;
     private final LocalizacaoService localizacaoService;
+    private final BlocoService blocoService;
+    private final BlocoMapper blocoMapper;
 
-    public PlantaService(PlantaRepository plantaRepository, PlantaMapper plantaMapper, @Lazy AreaService areaService, AreaMapper areaMapper, CicloMapper cicloMapper,@Lazy CicloService cicloService, LocalizacaoMapper localizacaoMapper,@Lazy LocalizacaoService localizacaoService) {
+    public PlantaService(PlantaRepository plantaRepository, PlantaMapper plantaMapper, @Lazy AreaService areaService, AreaMapper areaMapper, CicloMapper cicloMapper, @Lazy CicloService cicloService, LocalizacaoMapper localizacaoMapper, @Lazy LocalizacaoService localizacaoService, BlocoService blocoService, BlocoMapper blocoMapper) {
         this.plantaRepository = plantaRepository;
         this.plantaMapper = plantaMapper;
         this.areaService = areaService;
@@ -42,6 +45,8 @@ public class PlantaService implements PlantaGateway {
         this.cicloService = cicloService;
         this.localizacaoMapper = localizacaoMapper;
         this.localizacaoService = localizacaoService;
+        this.blocoService = blocoService;
+        this.blocoMapper = blocoMapper;
     }
 
     @Override
@@ -248,7 +253,7 @@ public class PlantaService implements PlantaGateway {
     }
 
     @Override
-    public ResponseEntity<Planta> NovaPlanta(Long areaId, Long localizacaoId, String nomeCientifico, String nomePopular, String instrucoes)
+    public ResponseEntity<Planta> NovaPlanta(Long areaId, Long localizacaoId, Long blocoId, String nomeCientifico, String nomePopular, String instrucoes)
     {
         try
         {
@@ -264,12 +269,24 @@ public class PlantaService implements PlantaGateway {
                 cicloService.AlterarCiclo(ciclo.getId(),CICLO.GERMINACAO);
                 CicloEntity cicloEntity = cicloMapper.DtoToEntity(ciclo);
                 entity.setCiclo(cicloEntity);
-                Localizacao localizacao = localizacaoService.BuscarLocalizacaoPorId(localizacaoId).getBody();
-                LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
-                entity.setLocalizacao(localizacaoEntity);
-                localizacaoEntity.SetPlanta();
-                Localizacao localizacaoRequest = localizacaoMapper.EntityToDto(localizacaoEntity);
-                localizacaoService.SalvarAlteracao(localizacaoRequest);
+                if(localizacaoId > 0)
+                {
+                    Localizacao localizacao = localizacaoService.BuscarLocalizacaoPorId(localizacaoId).getBody();
+                    LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
+                    entity.setLocalizacao(localizacaoEntity);
+                    localizacaoEntity.SetPlanta();
+                    Localizacao localizacaoRequest = localizacaoMapper.EntityToDto(localizacaoEntity);
+                    localizacaoService.SalvarAlteracao(localizacaoRequest);
+                }
+                if(blocoId > 0)
+                {
+                    Bloco bloco = blocoService.BuscarBlocoPorId(blocoId).getBody();
+                    BlocoEntity blocoEntity = blocoMapper.DtoToEntity(bloco);
+                    entity.setBloco(blocoEntity);
+                    blocoEntity.SetPlanta();
+                    Bloco request = blocoMapper.EntityToDto(blocoEntity);
+                    blocoService.SalvarAlteracoes(request);
+                }
                 entity.SetInfo(nomePopular,nomeCientifico,instrucoes);
                 plantaRepository.save(entity);
                 Planta response = plantaMapper.EntityToDto(entity);
@@ -295,7 +312,7 @@ public class PlantaService implements PlantaGateway {
             {
                 Planta planta = BuscarPlantaPorId(plantaId).getBody();
                 PlantaEntity entity = plantaMapper.DtoToEntity(planta);
-                entity.SetInfo(nomePopular,nomeCientifico,instrucoes);
+                entity.EditInfo(nomePopular,nomeCientifico,instrucoes);
                 plantaRepository.save(entity);
                 return new ResponseEntity<>(planta, HttpStatus.OK);
             }
