@@ -29,6 +29,12 @@ function Home() {
   listAll.filter(dados => dados.nomePopular.includes(pesquisaInput)) :
   []
 
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
+  };
+
   useEffect(() => {
     getListaAll();
   }, []);
@@ -74,7 +80,8 @@ return (
                     <td>{data.ciclo.ciclo}</td>
                     <td>{data.DataPlantio}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>
-                    <td>{data.ciclo.dataCicloAtual}</td>
+                    <td>{data.ciclo.dataCicloAtual}</td>  
+                    <td>{formatDate(data.DataAdubacao)}</td>    
                   </tr>
                 </tbody>
               </>)})}
@@ -96,6 +103,7 @@ return (
                     <td>{data.DataPlantio}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>
                     <td>{data.ciclo.dataCicloAtual}</td>
+                    <td>{formatDate(data.dataAdubacao)}</td>  
                   </tr>
                 </tbody>
               </>)})}

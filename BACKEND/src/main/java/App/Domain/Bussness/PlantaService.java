@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Blob;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -345,6 +346,22 @@ public class PlantaService implements PlantaGateway {
                     entity.FimCiclo();
                 }
                 plantaRepository.save(entity);
+                String local = "";
+                if(planta.getLocalizacao().equals(null))
+                {
+                    local = planta.getBloco().getReferencia();
+                }
+                else
+                {
+                    local = planta.getLocalizacao().getReferencia();
+                }
+                String mensagem = "Na data "+ LocalDate.now()+" a planta "+planta.getNomePopular()+
+                        " presente no local "+local+" passou para o ciclo "+cicloConvertido;
+                Area area = areaService.BuscarAreaPorNome(planta.getLocalizacao().getArea()).getBody();
+                AreaEntity areaEntity = areaMapper.toToEntity(area);
+                areaEntity.SetNotificacao(mensagem);
+                area = areaMapper.EntityToDto(areaEntity);
+                areaService.SalvarAlteracao(area);
                 Planta response = plantaMapper.EntityToDto(entity);
                 return new ResponseEntity<>(response,HttpStatus.OK);
             }
@@ -380,6 +397,25 @@ public class PlantaService implements PlantaGateway {
             e.getMessage();
         }
         return null;
+    }
+
+    public ResponseEntity<Void> SalvarAlteracao(Planta planta)
+    {
+        try
+        {
+            if(planta != null)
+            {
+                PlantaEntity entity = plantaMapper.DtoToEntity(planta);
+                plantaRepository.save(entity);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 }

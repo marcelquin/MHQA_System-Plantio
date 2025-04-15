@@ -38,6 +38,9 @@ public class PlantaEntity {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate DataPlantio;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate DataAdubacao;
+
     @OneToOne
     @JoinColumn(name = "cicloEntity_id", referencedColumnName = "id")
     private CicloEntity ciclo;
@@ -48,7 +51,7 @@ public class PlantaEntity {
     public PlantaEntity() {
     }
 
-    public PlantaEntity(Long id, String nomeCientifico, String nomePopular, String instrucoes, List<String> notificacoes, LocalizacaoEntity localizacao, BlocoEntity bloco, LocalDate dataPlantio, CicloEntity ciclo, LocalDateTime timeStamp) {
+    public PlantaEntity(Long id, String nomeCientifico, String nomePopular, String instrucoes, List<String> notificacoes, LocalizacaoEntity localizacao, BlocoEntity bloco, LocalDate dataPlantio, LocalDate dataAdubacao, CicloEntity ciclo, LocalDateTime timeStamp) {
         this.id = id;
         this.nomeCientifico = nomeCientifico;
         this.nomePopular = nomePopular;
@@ -56,9 +59,18 @@ public class PlantaEntity {
         this.notificacoes = notificacoes;
         this.localizacao = localizacao;
         this.bloco = bloco;
-        DataPlantio = dataPlantio;
+        this.DataPlantio = dataPlantio;
+        this.DataAdubacao = dataAdubacao;
         this.ciclo = ciclo;
         this.timeStamp = timeStamp;
+    }
+
+    public LocalDate getDataAdubacao() {
+        return DataAdubacao;
+    }
+
+    public void setDataAdubacao(LocalDate dataAdubacao) {
+        DataAdubacao = dataAdubacao;
     }
 
     public BlocoEntity getBloco() {
@@ -163,6 +175,12 @@ public class PlantaEntity {
     public void FimCiclo()
     {
         this.localizacao = null;
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    public void SetDataAdubacao()
+    {
+        this.DataAdubacao = LocalDate.now();
         this.timeStamp = LocalDateTime.now();
     }
 

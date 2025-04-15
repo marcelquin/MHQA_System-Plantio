@@ -25,6 +25,9 @@ public class Planta {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate DataPlantio;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate DataAdubacao;
+
     private Ciclo ciclo;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
@@ -33,7 +36,7 @@ public class Planta {
     public Planta() {
     }
 
-    public Planta(Long id, String nomeCientifico, String nomePopular, String instrucoes, List<String> notificacoes, Localizacao localizacao, Bloco bloco, LocalDate dataPlantio, Ciclo ciclo, LocalDateTime timeStamp) {
+    public Planta(Long id, String nomeCientifico, String nomePopular, String instrucoes, List<String> notificacoes, Localizacao localizacao, Bloco bloco, LocalDate dataPlantio, LocalDate dataAdubacao, Ciclo ciclo, LocalDateTime timeStamp) {
         this.id = id;
         this.nomeCientifico = nomeCientifico;
         this.nomePopular = nomePopular;
@@ -42,8 +45,17 @@ public class Planta {
         this.localizacao = localizacao;
         this.bloco = bloco;
         DataPlantio = dataPlantio;
+        DataAdubacao = dataAdubacao;
         this.ciclo = ciclo;
         this.timeStamp = timeStamp;
+    }
+
+    public LocalDate getDataAdubacao() {
+        return DataAdubacao;
+    }
+
+    public void setDataAdubacao(LocalDate dataAdubacao) {
+        DataAdubacao = dataAdubacao;
     }
 
     public Bloco getBloco() {

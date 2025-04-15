@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS planta (
     nome_popular VARCHAR(255) NOT NULL,
     instrucoes TEXT NOT NULL,
     data_plantio DATE NOT NULL,
+    data_adubacao DATE NOT NULL,
     time_stamp TIMESTAMP NOT NULL,
     localizacao_id BIGINT REFERENCES localizacao(id),
     bloco_id BIGINT REFERENCES bloco(id),

@@ -91,6 +91,7 @@ function Gerencia_AreaPlantio() {
                     <td>{data.dimensao}</td>
                     <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('relatorio'); }}>Relatório</a></td>
                     <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('editar'); }}>Editar</a></td>
+                    <td><a className='opcaoExtra' onClick={() => handleOpenModal('Adubacao')} >Adubação</a></td>
                   </tr>
                   </tbody>
           </>)})}
@@ -106,6 +107,7 @@ function Gerencia_AreaPlantio() {
                     <td>{data.dimensao}</td>
                     <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('relatorio'); }}>Relatório</a></td>
                     <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('editar'); }}>Editar</a></td>
+                    <td><a className='opcaoExtra' onClick={() => handleOpenModal('Adubacao')} >Adubação</a></td>
                   </tr>
                   </tbody>
           </>)})}

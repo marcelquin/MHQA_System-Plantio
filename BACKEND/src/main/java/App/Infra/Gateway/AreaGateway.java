@@ -21,4 +21,7 @@ public interface AreaGateway {
     public ResponseEntity<Area> EditarArea(@RequestParam Long id,
                                            @RequestParam String dimensao,
                                            @RequestParam String nomeIdentificador);
+
+    public ResponseEntity<Area> NovaAdubacao(@RequestParam Long id, @RequestParam String relatorio);
+
 }

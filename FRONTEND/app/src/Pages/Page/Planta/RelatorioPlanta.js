@@ -1,6 +1,12 @@
 import '../../CSS/BodyStyle.css'
 
 function RelatorioPlanta({data}) {
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('pt-BR');
+    };
+
     return(<>
             <div class="card">
                 <div class="card-body">
@@ -15,8 +21,8 @@ function RelatorioPlanta({data}) {
                      <p className='infoItem'>Localização:  <span className='infoTexto'>{data.localizacao.referencia}</span></p>
                    )}
                    <p className='infoItem'>Fase Atual:  <span className='infoTexto'>{data.ciclo.ciclo}</span></p>
-                   <p className='infoItem'>Data de Plantio:  <span className='infoTexto'>{data.DataPlantio}</span></p>
-                   <p className='infoItem'>Ultima Adubação :  <span className='infoTexto'></span></p>
+                   <p className='infoItem'>Data de Plantio:  <span className='infoTexto'>{formatDate(data.DataPlantio)}</span></p>
+                   <p className='infoItem'>Ultima Adubação :  <span className='infoTexto'>{formatDate(data.DataAdubacao)}</span></p>
                    <p className='infoItem'>notificações:</p>
                    {data.notificacoes !== null ? (<>
                         {data.notificacoes.map((data, i)=>{return(<>

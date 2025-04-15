@@ -1,24 +1,32 @@
 package App.Domain.Bussness;
 
+
 import App.Domain.Response.Area;
 import App.Domain.Response.Bloco;
 import App.Domain.Response.Localizacao;
+import App.Domain.Response.Planta;
 import App.Infra.Exceptions.EntityNotFoundException;
 import App.Infra.Exceptions.IllegalActionException;
 import App.Infra.Exceptions.NullargumentsException;
 import App.Infra.Gateway.AreaGateway;
+
 import App.Infra.Mapper.AreaMapper;
 import App.Infra.Mapper.BlocoMapper;
 import App.Infra.Mapper.LocalizacaoMapper;
+
+import App.Infra.Mapper.PlantaMapper;
 import App.Infra.Persistence.Entity.AreaEntity;
 import App.Infra.Persistence.Entity.BlocoEntity;
 import App.Infra.Persistence.Entity.LocalizacaoEntity;
+import App.Infra.Persistence.Entity.PlantaEntity;
 import App.Infra.Persistence.Repository.AreaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,15 +40,19 @@ public class AreaService implements AreaGateway {
     private final BlocoService blocoService;
     private final LocalizacaoMapper localizacaoMapper;
     private final BlocoMapper blocoMapper;
+    private final PlantaMapper plantaMapper;
+    private final PlantaService plantaService;
 
 
-    public AreaService(AreaRepository areaRepository, AreaMapper areaMapper, @Lazy LocalizacaoService localizacaoService, BlocoService blocoService, LocalizacaoMapper localizacaoMapper, BlocoMapper blocoMapper) {
+    public AreaService(AreaRepository areaRepository, AreaMapper areaMapper, @Lazy LocalizacaoService localizacaoService, @Lazy BlocoService blocoService, LocalizacaoMapper localizacaoMapper, BlocoMapper blocoMapper, PlantaMapper plantaMapper, PlantaService plantaService) {
         this.areaRepository = areaRepository;
         this.areaMapper = areaMapper;
         this.localizacaoService = localizacaoService;
         this.blocoService = blocoService;
         this.localizacaoMapper = localizacaoMapper;
         this.blocoMapper = blocoMapper;
+        this.plantaMapper = plantaMapper;
+        this.plantaService = plantaService;
     }
 
     @Override
@@ -59,6 +71,7 @@ public class AreaService implements AreaGateway {
         } catch (Exception e)
         {
             e.getMessage();
+
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -227,5 +240,29 @@ public class AreaService implements AreaGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
+    public ResponseEntity<Area> NovaAdubacao(Long id, String relatorio)
+    {
+        try
+        {
+            Area area = BuscarAreaPorId(id).getBody();
+            AreaEntity entity = areaMapper.toToEntity(area);
+            entity.SetAdubacao(relatorio);
+            for(PlantaEntity planta : entity.getPlantas())
+            {
+               planta.SetDataAdubacao();
+               Planta request = plantaMapper.EntityToDto(planta);
+               plantaService.SalvarAlteracao(request);
+            }
+            areaRepository.save(entity);
+            area = areaMapper.EntityToDto(entity);
+            return new ResponseEntity<>(area, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
 }

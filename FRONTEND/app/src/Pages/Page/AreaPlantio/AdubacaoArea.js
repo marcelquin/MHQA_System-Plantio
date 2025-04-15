@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom';
 
 function AdubacaoGeral({ data }) {
 
-  const UrlPut = "http://localhost:8080/areaPlantio/AdubacaoAreaPlantioGeral"
+  const UrlPut = "http://localhost:8080/Area/NovaAdubacao"
   const navigate = useNavigate();
   const [dataPost, setDataPost] = useState({
-    nomeIdentificador: data.nomeIdentificador,
-    resumoAdubacao: ''
+     relatorio: '',
+     nomeIdentificador: data.nomeIdentificador,
   })
 
   const handleChanage = (e) => {
@@ -24,13 +24,13 @@ function AdubacaoGeral({ data }) {
           'Content-Type': 'application/x-www-form-urlencoded'
         },    
         body: new URLSearchParams({
-          nomeIdentificador: dataPost.nomeIdentificador,
-          adubacao: dataPost.resumoAdubacao
+          id: data.id,
+          relatorio: dataPost.relatorio
     })})
     .then(navigate("/gerenciar")) 
     setDataPost({
-      nomeIdentificador: data.nomeIdentificador,
-      resumoAdubacao: ''
+      id: data.id,
+      relatorio: ''
     })
     }catch (err){
       console.log("erro")
@@ -47,8 +47,8 @@ function AdubacaoGeral({ data }) {
                   <td>
                     <br/>
                       <div class="input-group mb-3">
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon1">Nome Identificador</button>
-                        <input type="text" name="nomeIdentificador" value={data.nomeIdentificador}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon1">Nome</button>
+                        <input type="text" value={data.nomeIdentificador}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                       </div>
                     <br/>
                   </td>
@@ -56,7 +56,7 @@ function AdubacaoGeral({ data }) {
                 <tr>
                   <td>
                     <div class="form-floating">
-                      <textarea class="form-control" name='resumoAdubacao' onChange={handleChanage} placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                      <textarea class="form-control" name='relatorio' onChange={handleChanage} placeholder="Descreva a adubação" id="floatingTextarea"></textarea>
                       <label for="floatingTextarea">Resumo da Adubação</label>
                     </div>
                     <br/>

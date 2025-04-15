@@ -18,4 +18,7 @@ public class UseCaseAreaPut {
                                            @RequestParam String dimensao,
                                            @RequestParam String nomeIdentificador)
     {return areaGateway.EditarArea(id, dimensao, nomeIdentificador);}
+
+    public ResponseEntity<Area> NovaAdubacao(@RequestParam Long id, @RequestParam String relatorio)
+    {return areaGateway.NovaAdubacao(id, relatorio);}
 }

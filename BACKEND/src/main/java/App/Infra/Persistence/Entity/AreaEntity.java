@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,6 +153,19 @@ public class AreaEntity {
     public void AddPlanta(PlantaEntity plantaEntity)
     {
         this.plantas.add(plantaEntity);
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    public void SetAdubacao(String relatorio)
+    {
+        String mensagem = "Hoje dia "+ LocalDate.now()+" foi feita uma adubação na área com o seguinte relatoirio: "+relatorio;
+        this.notificacoes.add(mensagem);
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    public void SetNotificacao(String mensagem)
+    {
+        this.notificacoes.add(mensagem);
         this.timeStamp = LocalDateTime.now();
     }
 
