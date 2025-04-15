@@ -7,6 +7,7 @@ function RelatorioPlanta({data}) {
         return date.toLocaleDateString('pt-BR');
     };
 
+  
     return(<>
             <div class="card">
                 <div class="card-body">

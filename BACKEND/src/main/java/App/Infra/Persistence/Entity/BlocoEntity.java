@@ -88,6 +88,13 @@ public class BlocoEntity {
         this.disponivel = Boolean.TRUE;
     }
 
+    public void SetDisponivel()
+    {
+        this.disponivel = Boolean.TRUE;
+        this.timeStamp = LocalDateTime.now();
+    }
+
+
     public void SetPlanta()
     {
         this.disponivel = Boolean.FALSE;

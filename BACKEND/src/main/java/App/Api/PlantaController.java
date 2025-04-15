@@ -171,4 +171,17 @@ public class PlantaController {
     public ResponseEntity<Planta> AlterarCiclo(@RequestParam Long id,
                                                @RequestParam String ciclo)
     {return casePlantaPut.AlterarCiclo(id, ciclo);}
+
+    @Operation(summary = "Edita Registros na tabela", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @PutMapping("AlterarLocalizacao")
+    public ResponseEntity<Planta> AlterarLocalizacao(@RequestParam Long plantaId,
+                                                     @RequestParam Long localizacaoId,
+                                                     @RequestParam Long blocoId)
+    {return casePlantaPut.AlterarLocalizacao(plantaId, localizacaoId, blocoId);}
 }

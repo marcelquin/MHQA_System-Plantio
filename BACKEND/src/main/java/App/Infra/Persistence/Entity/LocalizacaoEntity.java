@@ -117,6 +117,13 @@ public class LocalizacaoEntity {
     public void SetPlanta()
     {
         this.disponivel = Boolean.FALSE;
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    public void SetDisponivel()
+    {
+        this.disponivel = Boolean.TRUE;
+        this.timeStamp = LocalDateTime.now();
     }
 
     public void EditInfo(String area, int eixoX, int eixoY)

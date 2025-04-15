@@ -418,4 +418,71 @@ public class PlantaService implements PlantaGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
+    public ResponseEntity<Planta> AlterarLocalizacao(Long plantaId, Long localizacaoId, Long blocoId)
+    {
+        try
+        {
+            if(plantaId != null)
+            {
+               if(localizacaoId > 0L && blocoId > 0L){throw new IllegalActionException();}
+               if(localizacaoId < 0L){throw new IllegalActionException();}
+               if(blocoId < 0L){throw new IllegalActionException();}
+               if(plantaId != null)
+               {
+                   Planta planta = BuscarPlantaPorId(plantaId).getBody();
+                   PlantaEntity entity = plantaMapper.DtoToEntity(planta);
+                   if(entity.getBloco() != null)
+                   {
+                       Bloco bloco = blocoService.BuscarBlocoPorId(entity.getBloco().getId()).getBody();
+                       BlocoEntity blocoEntity = blocoMapper.DtoToEntity(bloco);
+                       blocoEntity.setDisponivel(Boolean.TRUE);
+                       bloco = blocoMapper.EntityToDto(blocoEntity);
+                       blocoService.SalvarAlteracoes(bloco);
+                       //entity.setLocalizacao(null);
+                   }
+                   if(entity.getLocalizacao() != null)
+                   {
+                       if(entity.getLocalizacao() != null && blocoId > 0L){throw new IllegalActionException();}
+                       Localizacao localizacao = localizacaoService.BuscarLocalizacaoPorId(entity.getLocalizacao().getId()).getBody();
+                       LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
+                       localizacaoEntity.setDisponivel(Boolean.TRUE);
+                       localizacao = localizacaoMapper.EntityToDto(localizacaoEntity);
+                       localizacaoService.SalvarAlteracao(localizacao);
+                       //entity.setBloco(null);
+                   }
+                   if(localizacaoId > 0L)
+                   {
+                        Localizacao novaLocalizacao = localizacaoService.BuscarLocalizacaoPorId(localizacaoId).getBody();
+                        LocalizacaoEntity novaLocalizacaoEntity = localizacaoMapper.DtoToEntity(novaLocalizacao);
+                        novaLocalizacaoEntity.SetPlanta();
+                        novaLocalizacao = localizacaoMapper.EntityToDto(novaLocalizacaoEntity);
+                        localizacaoService.SalvarAlteracao(novaLocalizacao);
+                        entity.setLocalizacao(novaLocalizacaoEntity);
+                   }
+                   if(blocoId != null && blocoId > 0L)
+                   {
+
+                       Bloco bloco = blocoService.BuscarBlocoPorId(blocoId).getBody();
+                       BlocoEntity novoBlocoEntity = blocoMapper.DtoToEntity(bloco);
+                       novoBlocoEntity.SetPlanta();
+                       entity.setBloco(novoBlocoEntity);
+                       bloco = blocoMapper.EntityToDto(novoBlocoEntity);
+                       blocoService.SalvarAlteracoes(bloco);
+                   }
+                   entity.setTimeStamp(LocalDateTime.now());
+                   plantaRepository.save(entity);
+                   planta = plantaMapper.EntityToDto(entity);
+                   return new ResponseEntity<>(planta, HttpStatus.OK);
+               }
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
 }

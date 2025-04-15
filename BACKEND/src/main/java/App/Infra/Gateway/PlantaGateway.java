@@ -42,4 +42,8 @@ public interface PlantaGateway {
     public ResponseEntity<Planta> AlterarCiclo(@RequestParam Long id,
                                                @RequestParam String ciclo);
 
+    public ResponseEntity<Planta> AlterarLocalizacao(@RequestParam Long plantaId,
+                                                     @RequestParam Long localizacaoId,
+                                                     @RequestParam Long blocoId);
+
 }
