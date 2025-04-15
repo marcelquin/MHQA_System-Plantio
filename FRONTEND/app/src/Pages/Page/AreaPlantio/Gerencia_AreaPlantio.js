@@ -60,6 +60,7 @@ function Gerencia_AreaPlantio() {
       'nomeIdentificador': data.nomeIdentificador,
       'dataCadastro': data.dataCadastro,
       'localizacoes': data.localizacoes,
+      'blocos': data.blocos,
       'plantas': data.plantas,
       'dimensao': data.dimensao,
       'notificacoes': data.notificacoes

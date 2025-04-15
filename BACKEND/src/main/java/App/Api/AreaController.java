@@ -94,5 +94,18 @@ public class AreaController {
     public ResponseEntity<Area> NovaAdubacao(@RequestParam Long id, @RequestParam String relatorio)
     {return caseAreaPut.NovaAdubacao(id, relatorio);}
 
+    @Operation(summary = "Edita Registros na tabela", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @PutMapping("AlterarDimensaoLocalizacoes")
+    public ResponseEntity<Area> AlterarDimensaoLocalizacoes(@RequestParam Long id,
+                                                            @RequestParam int eixoX,
+                                                            @RequestParam int eixoY,
+                                                            @RequestParam int quantidadeBlocos)
+    {return caseAreaPut.AlterarDimensaoLocalizacoes(id, eixoX, eixoY, quantidadeBlocos);}
 
 }

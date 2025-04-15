@@ -169,4 +169,22 @@ public class LocalizacaoService implements LocalizacaoGateway {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    public ResponseEntity<Void> DeletarLocalizacaoPorId(Long id)
+    {
+        try
+        {
+            if(id != null)
+            {
+                localizacaoRepository.deleteById(id);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

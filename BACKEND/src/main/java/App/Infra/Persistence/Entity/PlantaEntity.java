@@ -175,6 +175,7 @@ public class PlantaEntity {
     public void FimCiclo()
     {
         this.localizacao = null;
+        this.bloco = null;
         this.timeStamp = LocalDateTime.now();
     }
 

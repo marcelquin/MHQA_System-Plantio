@@ -63,7 +63,7 @@ public class CicloService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Boolean> AlterarCiclo(Long id, CICLO ciclo)
+    public ResponseEntity<Ciclo> AlterarCiclo(Long id, CICLO ciclo)
     {
         try
         {
@@ -82,7 +82,8 @@ public class CicloService {
                     entity.setTimeStamp(LocalDateTime.now());
                     entity.setCiclo(ciclo);
                     cicloRepository.save(entity);
-                    return new ResponseEntity<>(Boolean.TRUE,HttpStatus.OK);
+                    Ciclo response = cicloMapper.EntityToDto(entity);
+                    return new ResponseEntity<>(response,HttpStatus.OK);
                 }
             }
             else {throw new NullargumentsException();}
@@ -90,7 +91,7 @@ public class CicloService {
         {
             e.getMessage();
         }
-        return new ResponseEntity<>(Boolean.FALSE,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Ciclo> SalvarAlteracao(Ciclo ciclo)

@@ -24,4 +24,10 @@ public interface AreaGateway {
 
     public ResponseEntity<Area> NovaAdubacao(@RequestParam Long id, @RequestParam String relatorio);
 
+    public ResponseEntity<Area> AlterarDimensaoLocalizacoes(@RequestParam Long id,
+                                                            @RequestParam int eixoX,
+                                                            @RequestParam int eixoY,
+                                                            @RequestParam int quantidadeBlocos);
+
+
 }
