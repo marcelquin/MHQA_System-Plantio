@@ -114,6 +114,26 @@ public class LocalizacaoService implements LocalizacaoGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    public ResponseEntity<Localizacao> BuscarLocalizacaoPorreferencia(String referencia)
+    {
+        try
+        {
+            if(referencia != null)
+            {
+                LocalizacaoEntity entity = localizacaoRepository.findByreferencia(referencia).orElseThrow(
+                        EntityNotFoundException::new
+                );
+                Localizacao response = localizacaoMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response,HttpStatus.OK);
+            }
+            else {throw new NullargumentsException();}
+        } catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     public ResponseEntity<Localizacao> NovaLocalizacao(String area, int eixoX, int eixoY)
     {
         try
@@ -161,7 +181,7 @@ public class LocalizacaoService implements LocalizacaoGateway {
             {
                 return new ResponseEntity<>(Boolean.TRUE,HttpStatus.OK);
             }
-            else {throw new NullargumentsException();}
+            else {return new ResponseEntity<>(Boolean.FALSE,HttpStatus.OK);}
         }
         catch (Exception e)
         {

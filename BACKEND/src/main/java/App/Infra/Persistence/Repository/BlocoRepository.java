@@ -10,4 +10,7 @@ import java.util.Optional;
 @Repository
 public interface BlocoRepository extends JpaRepository<BlocoEntity,Long > {
 
+
+    Optional<BlocoEntity> findByreferencia(String referencia);
+
 }

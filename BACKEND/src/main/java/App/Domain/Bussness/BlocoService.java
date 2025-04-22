@@ -117,6 +117,27 @@ public class BlocoService implements BlocoGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    public ResponseEntity<Bloco> BuscarBlocoPorReferencia(String referencia)
+    {
+        try
+        {
+            if(referencia != null)
+            {
+                BlocoEntity entity = blocoRepository.findByreferencia(referencia).orElseThrow(
+                        EntityNotFoundException::new
+                );
+                Bloco response = blocoMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     public ResponseEntity<Bloco> NovoBloco(String area, int referencia)
     {
         try
@@ -145,7 +166,7 @@ public class BlocoService implements BlocoGateway {
         {
             if(id != null)
             {
-
+                blocoRepository.deleteById(id);
             }
             else {throw new NullargumentsException();}
         }

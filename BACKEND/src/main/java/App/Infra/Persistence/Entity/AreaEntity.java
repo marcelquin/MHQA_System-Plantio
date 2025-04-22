@@ -169,4 +169,17 @@ public class AreaEntity {
         this.timeStamp = LocalDateTime.now();
     }
 
+    public void AddLocalizacao(LocalizacaoEntity localizacao)
+    {
+        this.localizacoes.add(localizacao);
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    public void AddBloco(BlocoEntity bloco)
+    {
+        this.blocos.add(bloco);
+        this.timeStamp = LocalDateTime.now();
+    }
+
+
 }
