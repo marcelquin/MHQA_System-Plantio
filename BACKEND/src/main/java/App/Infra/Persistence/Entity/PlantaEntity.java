@@ -1,10 +1,8 @@
 package App.Infra.Persistence.Entity;
 
-import App.Infra.Persistence.Enum.CICLO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,21 +23,12 @@ public class PlantaEntity {
 
     private String instrucoes;
 
-    private List<String> notificacoes;
-
     @OneToOne
     @JoinColumn(name = "localizacaoEntity_id", referencedColumnName = "id")
     private LocalizacaoEntity localizacao;
 
-    @OneToOne
-    @JoinColumn(name = "blocoEntity_id", referencedColumnName = "id")
-    private BlocoEntity bloco;
-
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate DataPlantio;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate DataAdubacao;
 
     @OneToOne
     @JoinColumn(name = "cicloEntity_id", referencedColumnName = "id")
@@ -51,42 +40,15 @@ public class PlantaEntity {
     public PlantaEntity() {
     }
 
-    public PlantaEntity(Long id, String nomeCientifico, String nomePopular, String instrucoes, List<String> notificacoes, LocalizacaoEntity localizacao, BlocoEntity bloco, LocalDate dataPlantio, LocalDate dataAdubacao, CicloEntity ciclo, LocalDateTime timeStamp) {
+    public PlantaEntity(Long id, String nomeCientifico, String nomePopular, String instrucoes, LocalizacaoEntity localizacao, LocalDate dataPlantio, CicloEntity ciclo, LocalDateTime timeStamp) {
         this.id = id;
         this.nomeCientifico = nomeCientifico;
         this.nomePopular = nomePopular;
         this.instrucoes = instrucoes;
-        this.notificacoes = notificacoes;
         this.localizacao = localizacao;
-        this.bloco = bloco;
         this.DataPlantio = dataPlantio;
-        this.DataAdubacao = dataAdubacao;
         this.ciclo = ciclo;
         this.timeStamp = timeStamp;
-    }
-
-    public LocalDate getDataAdubacao() {
-        return DataAdubacao;
-    }
-
-    public void setDataAdubacao(LocalDate dataAdubacao) {
-        DataAdubacao = dataAdubacao;
-    }
-
-    public BlocoEntity getBloco() {
-        return bloco;
-    }
-
-    public void setBloco(BlocoEntity bloco) {
-        this.bloco = bloco;
-    }
-
-    public LocalDate getDataPlantio() {
-        return DataPlantio;
-    }
-
-    public void setDataPlantio(LocalDate dataPlantio) {
-        DataPlantio = dataPlantio;
     }
 
     public Long getId() {
@@ -121,20 +83,20 @@ public class PlantaEntity {
         this.instrucoes = instrucoes;
     }
 
-    public List<String> getNotificacoes() {
-        return notificacoes;
-    }
-
-    public void setNotificacoes(List<String> notificacoes) {
-        this.notificacoes = notificacoes;
-    }
-
     public LocalizacaoEntity getLocalizacao() {
         return localizacao;
     }
 
     public void setLocalizacao(LocalizacaoEntity localizacao) {
         this.localizacao = localizacao;
+    }
+
+    public LocalDate getDataPlantio() {
+        return DataPlantio;
+    }
+
+    public void setDataPlantio(LocalDate dataPlantio) {
+        DataPlantio = dataPlantio;
     }
 
     public CicloEntity getCiclo() {
@@ -155,11 +117,9 @@ public class PlantaEntity {
 
     public void SetInfo(String nomePopular, String nomeCientifico, String instrucoes)
     {
-        List<String> list = new ArrayList<>();
         this.nomePopular = nomePopular;
         this.instrucoes = instrucoes;
         this.nomeCientifico = nomeCientifico;
-        this.notificacoes = list;
         this.timeStamp = LocalDateTime.now();
         this.setDataPlantio(LocalDate.now());
     }
@@ -175,14 +135,8 @@ public class PlantaEntity {
     public void FimCiclo()
     {
         this.localizacao = null;
-        this.bloco = null;
         this.timeStamp = LocalDateTime.now();
     }
 
-    public void SetDataAdubacao()
-    {
-        this.DataAdubacao = LocalDate.now();
-        this.timeStamp = LocalDateTime.now();
-    }
 
 }

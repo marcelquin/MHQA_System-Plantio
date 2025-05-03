@@ -42,10 +42,6 @@ function AlterarCiclo({ data }) {
 
     return (
       <>
-      
-          <div class="card">
-            <div class="card-body">
-              
             <form>
                 <table>
                   <tr>
@@ -108,12 +104,7 @@ function AlterarCiclo({ data }) {
                     <td><button type="submit" onClick={handleClick} class="btn btn-success">Salvar</button></td>
                   </tr>
                 </table>
-              </form>
-              
-            </div>
-          </div> 
-
-  
+            </form>
       </>
     );
   }

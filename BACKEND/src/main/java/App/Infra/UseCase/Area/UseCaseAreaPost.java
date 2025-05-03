@@ -13,11 +13,12 @@ public class UseCaseAreaPost {
         this.areaGateway = areaGateway;
     }
 
+    public ResponseEntity<Area> NovaArea(@RequestParam String nome,
+                                         @RequestParam String dimensao,
+                                         @RequestParam String gps,
+                                         @RequestParam int numeroPlantios,
+                                         @RequestParam int numeroLinhas,
+                                         @RequestParam int numeroLocalizacoes)
+    {return areaGateway.NovaArea(nome, dimensao, gps, numeroPlantios, numeroLinhas, numeroLocalizacoes);}
 
-    public ResponseEntity<Area> NovaArea(@RequestParam String dimensao,
-                                         @RequestParam String nomeIdentificador,
-                                         @RequestParam int eixoX,
-                                         @RequestParam int eixoY,
-                                         @RequestParam  int quantidadeBlocos)
-    {return areaGateway.NovaArea(dimensao, nomeIdentificador, eixoX,eixoY, quantidadeBlocos);}
 }

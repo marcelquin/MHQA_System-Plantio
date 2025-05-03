@@ -4,129 +4,131 @@ import '../../CSS/BodyStyle.css'
 
 function EditarInfo({data}){
 
-    const Url = "http://localhost:8080/Planta/EditarPlanta"
-    const UrlPut = "http://localhost:8080/Planta/AlterarLocalizacao"
-    const UrlGetList = "http://localhost:8080/Area/ListarAreas"
+    const UrlPutEdit = "http://localhost:8080/planta/EditarPlanta"
+    const UrlPutLocalizacao = "http://localhost:8080/planta/AlterarLocalizacao"
+    const UrlPutCilco = "http://localhost:8080/planta/AlterarCiclo"
+    const UrlGetList = "http://localhost:8080/localizacao/ListarLocalizacoesDisponiveis"
 
     const navigate = useNavigate();
 
     const [opcao, setopcao] = useState("info")
-    const [dadosGetAreas, setDadosGetAreas] = useState([])
-    const [areaSelecionada, setAreaSelecionada] = useState(null);
-
+    const [dadosGetLocalizacoes, setDadosGetLocalizacoes] = useState([])
     const getListaAreaAll = async () => {
         try {
           const response = await fetch(UrlGetList);
           const data = await response.json();
-          setDadosGetAreas(data);
+          setDadosGetLocalizacoes(data);
         } catch (error) {
           console.error('Erro ao buscar lista de áreas:', error);
         }
       };
 
-    const handleChangeOpcao = (e) => {
-      setopcao(e.target.value);
-    }
-
-    const [dataPut, setdataPut] = useState({
-        plantaId: data.idPlanta,
-        areaId: 0,
-        localizacaoId: 0,
-        blocoId: 0,
-    })
-
-    const [dataPost, serdataPost] = useState({
+    const [dataPutEdit, setDataPutEdit] = useState({
         plantaId: data.idPlanta,
         nomeCientifico: data.nomeCientifico,
         nomePopular: data.nomePopular,
         instrucoes: data.instrucoes,
     });
      
-    const handleChanage = (e) => {
-        serdataPost(prev => ({...prev, [e.target.name]: e.target.value}));
+    const [dataPutLocalizacao, setDataPutLocalizacao] = useState({
+        plantaId: data.idPlanta,
+        localizacaoId: 0,
+    })
+
+    const [dataPutCiclo, setdataPutCiclo] = useState({
+        localizacao: data.localizacao,
+        ciclo: '',
+        id: Number(data.idPlanta),
+      })
+
+      const handleChangeOpcao = (e) => {
+        setopcao(e.target.value);
+      }
+  
+      const handleChanagePutEdit = (e) => {
+          setDataPutEdit(prev => ({...prev, [e.target.name]: e.target.value}));
+      }
+      
+      const handleChanagePutLocalizacao = (e) => {
+          const { name, value } = e.target;
+          setDataPutLocalizacao(prev => ({...prev, [name]: value}));
+      }
+
+      const handleChanageCiclo = (e) => {
+        setdataPutCiclo(prev=>({...prev,[e.target.name]:e.target.value}));
+      }
+
+    const handleClickPutEdit=async (e)=>{
+        try{
+          fetch(UrlPutEdit, {
+            method: 'PUT',
+            headers:{
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },    
+            body: new URLSearchParams({
+              plantaId: Number(data.idPlanta),
+              nomeCientifico: dataPutEdit.nomeCientifico,
+              nomePopular: dataPutEdit.nomePopular,
+              instrucoes: dataPutEdit.instrucoes
+            })
+          })
+          .then(navigate("/gerenciar")) 
+          setDataPutEdit({
+              id: data.idPlanta,
+              nomeCientifico: data.nomeCientifico,
+              nomePopular: data.nomePopular,
+              instrucoes: data.instrucoes
+          })
+        }catch (err){
+          console.log("erro")
+        }
     }
     
-    const handleChanagePut = (e) => {
-        const { name, value } = e.target;
-        setdataPut(prev => ({...prev, [name]: value}));
-        
-        if (name === 'areaId') {
-            const area = dadosGetAreas.find(a => a.id === Number(value));
-            setAreaSelecionada(area);
-            setdataPut(prev => ({
-                ...prev,
-                localizacaoId: 0,
-                blocoId: 0
-            }));
-        } else if (name === 'localizacaoId') {
-            setdataPut(prev => ({
-                ...prev,
-                blocoId: 0
-            }));
-        } else if (name === 'blocoId') {
-            setdataPut(prev => ({
-                ...prev,
-                localizacaoId: 0
-            }));
+    const handleClickPutLocalizacao=async (e)=>{
+        try{
+          fetch(UrlPutLocalizacao, {
+            method: 'PUT',
+            headers:{
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },    
+            body: new URLSearchParams({
+                plantaId: Number(dataPutLocalizacao.plantaId),
+                localizacaoId: dataPutLocalizacao.localizacaoId,
+            })
+          })
+          .then(navigate("/gerenciar")) 
+          setDataPutLocalizacao({
+            plantaId: data.idPlanta,
+            localizacaoId: 0
+          })
+        }catch (err){
+          console.log("erro")
         }
     }
 
-    const handleClick=async (e)=>{
+    const handleClickCiclo=async (e)=>{
         try{
-          fetch(Url, {
+          fetch(UrlPutCilco, {
             method: 'PUT',
             headers:{
               'Content-Type': 'application/x-www-form-urlencoded'
             },    
             body: new URLSearchParams({
-              plantaId: Number(data.idPlanta),
-              nomeCientifico: dataPost.nomeCientifico,
-              nomePopular: dataPost.nomePopular,
-              instrucoes: dataPost.instrucoes
+              id: dataPutCiclo.id,
+              ciclo: dataPutCiclo.ciclo
             })
           })
           .then(navigate("/gerenciar")) 
-          serdataPost({
-              id: data.idPlanta,
-              nomeCientifico: data.nomeCientifico,
-              nomePopular: data.nomePopular,
-              instrucoes: data.instrucoes
+          setdataPutCiclo({
+            localizacao: data.localizacao,
+            ciclo: '',
+            id: Number(data.idPlanta),
           })
         }catch (err){
           console.log("erro")
         }
-    }
-    
-    const handleClickPut=async (e)=>{
-        try{
-          fetch(UrlPut, {
-            method: 'PUT',
-            headers:{
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },    
-            body: new URLSearchParams({
-              plantaId: Number(data.idPlanta),
-              localizacaoId: dataPut.localizacaoId,
-              blocoId: Number(dataPut.blocoId)
-            })
-          })
-          .then(navigate("/gerenciar")) 
-          setdataPut({
-              plantaId: data.idPlanta,
-              areaId: 0,
-              localizacaoId: 0,
-              blocoId: 0,
-          })
-          serdataPost({
-              id: data.idPlanta,
-              nomeCientifico: data.nomeCientifico,
-              nomePopular: data.nomePopular,
-              instrucoes: data.instrucoes
-          })
-        }catch (err){
-          console.log("erro")
-        }
-    }
+      }
+  
 
     useEffect(() => {
         getListaAreaAll();
@@ -164,6 +166,20 @@ function EditarInfo({data}){
                         Editar Localização
                         </label>
                     </div>
+                    <div className="form-check">
+                        <input 
+                        className="form-check-input" 
+                        type="radio" 
+                        name="opcao" 
+                        id="radioFloracao" 
+                        value="ciclo"
+                        checked={opcao === "ciclo"}
+                        onChange={handleChangeOpcao}
+                        />
+                        <label className="form-check-label" htmlFor="radioFloracao">
+                        Editar Ciclo
+                        </label>
+                    </div>
                 </div>
                 <br/>
                 {opcao === "info" ? (<>
@@ -174,7 +190,7 @@ function EditarInfo({data}){
                                 <td>
                                     <div class="input-group mb-3">
                                         <button class="btn btn-outline-secondary" type="button" id="button-addon1">Nome Cientifico</button>
-                                        <input type="text" name="nomeCientifico" value={dataPost.nomeCientifico} onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                                        <input type="text" name="nomeCientifico" value={dataPutEdit.nomeCientifico} onChange={handleChanagePutEdit} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                                     </div>
                                 </td>
                             </tr>
@@ -182,7 +198,7 @@ function EditarInfo({data}){
                                 <td>
                                     <div class="input-group mb-3">
                                         <button class="btn btn-outline-secondary" type="button" id="button-addon1">Nome Popular</button>
-                                        <input type="text" name="nomePopular" value={dataPost.nomePopular} onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                                        <input type="text" name="nomePopular" value={dataPutEdit.nomePopular} onChange={handleChanagePutEdit} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                                     </div>
                                 </td>
                             </tr>
@@ -190,17 +206,19 @@ function EditarInfo({data}){
                                 <td>
                                     <div class="input-group mb-3">
                                         <button class="btn btn-outline-secondary" type="button" id="button-addon1">Orientações</button>
-                                        <input type="text" name="instrucoes" value={dataPost.instrucoes} onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                                        <input type="text" name="instrucoes" value={dataPutEdit.instrucoes} onChange={handleChanagePutEdit} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td><button type="submit" onClick={handleClick} class="btn btn-success">Salvar</button></td>
+                                <td><button type="submit" onClick={handleClickPutEdit} class="btn btn-success">Salvar</button></td>
                             </tr>
                         </table>
                     </form>
                 
-                </>): (<>
+                </>): (<></>)}
+
+                {opcao === "localizacao" ? (<>
                 
                     <form>
                         <table>
@@ -208,13 +226,13 @@ function EditarInfo({data}){
                                 <td>
                                     <div class="input-group mb-3">
                                         <button class="btn btn-outline-secondary" type="button" id="button-addon1">Nome Cientifico</button>
-                                        <input type="text"  value={dataPost.nomeCientifico}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                                        <input type="text"  value={dataPutEdit.nomeCientifico}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group mb-3">
                                         <button class="btn btn-outline-secondary" type="button" id="button-addon1">Nome Popular</button>
-                                        <input type="text"  value={dataPost.nomePopular}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                                        <input type="text"  value={dataPutEdit.nomePopular}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                                     </div>
                                 </td>
                             </tr>
@@ -222,7 +240,7 @@ function EditarInfo({data}){
                                 <td>
                                     <div class="input-group mb-3">
                                         <button class="btn btn-outline-secondary" type="button" id="button-addon1">Orientações</button>
-                                        <input type="text" value={dataPost.instrucoes}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                                        <input type="text" value={dataPutEdit.instrucoes}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                                     </div>
                                 </td>
                                 <td>
@@ -231,78 +249,93 @@ function EditarInfo({data}){
                                         <input type="text" value={data.localizacao}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="input-group mb-3">
-                                        <button class="btn btn-outline-secondary" type="button" id="button-addon1">Área Atual</button>
-                                        <input type="text" value={data.areaPlantio}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
-                                    </div>
-                                </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <select 
-                                        class="form-select" 
-                                        aria-label="Default select example"
-                                        name="areaId"
-                                        value={dataPut.areaId || ''}
-                                        onChange={handleChanagePut}
-                                     >
-                                    {dadosGetAreas ? (<>
-                                        <option value="">Selecione uma área</option>
-                                            {dadosGetAreas.map((data, i)=>{return(<> 
-                                            <option key={data.id} value={data.id}>{data.nomeIdentificador}</option>
-                                            </>)})}
-                                            </>) : (<></>)}
-                                    </select>   
-                                </td>
-                                <td>
-                                    <select 
+                                <select 
                                         class="form-select" 
                                         aria-label="Default select example"
                                         name="localizacaoId"
-                                        value={dataPut.localizacaoId || ''}
-                                        onChange={handleChanagePut}
-                                    >
+                                        value={dataPutLocalizacao.localizacaoId || ''}
+                                        onChange={handleChanagePutLocalizacao}
+                                        >
                                         <option value="">Localizações disponíveis</option>
-                                        {areaSelecionada && areaSelecionada.localizacoes && 
-                                        areaSelecionada.localizacoes.map((localizacao) => (
-                                            localizacao.disponivel && (
-                                            <option key={localizacao.id} value={localizacao.id}>
-                                                {localizacao.referencia}
-                                            </option>
-                                            )
-                                        ))
-                                        }
-                                    </select>       
-                                </td>
-                                <td>
-                                    <select 
-                                        class="form-select" 
-                                        aria-label="Default select example"
-                                        name="blocoId"
-                                        value={dataPut.blocoId || ''}
-                                        onChange={handleChanagePut}
-                                    >
-                                        <option value="">Blocos disponíveis</option>
-                                        {areaSelecionada && areaSelecionada.blocos && 
-                                        areaSelecionada.blocos.map((bloco) => (
-                                            bloco.disponivel && (
-                                            <option key={bloco.id} value={bloco.id}>
-                                                {bloco.referencia}
-                                            </option>
-                                            )
-                                        ))
-                                        }
+                                        {dadosGetLocalizacoes.map((loc, i)=>{return(<>       
+                                        <option key={loc.id} value={loc.id}>{loc.referencia}</option>
+                                    </>)})}
                                     </select>
-                                </td>    
+                                </td>
                             </tr>
-                            <br/><br/><br/>
+                            <br/>
                             <tr>
-                                <td><button type="submit" onClick={handleClickPut} class="btn btn-success">Salvar</button></td>
+                                <td><button type="submit" onClick={handleClickPutLocalizacao} class="btn btn-success">Salvar</button></td>
                             </tr>
                         </table>
                     </form>
-                </>)}
+
+                </>) :(<></>)}
+
+                {opcao === "ciclo" ? (<>
+                
+                    <form>
+                        <table>
+                        <tr>
+                            <td>
+                                <div class="input-group mb-3">
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Nome Cientifico</button>
+                                <input type="text" name="nomePopular" value={data.nomeCientifico} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group mb-3">
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Nome Popular</button>
+                                <input type="text" name="nomePopular" value={data.nomePopular} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group mb-3">
+                                    <button class="btn btn-outline-secondary" type="button" id="button-addon1">Localização Atual</button>
+                                    <input type="text" value={data.localizacao}  class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                                </div>
+                                </td>
+                            <td>
+                                <div class="input-group mb-3">
+                                    <button class="btn btn-outline-secondary" type="button" id="button-addon1">Ciclo Atual</button>
+                                    <input type="text" value={data.ciclo} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                                </div>
+                            </td> 
+                        </tr>
+                        <tr>
+                            <td>
+                            <select 
+                                class="form-select" 
+                                aria-label="Default select example"
+                                name="ciclo"
+                                value={dataPutCiclo.ciclo}
+                                onChange={handleChanageCiclo}
+                            >
+                                <option value="">Selecione a opção desejada</option>
+                                <option value="GERMINACAO">Germinação</option>
+                                <option value="MUDA">Muda</option>
+                                <option value="CRESCIMENTO">Crescimento</option>
+                                <option value="FLORACAO">Floração</option>
+                                <option value="FRUTIFICACAO">Frutificação</option>
+                                <option value="MATURACAO">Maturação</option>
+                                <option value="FIM">Fim de Ciclo</option>
+                            </select>
+                            <br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><button type="submit" onClick={handleClickCiclo} class="btn btn-success">Salvar</button></td>
+                        </tr>
+                        </table>
+                    </form>
+                
+                </>) : (<></>)}
+
             </div>
         </div>
     </>)

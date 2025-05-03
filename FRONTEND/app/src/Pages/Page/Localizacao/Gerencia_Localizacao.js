@@ -1,9 +1,7 @@
 import '../../CSS/BodyStyle.css'
 import React, { useState, useEffect } from 'react';
 import GerenciarLocalizacaoDisponiveis from './GerenciarLocalizacaoDisponiveis';
-import GerenciarLocalizacaoUltilizados from './GerenciarLocalizacaoUltilizados';
 import GerenciarLocalizacaoTodos from './GerenciarLocalizacaoTodos'
-
 
 function Gerencia_Localizacao() {
   const [showModal, setShowModal] = useState(false);
@@ -56,19 +54,6 @@ function Gerencia_Localizacao() {
             className="form-check-input" 
             type="checkbox" 
             id="flexCheckDefault"
-            value="indisponivel"
-            checked={checkboxDisponivel === 'indisponivel'}
-            onChange={handleChangeDisponivel}
-          />
-          <label className="form-check-label" htmlFor="flexCheckDefault">
-            Utilizado
-          </label>
-        </div>
-        <div className="form-check">
-          <input 
-            className="form-check-input" 
-            type="checkbox" 
-            id="flexCheckDefault"
             checked={checkboxDisponivel === 'disponivel'}
             value="disponivel"
             onChange={handleChangeDisponivel}
@@ -80,7 +65,6 @@ function Gerencia_Localizacao() {
         <br/>
         {checkboxDisponivel === "Todos" ?(<><GerenciarLocalizacaoTodos/></>) : (<></>)}
         {checkboxDisponivel === "disponivel" ?(<><GerenciarLocalizacaoDisponiveis/></>) : (<></>)}
-        {checkboxDisponivel === "indisponivel" ?(<><GerenciarLocalizacaoUltilizados/></>) : (<></>)}
     </>
   );
 }

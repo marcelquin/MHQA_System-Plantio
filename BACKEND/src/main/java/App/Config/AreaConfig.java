@@ -11,14 +11,14 @@ import org.springframework.context.annotation.Configuration;
 public class AreaConfig {
 
     @Bean
-    UseCaseAreaGet useCaseAreaGet(AreaGateway areaGateway)
-    {return new UseCaseAreaGet(areaGateway);}
-
-    @Bean
     UseCaseAreaPost useCaseAreaPost(AreaGateway areaGateway)
     {return new UseCaseAreaPost(areaGateway);}
 
     @Bean
     UseCaseAreaPut useCaseAreaPut(AreaGateway areaGateway)
     {return new UseCaseAreaPut(areaGateway);}
+
+    @Bean
+    UseCaseAreaGet useCaseAreaGet(AreaGateway areaGateway)
+    {return new UseCaseAreaGet(areaGateway);}
 }

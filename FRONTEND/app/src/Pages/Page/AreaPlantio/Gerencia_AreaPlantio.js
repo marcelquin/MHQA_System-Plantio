@@ -1,14 +1,13 @@
 import '../../CSS/BodyStyle.css'
 import React, { useState, useEffect } from 'react';
-import AdubacaoAreaPlantio from '../AreaPlantio/AdubacaoArea'
 import RelatorioArea from './RelatorioArea'
 import Edit_AreaPlantio from './Edit_AreaPlantio'
+import AdubacaoPlantio from './AdubacaoPlantio';
 import { useNavigate } from 'react-router-dom';
 
 function Gerencia_AreaPlantio() {
 
   //<td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('editar'); }}>Editar</a></td>
-  //<td><a className='opcaoExtra' onClick={() => handleOpenModal('Adubacao')} >Adubação</a></td>
 
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
@@ -18,7 +17,7 @@ function Gerencia_AreaPlantio() {
       setShowModal(true);
   };
 
-  const UrlGetList = "http://localhost:8080/Area/ListarAreas"
+  const UrlGetList = "http://localhost:8080/area/ListarAreas"
   const [listAll, setlistAll] = useState([]);
   const [pesquisaInput, setPesquisaInput] = useState('')
 
@@ -37,33 +36,33 @@ function Gerencia_AreaPlantio() {
   }
 
   const response = pesquisaInput.length > 0 ?
-  listAll.filter(dados => dados.nomeIdentificador.includes(pesquisaInput)) :
+  listAll.filter(dados => dados.nome.includes(pesquisaInput)) :
   []
 
   useEffect(() => {
     getListaAll();
   }, []);
-
+  //<td><a className='opcaoExtra' onClick={() => handleOpenModal('Adubacao')} >Adubação</a></td>
   const navigate = useNavigate();
 
   const [dataRequest, setDataRequest] = useState({
       'id': '',
-      'nomeIdentificador': '',
+      'nome': '',
       'dataCadastro': '',
       'dimensao': '',
-      'notificacoes': ''
+      'gps': '',
+      'notificacoes': '',
+      'plantios': '',
   })
 
   const handleRowSelect = (data) => {
     setDataRequest({
       'id': data.id,
-      'nomeIdentificador': data.nomeIdentificador,
+      'nome': data.nome,
       'dataCadastro': data.dataCadastro,
-      'localizacoes': data.localizacoes,
-      'blocos': data.blocos,
-      'plantas': data.plantas,
+      'plantios': data.plantios,
       'dimensao': data.dimensao,
-      'notificacoes': data.notificacoes
+      'gps': data.gps
     });
   }
 
@@ -76,7 +75,7 @@ function Gerencia_AreaPlantio() {
        <table class="table">
                       <thead>
                         <tr>
-                          <th scope="col">Nomee Identificador</th>
+                          <th scope="col">Nome </th>
                           <th scope="col">Data de Cadastro</th>
                           <th scope="col">Dimensão</th>
                         </tr>
@@ -87,12 +86,12 @@ function Gerencia_AreaPlantio() {
                   
                   <tbody>
                   <tr>
-                    <th scope="row">{data.nomeIdentificador}</th>
+                    <th scope="row">{data.nome}</th>
                     <td>{data.dataCadastro}</td>
                     <td>{data.dimensao}</td>
+                    <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('adubacao'); }}>Adicionar Adubação</a></td>
                     <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('relatorio'); }}>Relatório</a></td>
-                    <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('editar'); }}>Editar</a></td>
-                    <td><a className='opcaoExtra' onClick={() => handleOpenModal('Adubacao')} >Adubação</a></td>
+                    <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('editar'); }}>Editar Informações</a></td>
                   </tr>
                   </tbody>
           </>)})}
@@ -103,12 +102,12 @@ function Gerencia_AreaPlantio() {
                   
                   <tbody>
                   <tr>
-                    <th scope="row">{data.nomeIdentificador}</th>
+                    <th scope="row">{data.nome}</th>
                     <td>{data.dataCadastro}</td>
                     <td>{data.dimensao}</td>
+                    <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('adubacao'); }}>Adicionar Adubação</a></td>
                     <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('relatorio'); }}>Relatório</a></td>
-                    <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('editar'); }}>Editar</a></td>
-                    <td><a className='opcaoExtra' onClick={() => handleOpenModal('Adubacao')} >Adubação</a></td>
+                    <td><a className='opcaoExtra' onClick={() => { handleRowSelect(data); handleOpenModal('editar'); }}>Editar Informações</a></td>
                   </tr>
                   </tbody>
           </>)})}
@@ -127,7 +126,7 @@ function Gerencia_AreaPlantio() {
                             </button>
                         </div>
                         <div className="modal-body">
-                            {modalContent === 'Adubacao' && <AdubacaoAreaPlantio data={dataRequest}/>}
+                            {modalContent === 'adubacao' && <AdubacaoPlantio data={dataRequest}/>}
                             {modalContent === 'relatorio' && <RelatorioArea data={dataRequest}/>}
                             {modalContent === 'editar' && <Edit_AreaPlantio data={dataRequest}/>}
                         </div>

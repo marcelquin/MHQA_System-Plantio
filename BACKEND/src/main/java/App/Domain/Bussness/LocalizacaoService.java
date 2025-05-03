@@ -1,7 +1,6 @@
 package App.Domain.Bussness;
 
 import App.Domain.Response.Localizacao;
-import App.Domain.Response.Planta;
 import App.Infra.Exceptions.EntityNotFoundException;
 import App.Infra.Exceptions.NullargumentsException;
 import App.Infra.Gateway.LocalizacaoGateway;
@@ -12,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +71,7 @@ public class LocalizacaoService implements LocalizacaoGateway {
     }
 
     @Override
-    public ResponseEntity<List<Localizacao>> ListarLocalizacoesIndisponiveis()
+    public ResponseEntity<List<Localizacao>> ListarLocalizacoesNaoDisponiveis()
     {
         try
         {
@@ -107,14 +107,15 @@ public class LocalizacaoService implements LocalizacaoGateway {
                 return new ResponseEntity<>(response,HttpStatus.OK);
             }
             else {throw new NullargumentsException();}
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
-           e.getMessage();
+            e.getMessage();
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Localizacao> BuscarLocalizacaoPorreferencia(String referencia)
+    public ResponseEntity<Localizacao> BuscarLocalizacaoPorReferencia(String referencia)
     {
         try
         {
@@ -127,61 +128,6 @@ public class LocalizacaoService implements LocalizacaoGateway {
                 return new ResponseEntity<>(response,HttpStatus.OK);
             }
             else {throw new NullargumentsException();}
-        } catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    public ResponseEntity<Localizacao> NovaLocalizacao(String area, int eixoX, int eixoY)
-    {
-        try
-        {
-            if(eixoX < 0){throw new NullargumentsException();}
-            if(eixoY < 0){throw new NullargumentsException();}
-            if(area != null && eixoX > 0 && eixoY > 0)
-            {
-                LocalizacaoEntity entity = new LocalizacaoEntity();
-                entity.SetInfo(area, eixoX, eixoY);
-                localizacaoRepository.save(entity);
-                Localizacao response = localizacaoMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response, HttpStatus.CREATED);
-            }
-            else {throw new NullargumentsException();}
-        } catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    public void SalvarAlteracao(Localizacao localizacao)
-    {
-        try
-        {
-            if(localizacao != null)
-            {
-                LocalizacaoEntity entity = localizacaoMapper.DtoToEntity(localizacao);
-                localizacaoRepository.save(entity);
-            }
-            else {throw new NullargumentsException();}
-        } catch (Exception e)
-        {
-            e.getMessage();
-        }
-
-    }
-
-    public ResponseEntity<Boolean> verificaReferencia(String referencia)
-    {
-        try
-        {
-            if(localizacaoRepository.existsByreferencia(referencia))
-            {
-                return new ResponseEntity<>(Boolean.TRUE,HttpStatus.OK);
-            }
-            else {return new ResponseEntity<>(Boolean.FALSE,HttpStatus.OK);}
         }
         catch (Exception e)
         {
@@ -190,13 +136,58 @@ public class LocalizacaoService implements LocalizacaoGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Void> DeletarLocalizacaoPorId(Long id)
+
+    public ResponseEntity<Localizacao> NovaLocalizacao(String area, int numeroLinha, int numeroPlantio, int referencia)
     {
         try
         {
-            if(id != null)
+            if(area != null && numeroLinha > 0 && referencia > 0 && numeroPlantio >0)
             {
-                localizacaoRepository.deleteById(id);
+                LocalizacaoEntity entity = new LocalizacaoEntity();
+                entity.SetInfoInicial(area, numeroPlantio, numeroLinha,referencia);
+                localizacaoRepository.save(entity);
+                Localizacao response = localizacaoMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response,HttpStatus.CREATED);
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<Localizacao> EditarLocalizacao(Long id, String area, int numeroLinha)
+    {
+        try
+        {
+            if(area != null && numeroLinha > 0 && id != null)
+            {
+                Localizacao localizacao = BuscarLocalizacaoPorId(id).getBody();
+                localizacao.setNomeArea(area);
+                localizacao.setTimeStamp(LocalDateTime.now());
+                LocalizacaoEntity entity = localizacaoMapper.DtoToEntity(localizacao);
+                localizacaoRepository.save(entity);
+                return new ResponseEntity<>(localizacao, HttpStatus.OK);
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<Void> SalvarAlteracao(Localizacao localizacao)
+    {
+        try
+        {
+            if(localizacao != null)
+            {
+                LocalizacaoEntity entity = localizacaoMapper.DtoToEntity(localizacao);
+                localizacaoRepository.save(entity);
                 return new ResponseEntity<>(HttpStatus.OK);
             }
             else {throw new NullargumentsException();}
@@ -207,4 +198,22 @@ public class LocalizacaoService implements LocalizacaoGateway {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    public ResponseEntity<Localizacao> DeletarLocalizacaoPorId(Long id)
+    {
+        try
+        {
+            if(id != null)
+            {
+                localizacaoRepository.deleteById(id);
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
 }

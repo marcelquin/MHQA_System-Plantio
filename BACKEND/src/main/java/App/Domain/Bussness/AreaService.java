@@ -1,24 +1,22 @@
 package App.Domain.Bussness;
 
-
 import App.Domain.Response.*;
 import App.Infra.Exceptions.EntityNotFoundException;
-import App.Infra.Exceptions.IllegalActionException;
 import App.Infra.Exceptions.NullargumentsException;
 import App.Infra.Gateway.AreaGateway;
-
-import App.Infra.Mapper.*;
-
-import App.Infra.Persistence.Entity.*;
-import App.Infra.Persistence.Enum.CICLO;
+import App.Infra.Mapper.AreaMapper;
+import App.Infra.Mapper.LinhaMapper;
+import App.Infra.Mapper.LocalizacaoMapper;
+import App.Infra.Mapper.PlantioMapper;
+import App.Infra.Persistence.Entity.AreaEntity;
+import App.Infra.Persistence.Entity.LinhaEntity;
+import App.Infra.Persistence.Entity.LocalizacaoEntity;
+import App.Infra.Persistence.Entity.PlantioEntity;
 import App.Infra.Persistence.Repository.AreaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,27 +26,22 @@ public class AreaService implements AreaGateway {
 
     private final AreaRepository areaRepository;
     private final AreaMapper areaMapper;
+    private final LinhaService linhaService;
+    private final LinhaMapper linhaMapper;
+    private final PlantioService plantioService;
+    private final PlantioMapper plantioMapper;
     private final LocalizacaoService localizacaoService;
-    private final BlocoService blocoService;
     private final LocalizacaoMapper localizacaoMapper;
-    private final BlocoMapper blocoMapper;
-    private final PlantaMapper plantaMapper;
-    private final PlantaService plantaService;
-    private final CicloService cicloService;
-    private final CicloMapper cicloMapper;
 
-
-    public AreaService(AreaRepository areaRepository, AreaMapper areaMapper, @Lazy LocalizacaoService localizacaoService, @Lazy BlocoService blocoService, LocalizacaoMapper localizacaoMapper, BlocoMapper blocoMapper, PlantaMapper plantaMapper, PlantaService plantaService, @Lazy CicloService cicloService, CicloMapper cicloMapper) {
+    public AreaService(AreaRepository areaRepository, AreaMapper areaMapper, LinhaService linhaService, LinhaMapper linhaMapper, PlantioService plantioService, PlantioMapper plantioMapper, LocalizacaoService localizacaoService, LocalizacaoMapper localizacaoMapper) {
         this.areaRepository = areaRepository;
         this.areaMapper = areaMapper;
+        this.linhaService = linhaService;
+        this.linhaMapper = linhaMapper;
+        this.plantioService = plantioService;
+        this.plantioMapper = plantioMapper;
         this.localizacaoService = localizacaoService;
-        this.blocoService = blocoService;
         this.localizacaoMapper = localizacaoMapper;
-        this.blocoMapper = blocoMapper;
-        this.plantaMapper = plantaMapper;
-        this.plantaService = plantaService;
-        this.cicloService = cicloService;
-        this.cicloMapper = cicloMapper;
     }
 
     @Override
@@ -56,18 +49,57 @@ public class AreaService implements AreaGateway {
     {
         try
         {
-            List<AreaEntity> entityList = areaRepository.findAll();
+            List<AreaEntity> list = areaRepository.findAll();
             List<Area> response = new ArrayList<>();
-            for(AreaEntity entity : entityList)
+            for(AreaEntity entity : list)
             {
-                Area dto = areaMapper.EntityToDto(entity);
+                Area area = areaMapper.EntityToDto(entity);
+                response.add(area);
+            }
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<List<AreaPesquisaResponse>> ListarAreasPesquisa()
+    {
+        try
+        {
+            List<AreaEntity> list = areaRepository.findAll();
+            List<AreaPesquisaResponse> response = new ArrayList<>();
+            List<Plantio> plantios = new ArrayList<>();
+            List<Linha> linhas = new ArrayList<>();
+            List<Localizacao> localizacoes = new ArrayList<>();
+            for(AreaEntity entity : list)
+            {
+                AreaPesquisaResponse dto = new AreaPesquisaResponse();
+                dto.setId(entity.getId());
+                dto.setGps(entity.getGps());
+                dto.setDisponivel(entity.getDisponivel());
+                dto.setNome(entity.getNome());
+                dto.setDataCadastro(entity.getDataCadastro());
+                dto.setDimensao(entity.getDimensao());
+                plantios = plantioMapper.EntityListToDto(entity.getPlantios());
+                for(Plantio plantioInterno : plantios)
+                {
+                    linhas.addAll(plantioInterno.getLinhas());
+                }
+                for(Linha linhaInterna : linhas)
+                {
+                    localizacoes.addAll(linhaInterna.getLocalizacoes());
+                }
                 response.add(dto);
             }
             return new ResponseEntity<>(response,HttpStatus.OK);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.getMessage();
-
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -83,176 +115,9 @@ public class AreaService implements AreaGateway {
                         EntityNotFoundException::new
                 );
                 Area response = areaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
-        } catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    public ResponseEntity<Area> BuscarAreaPorNome(String nome)
-    {
-        try
-        {
-            if(nome != null)
-            {
-                AreaEntity entity = areaRepository.findBynomeIdentificador(nome).orElseThrow(
-                        EntityNotFoundException::new
-                );
-                Area response = areaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
-        } catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Area> NovaArea(String dimensao,String nomeIdentificador, int eixoX, int eixoY, int quantidadeBlocos)
-    {
-        try
-        {
-            if(eixoX < 0){throw new IllegalActionException();}
-            if(eixoY < 0){throw new IllegalActionException();}
-            if(quantidadeBlocos < 0){throw new IllegalActionException();}
-            if (dimensao != null &&
-                nomeIdentificador != null)
-            {
-                List<Localizacao> localizacaoList = new ArrayList<>();
-                List<Bloco> blocoList = new ArrayList<>();
-                if(eixoX > 0 && eixoY >0)
-                {
-                    int ROWS = eixoY;
-                    int COLS = eixoX;
-                    int[][] matrix = new int[ROWS][COLS];
-                    int currentValue = 1;
-                    for (int i = 0; i < ROWS; i++)
-                    {
-                        for (int j = 0; j < COLS; j++)
-                        {
-                            if (matrix[i][j] == 0)
-                            {
-                                matrix[i][j] = currentValue++;
-                                int eixoXAtual = j + 1;
-                                int eixoYAtual = i + 1;
-                                //"C "+eixoX+" x L "+eixoY
-                                Localizacao localizacao = localizacaoService.NovaLocalizacao(nomeIdentificador,eixoXAtual,eixoYAtual).getBody();
-                                localizacaoList.add(localizacao);
-                            }
-                        }
-                    }
-                }
-                if(quantidadeBlocos > 0)
-                {
-                    int referencia = 1;
-                    for(int i= 0; i < quantidadeBlocos; i++)
-                    {
-                        Bloco bloco = blocoService.NovoBloco(nomeIdentificador,referencia).getBody();
-                        blocoList.add(bloco);
-                        referencia ++;
-                    }
-                }
-                AreaEntity entity = new AreaEntity();
-                entity.SetInfo(dimensao,nomeIdentificador);
-                for(Localizacao localizacao : localizacaoList)
-                {
-                    LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
-                    entity.getLocalizacoes().add(localizacaoEntity);
-                }
-                for(Bloco bloco : blocoList)
-                {
-                    BlocoEntity blocoEntity = blocoMapper.DtoToEntity(bloco);
-                    entity.getBlocos().add(blocoEntity);
-                }
-                areaRepository.save(entity);
-                Area response = areaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.CREATED);
-            }
-            else {throw new NullargumentsException(); }
-        } catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    public ResponseEntity<Void> SalvarAlteracao(Area area)
-    {
-        try
-        {
-            if(area != null)
-            {
-                AreaEntity entity = areaMapper.toToEntity(area);
-                areaRepository.save(entity);
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
-        } catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-
-    public ResponseEntity<Area> EditarArea(Long id, String dimensao, String nomeIdentificador)
-    {
-        try
-        {
-            if (dimensao != null &&
-                id != null)
-            {
-                Area area = BuscarAreaPorId(id).getBody();
-                AreaEntity entity = areaMapper.toToEntity(area);
-                entity.EditInfo(dimensao, nomeIdentificador);
-                areaRepository.save(entity);
-                Area response = areaMapper.EntityToDto(entity);
-                for(Localizacao localizacao : area.getLocalizacoes())
-                {
-                    localizacao.setArea(nomeIdentificador);
-                    localizacao.setTimeStamp(LocalDateTime.now());
-                    localizacaoService.SalvarAlteracao(localizacao);
-                }
-                for(Bloco bloco : area.getBlocos())
-                {
-                    bloco.setArea(nomeIdentificador);
-                    bloco.setTimeStamp(LocalDateTime.now());
-                    blocoService.SalvarAlteracoes(bloco);
-                }
-
                 return new ResponseEntity<>(response,HttpStatus.OK);
             }
-            else {throw new NullargumentsException(); }
-        } catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    @Override
-    public ResponseEntity<Area> NovaAdubacao(Long id, String relatorio)
-    {
-        try
-        {
-            Area area = BuscarAreaPorId(id).getBody();
-            AreaEntity entity = areaMapper.toToEntity(area);
-            entity.SetAdubacao(relatorio);
-            for(PlantaEntity planta : entity.getPlantas())
-            {
-               planta.SetDataAdubacao();
-               Planta request = plantaMapper.EntityToDto(planta);
-               plantaService.SalvarAlteracao(request);
-            }
-            areaRepository.save(entity);
-            area = areaMapper.EntityToDto(entity);
-            return new ResponseEntity<>(area, HttpStatus.OK);
+            else {throw new NullargumentsException();}
         }
         catch (Exception e)
         {
@@ -262,180 +127,174 @@ public class AreaService implements AreaGateway {
     }
 
     @Override
-    public ResponseEntity<Area> AlterarDimensaoLocalizacoes(Long id, int eixoX, int eixoY, int quantidadeBlocos)
+    public ResponseEntity<Area> BuscarAreaPorNome(String nome)
     {
         try
         {
-            if(id != null)
+            if(nome != null)
+            {
+                AreaEntity entity = areaRepository.findBynome(nome).orElseThrow(
+                        EntityNotFoundException::new
+                );
+                Area response = areaMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response,HttpStatus.OK);
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<Area> NovaArea(String nome,
+                                         String dimensao,
+                                         String gps,
+                                         int numeroPlantios,
+                                         int numeroLinhas,
+                                         int numeroLocalizacoes)
+    {
+        try
+        {
+            if(nome != null && dimensao != null && gps != null && numeroLinhas > 0 && numeroPlantios > 0)
+            {
+                AreaEntity entity = new AreaEntity();
+                entity.SetInfoInicial(nome,dimensao,gps);
+                for(int i = 1; i<=numeroPlantios; i++)
+                {
+                    Plantio plantio = plantioService.NovoPlantio(nome,numeroLinhas,i,numeroLocalizacoes).getBody();
+                    PlantioEntity plantioEntity = plantioMapper.DtoToEntity(plantio);
+                    entity.getPlantios().add(plantioEntity);
+                }
+                areaRepository.save(entity);
+                Area response = areaMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response,HttpStatus.CREATED);
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<Area> EditarInformacoesArea(Long id,
+                                                      String nome,
+                                                      String dimensao,
+                                                      String gps)
+    {
+        try
+        {
+            if(id != null && nome != null && dimensao != null && gps != null)
             {
                 Area area = BuscarAreaPorId(id).getBody();
-                AreaEntity entity = areaMapper.toToEntity(area);
-                List<String> localizacoesAtuais = new ArrayList<>();
-                List<String> blocosAtuais = new ArrayList<>();
-                List<String> localizacoesAtuaisEntity = new ArrayList<>();
-                List<Localizacao> novasLocalizacoes = new ArrayList<>();
-                List<Bloco> blocoList = new ArrayList<>();
-                int localizacaoRequest = eixoX * eixoY;
-                for(Localizacao localizacaoInterno : area.getLocalizacoes())
-                {
-                    localizacoesAtuais.add(localizacaoInterno.getReferencia());
-                }
-                for(Bloco blocoInterno : area.getBlocos())
-                {
-                    blocosAtuais.add(blocoInterno.getReferencia());
-                }
-                for(LocalizacaoEntity loc : entity.getLocalizacoes())
-                {
-                    localizacoesAtuaisEntity.add(loc.getReferencia());
-                }
- /*               if(area.getLocalizacoes().size() < localizacaoRequest)
-                {
-                    System.out.println("adicionar");
-                    int ROWS = eixoY;
-                    int COLS = eixoX;
-                    int[][] matrix = new int[ROWS][COLS];
-                    int currentValue = 1;
-                    for (int i = 0; i < ROWS; i++)
-                    {
-                        for (int j = 0; j < COLS; j++)
-                        {
-                            if (matrix[i][j] == 0)
-                            {
-                                matrix[i][j] = currentValue++;
-                                int eixoXAtual = j + 1;
-                                int eixoYAtual = i + 1;
-                                String cod = "C "+eixoXAtual+" x L "+eixoYAtual;
-                                //novasLocalizacoes.add(cod);
-                                if(localizacoesAtuais.contains(cod))
-                                {
-
-                                }
-                                else
-                                {
-                                    System.out.println("novo "+ cod);
-                                    Localizacao localizacao = localizacaoService.NovaLocalizacao(area.getNomeIdentificador(),eixoXAtual,eixoYAtual).getBody();
-                                    novasLocalizacoes.add(localizacao);
-                                }
-                            }
-                        }
-                    }
-                    area.getLocalizacoes().addAll(novasLocalizacoes);
-                }
-                else
-                {
-                    System.out.println("remover");
-                    List<String> cods = new ArrayList<>();
-                    List<Localizacao> novaLista = new ArrayList<>();
-                    int ROWS = eixoY;
-                    int COLS = eixoX;
-                    int[][] matrix = new int[ROWS][COLS];
-                    int currentValue = 1;
-                    for (int i = 0; i < ROWS; i++) {
-                        for (int j = 0; j < COLS; j++) {
-                            if (matrix[i][j] == 0) {
-                                matrix[i][j] = currentValue++;
-                                int eixoXAtual = j + 1;
-                                int eixoYAtual = i + 1;
-                                String cod = "C " + eixoXAtual + " x L " + eixoYAtual;
-                                cods.add(cod);
-                            }
-                        }
-                    }
-                    System.out.println(cods);
-                    System.out.println(localizacoesAtuais);
-                    System.out.println("antes: "+area.getLocalizacoes().size());
-                    for(String cod : cods)
-                    {
-                        Localizacao localizacaoInterna = localizacaoService.BuscarLocalizacaoPorreferencia(cod).getBody();
-                        novaLista.add(localizacaoInterna);
-                    }
-                    area.setLocalizacoes(novaLista);
-                    entity = areaMapper.toToEntity(area);
-                    areaRepository.save(entity);
-                    for(String cod : localizacoesAtuaisEntity)
-                    {
-                        if(!cods.contains(cod))
-                        {
-                            Localizacao localizacao = localizacaoService.BuscarLocalizacaoPorreferencia(cod).getBody();
-                            for(Planta planta : area.getPlantas())
-                            {
-                                if(planta.getLocalizacao().getId().equals(localizacao.getId()))
-                                {
-                                    Ciclo ciclo = cicloService.BuscarCicloPorId(planta.getCiclo().getId()).getBody();
-                                    CicloEntity cicloEntity = cicloMapper.DtoToEntity(ciclo);
-                                    cicloEntity.FimCiclo();
-                                    ciclo = cicloMapper.EntityToDto(cicloEntity);
-                                    cicloService.SalvarAlteracao(ciclo);
-                                    PlantaEntity plantaEntity = plantaMapper.DtoToEntity(planta);
-                                    plantaEntity.FimCiclo();
-                                    planta = plantaMapper.EntityToDto(plantaEntity);
-                                    plantaService.SalvarAlteracao(planta);
-                                }
-                            }
-                            localizacaoService.DeletarLocalizacaoPorId(localizacao.getId());
-                        }
-                    }
-                    System.out.println("depois: "+area.getLocalizacoes().size());
-                }*/
-                if(area.getBlocos().size() < quantidadeBlocos)
-                {
-                    int referencia = area.getBlocos().size()+1;
-                    System.out.println(referencia);
-                    for(int i = referencia; i <= quantidadeBlocos; i++)
-                    {
-                        Bloco bloco = blocoService.NovoBloco(area.getNomeIdentificador(),i).getBody();
-                        blocoList.add(bloco);
-                    }
-                    area.getBlocos().addAll(blocoList);
-                    System.out.println("lista: "+area.getBlocos().size());
-                }
-                else
-                {
-                    System.out.println("salvo mas não apagou");
-                    List<String> novosBlocos = new ArrayList<>();
-                    List<Bloco> novosBlocosEntity = new ArrayList<>();
-                    for(int i = 1; i <= quantidadeBlocos; i++)
-                    {
-                        String ref = area.getNomeIdentificador()+"_"+i;
-                        novosBlocos.add(ref);
-                    }
-                    for(String cod : novosBlocos)
-                    {
-                        Bloco bloco = blocoService.BuscarBlocoPorReferencia(cod).getBody();
-                        novosBlocosEntity.add(bloco);
-                    }
-                    area.setBlocos(novosBlocosEntity);
-                    entity = areaMapper.toToEntity(area);
-                    areaRepository.saveAndFlush(entity);
-                    for(String codBloco : blocosAtuais)
-                    {
-                        if(!novosBlocos.contains(codBloco))
-                        {
-                            Bloco bloco = blocoService.BuscarBlocoPorReferencia(codBloco).getBody();
-                            for(Planta planta : area.getPlantas())
-                            {
-                                if(planta.getBloco().getId().equals(bloco.getId()))
-                                {
-                                    Ciclo ciclo = cicloService.BuscarCicloPorId(planta.getCiclo().getId()).getBody();
-                                    CicloEntity cicloEntity = cicloMapper.DtoToEntity(ciclo);
-                                    cicloEntity.FimCiclo();
-                                    ciclo = cicloMapper.EntityToDto(cicloEntity);
-                                    cicloService.SalvarAlteracao(ciclo);
-                                    PlantaEntity plantaEntity = plantaMapper.DtoToEntity(planta);
-                                    plantaEntity.FimCiclo();
-                                    planta = plantaMapper.EntityToDto(plantaEntity);
-                                    plantaService.SalvarAlteracao(planta);
-                                }
-                            }
-                            blocoService.DeleteBlocoPorId(bloco.getId());
-                        }
-                    }
-                }
-                //entity = areaMapper.toToEntity(area);
-                //areaRepository.save(entity);
+                AreaEntity entity = areaMapper.DtoToEntity(area);
+                entity.EditInfol(nome,dimensao,gps);
+                areaRepository.save(entity);
+                area = areaMapper.EntityToDto(entity);
                 return new ResponseEntity<>(area, HttpStatus.OK);
             }
-                
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<Area> AmpliarPlantio(Long id,int numeroPlantio, int numeroLinhas, int numeroLocalizacoes)
+    {
+        try
+        {
+            if(id != null && numeroPlantio > 0 && numeroLinhas >0)
+            {
+                Area area = BuscarAreaPorId(id).getBody();
+                for(Plantio plantio : area.getPlantios())
+                {
+                    if(plantio.getLinhas().size() < numeroLinhas)
+                    {
+                        int inicio = plantio.getLinhas().size() + 1;
+                        int fim = numeroLinhas;
+                        for( int i = inicio ; i<=fim;i++)
+                        {
+                            Linha linha = linhaService.NovaLinha(area.getNome(),i,numeroPlantio,numeroLocalizacoes).getBody();
+                            plantio.getLinhas().add(linha);
+                        }
+                    }
+                    for(Linha linha : plantio.getLinhas())
+                    {
+                        if(linha.getLocalizacoes().size() < numeroLocalizacoes)
+                        {
+                            int inicio = linha.getLocalizacoes().size()+1;
+                            int fim = numeroLocalizacoes;
+                            for(int i = inicio; i<=fim;i++)
+                            {
+                                Localizacao localizacao = localizacaoService.NovaLocalizacao(area.getNome(),numeroLinhas,numeroPlantio,i).getBody();
+                                linha.getLocalizacoes().add(localizacao);
+                            }
+                            linhaService.SalvarAlteracao(linha);
+                        }
+                    }
+                }
+                if(area.getPlantios().size() < numeroPlantio)
+                {
+                    List<Plantio> plantioEntities = new ArrayList<>();
+                    int j = area.getPlantios().size() + 1;
+                    for(int i = j; i<=numeroPlantio;i++)
+                    {
+                        Plantio plantio = plantioService.NovoPlantio(area.getNome(),numeroLinhas, i,numeroLocalizacoes).getBody();
+                        plantioEntities.add(plantio);
+                    }
+                    area.getPlantios().addAll(plantioEntities);
+                    area.setTimeStamp(LocalDateTime.now());
+                }
+                AreaEntity entity = areaMapper.DtoToEntity(area);
+                areaRepository.save(entity);
+                return new ResponseEntity<>(area, HttpStatus.OK);
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<Area> ReduzirPlantio(Long id,int numeroPlantio)
+    {
+        try
+        {
+            if(id != null && numeroPlantio > 0)
+            {
+                Area area = BuscarAreaPorId(id).getBody();
+                AreaEntity entity = areaMapper.DtoToEntity(area);
+                List<PlantioEntity> plantioEntities = new ArrayList<>();
+                List<Plantio> plantioEntitiesAtual = area.getPlantios();
+                entity.setPlantios(plantioEntities);
+                for(Plantio plantio : area.getPlantios())
+                {
+                    if(plantio.getNumero() > numeroPlantio)
+                    {
+                        plantioService.DeletarPlantio(plantio.getId());
+                    }
+                    else
+                    {
+                        PlantioEntity plantioEntity = plantioMapper.DtoToEntity(plantio);
+                        plantioEntities.add(plantioEntity);
+                    }
+                }
+                areaRepository.save(entity);
+                area = areaMapper.EntityToDto(entity);
+                return new ResponseEntity<>(area, HttpStatus.OK);
+            }
             else {throw new NullargumentsException();}
         }
         catch (Exception e)

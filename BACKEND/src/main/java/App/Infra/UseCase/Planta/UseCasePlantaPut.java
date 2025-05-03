@@ -2,7 +2,6 @@ package App.Infra.UseCase.Planta;
 
 import App.Domain.Response.Planta;
 import App.Infra.Gateway.PlantaGateway;
-import App.Infra.Persistence.Enum.CICLO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -25,9 +24,7 @@ public class UseCasePlantaPut {
     {return plantaGateway.AlterarCiclo(id, ciclo);}
 
     public ResponseEntity<Planta> AlterarLocalizacao(@RequestParam Long plantaId,
-                                                     @RequestParam Long localizacaoId,
-                                                     @RequestParam Long blocoId)
-    {return plantaGateway.AlterarLocalizacao(plantaId, localizacaoId, blocoId);}
-
+                                                     @RequestParam Long localizacaoId)
+    {return plantaGateway.AlterarLocalizacao(plantaId, localizacaoId);}
 
 }

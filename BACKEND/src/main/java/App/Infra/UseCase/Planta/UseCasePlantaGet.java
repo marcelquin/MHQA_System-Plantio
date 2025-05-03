@@ -22,23 +22,22 @@ public class UseCasePlantaGet {
     {return plantaGateway.ListarPlantasGerminacao();}
 
     public ResponseEntity<List<Planta>> ListarPlantasMuda()
-    {return  plantaGateway.ListarPlantasMuda();}
+    {return plantaGateway.ListarPlantasMuda();}
 
     public ResponseEntity<List<Planta>> ListarPlantasCrescimento()
-    {return  plantaGateway.ListarPlantasCrescimento();}
+    {return plantaGateway.ListarPlantasCrescimento();}
 
     public ResponseEntity<List<Planta>> ListarPlantasFloracao()
     {return plantaGateway.ListarPlantasFloracao();}
 
     public ResponseEntity<List<Planta>> ListarPlantasFrutificacao()
-    {return  plantaGateway.ListarPlantasFrutificacao();}
+    {return plantaGateway.ListarPlantasFrutificacao();}
 
     public ResponseEntity<List<Planta>> ListarPlantasMaturacao()
     {return plantaGateway.ListarPlantasMaturacao();}
 
     public ResponseEntity<List<Planta>> ListarPlantasFimCiclo()
     {return plantaGateway.ListarPlantasFimCiclo();}
-
 
     public ResponseEntity<Planta> BuscarPlantaPorId(@RequestParam Long id)
     {return plantaGateway.BuscarPlantaPorId(id);}

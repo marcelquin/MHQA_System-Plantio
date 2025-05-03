@@ -4,52 +4,37 @@ import { data, useNavigate } from 'react-router-dom';
 
 function Cad_Planta() {
 
-  const UrlPost = "http://localhost:8080/Planta/NovaPlanta"
-  const UrlGetList = "http://localhost:8080/Area/ListarAreas"
+  const UrlPost = "http://localhost:8080/planta/NovaPlanta"
+  const UrlGetList = "http://localhost:8080/localizacao/ListarLocalizacoesDisponiveis"
   const navigate = useNavigate();
 
   const getListaAreaAll = async () => {
     try {
       const response = await fetch(UrlGetList);
       const data = await response.json();
-      setDadosGetAreas(data);
+      setdadosGetLocalizacoes(data);
     } catch (error) {
       console.error('Erro ao buscar lista de áreas:', error);
     }
   };
 
-
-  const [dadosGetAreas, setDadosGetAreas] = useState([])
-  const [areaSelecionada, setAreaSelecionada] = useState(null);
+  const [dadosGetLocalizacoes, setdadosGetLocalizacoes] = useState([])
 
   const [dataPost, serdataPost] = useState({
-    areaId: '',
+    localizacaoId: '',
     nomeCientifico: '',
     nomePopular: '',
-    instrucoes: '',
-    localizacaoId: '',
-    blocoId: '',
+    instrucoes: ''
   });
 
 
   const handleChanage = (e) => {
     const { name, value } = e.target;
     serdataPost(prev => ({...prev, [name]: value}));
-    
-    if (name === 'areaId') {
-      const area = dadosGetAreas.find(a => a.id === Number(value));
-      setAreaSelecionada(area);
-      // Reset localizacaoId and blocoId when area changes
-      serdataPost(prev => ({
-        ...prev,
-        localizacaoId: '',
-        blocoId: ''
-      }));
-    }
   }
 
   const handleClick = async (e) => {
-    //e.preventDefault();
+
     try {
       fetch(UrlPost, {
         method: 'POST',
@@ -57,9 +42,7 @@ function Cad_Planta() {
           'Content-Type': 'application/x-www-form-urlencoded'
         },    
         body: new URLSearchParams({
-          areaId: Number(dataPost.areaId),
           localizacaoId: Number(dataPost.localizacaoId),
-          blocoId: Number(dataPost.blocoId),
           nomeCientifico: dataPost.nomeCientifico,
           nomePopular: dataPost.nomePopular,
           instrucoes: dataPost.instrucoes,
@@ -67,12 +50,10 @@ function Cad_Planta() {
       })
       .then(() => navigate("/gerenciar")) 
       serdataPost({
-        areaId: '',
         localizacaoId: '',
-        blocoId: '',
         nomeCientifico: '',
         nomePopular: '',
-        instrucoes: '',
+        instrucoes: ''
       })
     } catch (err) {
       console.log("erro", err)
@@ -115,73 +96,22 @@ function Cad_Planta() {
                 </tr>
                 <tr>
                   <td>
-                      <select 
-                        class="form-select" 
-                        aria-label="Default select example"
-                        name="areaId"
-                        value={dataPost.areaId || ''}
-                        onChange={handleChanage}
+                        <select 
+                          class="form-select" 
+                          aria-label="Default select example"
+                          name="localizacaoId"
+                          value={dataPost.localizacaoId || ''}
+                          onChange={handleChanage}
                         >
-                    {dadosGetAreas ? (<>
-                      <option value="">Selecione uma área</option>
-                      {dadosGetAreas.map((data, i)=>{return(<> 
-                        <option key={data.id} value={data.id}>{data.nomeIdentificador}</option>
+                          <option value="">Localizações disponíveis</option>
+                        {dadosGetLocalizacoes.map((loc, i)=>{return(<>       
+                          <option key={loc.id} value={loc.id}>{loc.referencia}</option>
                       </>)})}
-                    </>) : (<></>)}
-                    </select>   
-                  </td>
-                  <br/>
-                  <br/>
-                </tr>
-                <tr>
-                  <td>
-                      <select 
-                        class="form-select" 
-                        aria-label="Default select example"
-                        name="localizacaoId"
-                        value={dataPost.localizacaoId || ''}
-                        onChange={handleChanage}
-                      >
-                        <option value="">Localizações disponíveis</option>
-                        {areaSelecionada && areaSelecionada.localizacoes && 
-                          areaSelecionada.localizacoes.map((localizacao) => (
-                            localizacao.disponivel && (
-                              <option key={localizacao.id} value={localizacao.id}>
-                                {localizacao.referencia}
-                              </option>
-                            )
-                          ))
-                        }
                       </select>
                   </td>
-                  
                 </tr>
                 <br/>
-                <tr>
-                  
-                  <td>
-                      <select 
-                        class="form-select" 
-                        aria-label="Default select example"
-                        name="blocoId"
-                        value={dataPost.blocoId || ''}
-                        onChange={handleChanage}
-                      >
-                        <option value="">Blocos disponíveis</option>
-                        {areaSelecionada && areaSelecionada.blocos && 
-                          areaSelecionada.blocos.map((bloco) => (
-                            bloco.disponivel && (
-                              <option key={bloco.id} value={bloco.id}>
-                                {bloco.referencia}
-                              </option>
-                            )
-                          ))
-                        }
-                      </select>
-                  </td>
-                </tr>
-                <tr>
-                  
+                <tr>  
                   <td><button type="submit" class="btn btn-success">Salvar</button></td>
                 </tr>
               </table>

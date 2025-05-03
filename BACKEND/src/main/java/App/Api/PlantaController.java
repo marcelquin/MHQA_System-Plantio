@@ -1,7 +1,7 @@
 package App.Api;
 
+
 import App.Domain.Response.Planta;
-import App.Infra.Persistence.Enum.CICLO;
 import App.Infra.UseCase.Planta.UseCasePlantaGet;
 import App.Infra.UseCase.Planta.UseCasePlantaPost;
 import App.Infra.UseCase.Planta.UseCasePlantaPut;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("Planta")
+@RequestMapping("planta")
 @Tag(name = "Planta", description = "Manipula dados relacioados a entidade")
 @CrossOrigin(origins = "*")
 public class PlantaController {
@@ -86,6 +86,7 @@ public class PlantaController {
     public ResponseEntity<List<Planta>> ListarPlantasFloracao()
     {return casePlantaGet.ListarPlantasFloracao();}
 
+
     @Operation(summary = "Lista Registros da tabela", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
@@ -119,18 +120,19 @@ public class PlantaController {
     public ResponseEntity<List<Planta>> ListarPlantasFimCiclo()
     {return casePlantaGet.ListarPlantasFimCiclo();}
 
-    @Operation(summary = "Busca Registros na tabela", method = "GET")
+
+    @Operation(summary = "Busca Registro na tabela", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
             @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
             @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
     })
-    @GetMapping("BuscarPlantaPorId/{id}")
+    @GetMapping("BuscarPlantaPorId")
     public ResponseEntity<Planta> BuscarPlantaPorId(@RequestParam Long id)
     {return casePlantaGet.BuscarPlantaPorId(id);}
 
-    @Operation(summary = "Salva Registros na tabela", method = "POST")
+    @Operation(summary = "Salva Registro na tabela", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
@@ -138,15 +140,13 @@ public class PlantaController {
             @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
     })
     @PostMapping("NovaPlanta")
-    public ResponseEntity<Planta> NovaPlanta(@RequestParam Long areaId,
-                                             @RequestParam Long localizacaoId,
-                                             @RequestParam Long blocoId,
+    public ResponseEntity<Planta> NovaPlanta(@RequestParam Long localizacaoId,
                                              @RequestParam String nomeCientifico,
                                              @RequestParam String nomePopular,
                                              @RequestParam String instrucoes)
-    {return casePlantaPost.NovaPlanta(areaId, localizacaoId, blocoId, nomeCientifico, nomePopular, instrucoes);}
+    {return casePlantaPost.NovaPlanta(localizacaoId, nomeCientifico, nomePopular, instrucoes);}
 
-    @Operation(summary = "Edita Registros na tabela", method = "PUT")
+    @Operation(summary = "Edita Registro da tabela adicionando entidades", method = "PUT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
@@ -158,9 +158,9 @@ public class PlantaController {
                                                @RequestParam String nomeCientifico,
                                                @RequestParam String nomePopular,
                                                @RequestParam String instrucoes)
-    {return casePlantaPut.EditarPlanta(plantaId, nomeCientifico, nomePopular,instrucoes);}
+    {return casePlantaPut.EditarPlanta(plantaId, nomeCientifico, nomePopular, instrucoes);}
 
-    @Operation(summary = "Edita Registros na tabela", method = "PUT")
+    @Operation(summary = "Edita Registro da tabela adicionando entidades", method = "PUT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
@@ -172,7 +172,7 @@ public class PlantaController {
                                                @RequestParam String ciclo)
     {return casePlantaPut.AlterarCiclo(id, ciclo);}
 
-    @Operation(summary = "Edita Registros na tabela", method = "PUT")
+    @Operation(summary = "Edita Registro da tabela adicionando entidades", method = "PUT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
             @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
@@ -181,7 +181,7 @@ public class PlantaController {
     })
     @PutMapping("AlterarLocalizacao")
     public ResponseEntity<Planta> AlterarLocalizacao(@RequestParam Long plantaId,
-                                                     @RequestParam Long localizacaoId,
-                                                     @RequestParam Long blocoId)
-    {return casePlantaPut.AlterarLocalizacao(plantaId, localizacaoId, blocoId);}
+                                                     @RequestParam Long localizacaoId)
+    {return casePlantaPut.AlterarLocalizacao(plantaId,localizacaoId);}
+
 }

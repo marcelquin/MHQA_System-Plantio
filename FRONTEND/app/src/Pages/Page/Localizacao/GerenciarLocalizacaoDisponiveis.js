@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-function GerenciarLocalizacaoDisponiveis(){
+function GerenciarLocalizacaoNaoDisponiveis(){
 
-    const UrlGetList = "http://localhost:8080/Localizacao/ListarLocalizacoesDisponiveis"
+    const UrlGetList = "http://localhost:8080/localizacao/ListarLocalizacoesDisponiveis"
   const [lista, setLista] = useState([]);
   const [pesquisaInput, setPesquisaInput] = useState('')
   const [showModal, setShowModal] = useState(false);
@@ -18,7 +18,7 @@ const handleChange = (e) => {
   }
 
     const response = pesquisaInput.length > 0 ?
-    lista.filter(dados => dados.area.includes(pesquisaInput)) :
+    lista.filter(dados => dados.referencia.includes(pesquisaInput)) :
     []
 
 
@@ -59,9 +59,6 @@ const handleChange = (e) => {
           <thead>
             <tr>
               <th scope="col">Código</th>
-              <th scope="col">Localização X</th>
-              <th scope="col">Localização Y</th>
-              <th scope="col">Área de plantio</th>
               <th scope="col">Disponivel</th>
             </tr>
           </thead>
@@ -74,9 +71,6 @@ const handleChange = (e) => {
                 <tbody key={i}>
                   <tr>
                     <td>{data.referencia}</td>
-                    <td>{data.eixoX}</td>
-                    <td>{data.eixoY}</td>
-                    <td>{data.area}</td>
                     <td>{data.disponivel ? (<>Disponivel</>) : (<>Utilizado</>)}</td>  
                   </tr>
                 </tbody>
@@ -90,9 +84,6 @@ const handleChange = (e) => {
                 <tbody key={i}>
                   <tr>
                     <td>{data.referencia}</td>
-                    <td>{data.eixoX}</td>
-                    <td>{data.eixoY}</td>
-                    <td>{data.area}</td>
                     <td>{data.disponivel ? (<>Disponivel</>) : (<>Utilizado</>)}</td>      
                   </tr>
                 </tbody>
@@ -103,4 +94,4 @@ const handleChange = (e) => {
     </>)
 };
 
-export default GerenciarLocalizacaoDisponiveis
+export default GerenciarLocalizacaoNaoDisponiveis

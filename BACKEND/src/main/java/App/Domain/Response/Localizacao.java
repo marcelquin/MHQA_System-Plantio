@@ -8,11 +8,9 @@ public class Localizacao {
 
     private Long id;
 
-    private String area;
+    private int numeroLinha;
 
-    private int eixoX;
-
-    private int eixoY;
+    private String nomeArea;
 
     private String referencia;
 
@@ -24,11 +22,10 @@ public class Localizacao {
     public Localizacao() {
     }
 
-    public Localizacao(Long id, String area, int eixoX, int eixoY, String referencia, Boolean disponivel, LocalDateTime timeStamp) {
+    public Localizacao(Long id, int numeroLinha, String nomeArea, String referencia, Boolean disponivel, LocalDateTime timeStamp) {
         this.id = id;
-        this.area = area;
-        this.eixoX = eixoX;
-        this.eixoY = eixoY;
+        this.numeroLinha = numeroLinha;
+        this.nomeArea = nomeArea;
         this.referencia = referencia;
         this.disponivel = disponivel;
         this.timeStamp = timeStamp;
@@ -42,28 +39,20 @@ public class Localizacao {
         this.id = id;
     }
 
-    public String getArea() {
-        return area;
+    public int getNumeroLinha() {
+        return numeroLinha;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setNumeroLinha(int numeroLinha) {
+        this.numeroLinha = numeroLinha;
     }
 
-    public int getEixoX() {
-        return eixoX;
+    public String getNomeArea() {
+        return nomeArea;
     }
 
-    public void setEixoX(int eixoX) {
-        this.eixoX = eixoX;
-    }
-
-    public int getEixoY() {
-        return eixoY;
-    }
-
-    public void setEixoY(int eixoY) {
-        this.eixoY = eixoY;
+    public void setNomeArea(String nomeArea) {
+        this.nomeArea = nomeArea;
     }
 
     public String getReferencia() {
@@ -89,4 +78,6 @@ public class Localizacao {
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
     }
+
+
 }

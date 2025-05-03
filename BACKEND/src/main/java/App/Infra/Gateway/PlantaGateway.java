@@ -1,13 +1,13 @@
 package App.Infra.Gateway;
 
 import App.Domain.Response.Planta;
-import App.Infra.Persistence.Enum.CICLO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 public interface PlantaGateway {
+
 
     public ResponseEntity<List<Planta>> ListarPlantas();
 
@@ -27,9 +27,7 @@ public interface PlantaGateway {
 
     public ResponseEntity<Planta> BuscarPlantaPorId(@RequestParam Long id);
 
-    public ResponseEntity<Planta> NovaPlanta(@RequestParam Long plantioId,
-                                             @RequestParam Long localizacaoId,
-                                             @RequestParam Long blocoId,
+    public ResponseEntity<Planta> NovaPlanta(@RequestParam Long localizacaoId,
                                              @RequestParam String nomeCientifico,
                                              @RequestParam String nomePopular,
                                              @RequestParam String instrucoes);
@@ -43,7 +41,6 @@ public interface PlantaGateway {
                                                @RequestParam String ciclo);
 
     public ResponseEntity<Planta> AlterarLocalizacao(@RequestParam Long plantaId,
-                                                     @RequestParam Long localizacaoId,
-                                                     @RequestParam Long blocoId);
+                                                     @RequestParam Long localizacaoId);
 
 }

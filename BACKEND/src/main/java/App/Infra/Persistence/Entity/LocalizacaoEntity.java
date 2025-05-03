@@ -3,8 +3,8 @@ package App.Infra.Persistence.Entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "Localizacao")
@@ -14,11 +14,9 @@ public class LocalizacaoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String area;
+    private int numeroLinha;
 
-    private int eixoX;
-
-    private int eixoY;
+    private String nomeArea;
 
     private String referencia;
 
@@ -30,11 +28,10 @@ public class LocalizacaoEntity {
     public LocalizacaoEntity() {
     }
 
-    public LocalizacaoEntity(Long id, String area, int eixoX, int eixoY, String referencia, Boolean disponivel, LocalDateTime timeStamp) {
+    public LocalizacaoEntity(Long id, int numeroLinha, String nomeArea, String referencia, Boolean disponivel, LocalDateTime timeStamp) {
         this.id = id;
-        this.area = area;
-        this.eixoX = eixoX;
-        this.eixoY = eixoY;
+        this.numeroLinha = numeroLinha;
+        this.nomeArea = nomeArea;
         this.referencia = referencia;
         this.disponivel = disponivel;
         this.timeStamp = timeStamp;
@@ -48,28 +45,20 @@ public class LocalizacaoEntity {
         this.id = id;
     }
 
-    public String getArea() {
-        return area;
+    public int getNumeroLinha() {
+        return numeroLinha;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setNumeroLinha(int numeroLinha) {
+        this.numeroLinha = numeroLinha;
     }
 
-    public int getEixoX() {
-        return eixoX;
+    public String getNomeArea() {
+        return nomeArea;
     }
 
-    public void setEixoX(int eixoX) {
-        this.eixoX = eixoX;
-    }
-
-    public int getEixoY() {
-        return eixoY;
-    }
-
-    public void setEixoY(int eixoY) {
-        this.eixoY = eixoY;
+    public void setNomeArea(String nomeArea) {
+        this.nomeArea = nomeArea;
     }
 
     public String getReferencia() {
@@ -96,22 +85,13 @@ public class LocalizacaoEntity {
         this.timeStamp = timeStamp;
     }
 
-    public Boolean ValidaValor(int eixoX, int eixoY)
+    public void SetInfoInicial(String area,int numeroPlantio, int numeroLinha,int referencia)
     {
-        if(eixoX < 0){return Boolean.FALSE;}
-        if(eixoY < 0){return Boolean.FALSE;}
-        return Boolean.TRUE;
-    }
-
-
-    public void SetInfo(String area, int eixoX, int eixoY)
-    {
-        this.area = area;
-        this.eixoY = eixoY;
-        this.eixoX = eixoX;
-        this.referencia = "C "+eixoX+" x L "+eixoY;
-        this.timeStamp = LocalDateTime.now();
         this.disponivel = Boolean.TRUE;
+        this.nomeArea = area;
+        this.numeroLinha = numeroLinha;
+        this.referencia = area+"_"+numeroPlantio+":"+numeroLinha+"-"+referencia;
+        this.timeStamp = LocalDateTime.now();
     }
 
     public void SetPlanta()
@@ -119,22 +99,4 @@ public class LocalizacaoEntity {
         this.disponivel = Boolean.FALSE;
         this.timeStamp = LocalDateTime.now();
     }
-
-    public void SetDisponivel()
-    {
-        this.disponivel = Boolean.TRUE;
-        this.timeStamp = LocalDateTime.now();
-    }
-
-    public void EditInfo(String area, int eixoX, int eixoY)
-    {
-        if(!this.area.equals(area))
-        {
-            this.area = area;
-        }
-        this.eixoX = eixoX;
-        this.eixoY = eixoY;
-        this.referencia = eixoX+" x "+eixoY;
-    }
-
 }

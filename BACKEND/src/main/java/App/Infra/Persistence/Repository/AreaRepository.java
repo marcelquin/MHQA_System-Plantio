@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AreaRepository extends JpaRepository<AreaEntity, Long > {
+public interface AreaRepository extends JpaRepository<AreaEntity, Long> {
 
-    Optional<AreaEntity> findBynomeIdentificador(String nomeIdentificador);
+    Optional<AreaEntity> findBynome(String nome);
 }

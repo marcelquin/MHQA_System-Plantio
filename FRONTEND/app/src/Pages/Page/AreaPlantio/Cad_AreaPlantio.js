@@ -3,16 +3,17 @@ import { data, useNavigate } from 'react-router-dom';
 
 function Cad_AreaPlantio() {
 
-  const UrlPost = "http://localhost:8080/Area/NovaArea"
+  const UrlPost = "http://localhost:8080/area/NovaArea"
   const navigate = useNavigate();
 
 
   const [dataPost, serdataPost] = useState({
-    nomeIdentificador: "",
+    nome: "",
     dimensao: "",
-    eixoX: 0,
-    eixoY: 0,
-    quantidadeBlocos: 0
+    gps: "",
+    numeroPlantios: 0,
+    numeroLinhas: 0,
+    numeroLocalizacoes: 0
   });
 
   const handleChanage = (e) => {
@@ -27,22 +28,22 @@ function Cad_AreaPlantio() {
           'Content-Type': 'application/x-www-form-urlencoded'
         },    
         body: new URLSearchParams({
-          nomeIdentificador: dataPost.nomeIdentificador,
+          nome: dataPost.nome,
           dimensao: dataPost.dimensao,
           gps: dataPost.gps,
-          eixoX: parseInt(dataPost.eixoX),
-          eixoY: parseInt(dataPost.eixoY),
-          quantidadeBlocos : parseInt(dataPost.quantidadeBlocos)
+          numeroPlantios: parseInt(dataPost.numeroPlantios),
+          numeroLinhas: parseInt(dataPost.numeroLinhas),
+          numeroLocalizacoes : parseInt(dataPost.numeroLocalizacoes)
         })
       })
       .then(navigate("/gerenciar")) 
       serdataPost({
-        nomeIdentificador: '',
-        dimensao: '',
-        gps: '',
-        eixoX: 0,
-        eixoY: 0,
-        quantidadeBlocos: 0
+        nome: "",
+        dimensao: "",
+        gps: "",
+        numeroPlantios: 0,
+        numeroLinhas: 0,
+        numeroLocalizacoes: 0
       })
     }catch (err){
       console.log("erro")
@@ -59,7 +60,7 @@ function Cad_AreaPlantio() {
               <td>
               <div class="input-group mb-3">
                 <button class="btn btn-outline-secondary" type="button" id="button-addon1">Nome Identificador</button>
-                <input type="text" name="nomeIdentificador" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                <input type="text" name="nome" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
               </div>
               </td>
             </tr>
@@ -72,26 +73,34 @@ function Cad_AreaPlantio() {
               </td>
             </tr>
             <tr>
-              <td>
+            <td>
               <div class="input-group mb-3">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Eixo X </button>
-                <input type="number" name="eixoX" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1">GPS</button>
+                <input type="text" name="gps" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
               </div>
               </td>
             </tr>
             <tr>
               <td>
               <div class="input-group mb-3">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Eixo Y </button>
-                <input type="number" name="eixoY" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1">NUmero de Plantios </button>
+                <input type="number" name="numeroPlantios" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
               </div>
               </td>
             </tr>
             <tr>
               <td>
               <div class="input-group mb-3">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon1">quantidade de Blocos </button>
-                <input type="number" name="quantidadeBlocos" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1">Numero de linhas</button>
+                <input type="number" name="numeroLinhas" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+              </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+              <div class="input-group mb-3">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon1">localizações por Linha </button>
+                <input type="number" name="numeroLocalizacoes" onChange={handleChanage} class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
               </div>
               </td>
               <br/>

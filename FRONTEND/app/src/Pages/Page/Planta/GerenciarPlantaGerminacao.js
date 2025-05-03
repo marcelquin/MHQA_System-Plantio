@@ -1,12 +1,10 @@
 import '../../CSS/BodyStyle.css'
-import AlterarCiclo from './AlterarCiclo';
-import RelatorioPlanta from './RelatorioPlanta';
 import EditarInfo from './EditarInfo';
 import React, { useState, useEffect } from 'react';
 
 function GerenciarPlantaGerminacao(){
 
-  const UrlGetList = "http://localhost:8080/Planta/ListarPlantasGerminacao"
+  const UrlGetList = "http://localhost:8080/planta/ListarPlantasGerminacao"
   const [listAll, setListAll] = useState([]);
   const [pesquisaInput, setPesquisaInput] = useState('')
   const [showModal, setShowModal] = useState(false);
@@ -46,10 +44,7 @@ function GerenciarPlantaGerminacao(){
         'nomePopular': '',
         'instrucoes': '',
         'localizacao': '',
-        'areaPlantio': '',
-        'faseAtual': '',
-        'inicioCiclo': '',
-        'notificacoes': '',
+        'ciclo': '',
     })
     
     const handleRowSelect = (data) => {
@@ -59,12 +54,10 @@ function GerenciarPlantaGerminacao(){
         'nomePopular': data.nomePopular,
         'instrucoes': data.instrucoes,
         'localizacao': data.localizacao.referencia,
-        'areaPlantio': data.localizacao.area,
-        'faseAtual': data.ciclo.ciclo,
-        'inicioCiclo': data.dataPlantio,
-        'notificacoes': data.notificacoes,
+        'ciclo': data.ciclo.ciclo,
       });
     }
+
     return(<>
 
       <div class="input-group mb-3">
@@ -79,7 +72,6 @@ function GerenciarPlantaGerminacao(){
               <th scope="col">Data Último Ciclo</th>
               <th scope="col">Data Ciclo Atual</th>
               <th scope="col">Localização</th>
-              <th scope="col">Área de plantio</th>
               <th scope="col">Orientações</th>
             </tr>
         </thead>
@@ -93,15 +85,8 @@ function GerenciarPlantaGerminacao(){
                     <td>{data.ciclo.ciclo}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>
                     <td>{data.ciclo.dataCicloAtual}</td>
-                    {data.localizacao ? (<>
-                      <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<>{data.bloco.referencia}</>)}</td>
-                      <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<>{data.bloco.area}</>)}</td>
-                      </>) : (<>
-                    <td>{data.bloco.referencia}</td>
-                    <td>{data.bloco.area}</td>
-                    </>)}
+                    <td>{data.localizacao ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
                     <td>{data.instrucoes}</td>
-                    <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
                     <td><a onClick={() =>{handleOpenModal('Editar'); handleRowSelect(data);} } className='opcaoExtra'>Editar informações</a></td>
                   </tr>
                 </tbody>
@@ -116,15 +101,8 @@ function GerenciarPlantaGerminacao(){
                     <td>{data.ciclo.ciclo}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>
                     <td>{data.ciclo.dataCicloAtual}</td>
-                     {data.localizacao ? (<>
-                      <td>{data.localizacao && data.localizacao.referencia ? (<>{data.localizacao.referencia}</>) : (<>{data.bloco.referencia}</>)}</td>
-                      <td>{data.localizacao && data.localizacao.area ? (<>{data.localizacao.area}</>) : (<>{data.bloco.area}</>)}</td>
-                      </>) : (<>
-                    <td>{data.bloco.referencia}</td>
-                    <td>{data.bloco.area}</td>
-                    </>)}
+                    <td>{data.localizacao ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
                     <td>{data.instrucoes}</td>
-                    <td><a onClick={() =>{handleOpenModal('alterarCiclo'); handleRowSelect(data);} } className='opcaoExtra'>Alterar Ciclo</a></td>
                     <td><a onClick={() =>{handleOpenModal('Editar'); handleRowSelect(data);} } className='opcaoExtra'>Editar informações</a></td>
                   </tr>
                 </tbody>
@@ -147,8 +125,6 @@ function GerenciarPlantaGerminacao(){
                             </button>
                         </div>
                         <div className="modal-body">
-                            {modalContent === 'alterarCiclo' && <AlterarCiclo data={dataRequest}/>}
-                            {modalContent === 'maisInfo' && <RelatorioPlanta data={dataRequest}/>}
                             {modalContent === 'Editar' && <EditarInfo data={dataRequest}/>}
                         </div>
                     </div>

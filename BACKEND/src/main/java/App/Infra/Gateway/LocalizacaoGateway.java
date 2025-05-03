@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface LocalizacaoGateway {
 
-    public ResponseEntity<List<Localizacao>> ListarLocalizacoesIndisponiveis();
+    public ResponseEntity<List<Localizacao>> ListarLocalizacoes();
 
     public ResponseEntity<List<Localizacao>> ListarLocalizacoesDisponiveis();
 
-    public ResponseEntity<List<Localizacao>> ListarLocalizacoes();
+    public ResponseEntity<List<Localizacao>> ListarLocalizacoesNaoDisponiveis();
+
+
 }

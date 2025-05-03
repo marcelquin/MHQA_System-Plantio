@@ -2,8 +2,17 @@ import React, { useState, useEffect } from 'react';
 
 function GerenciarLocalizacaoTodos(){
 
-  const UrlGetList = "http://localhost:8080/Localizacao/ListarLocalizacoes"
+  const UrlGetList = "http://localhost:8080/localizacao/ListarLocalizacoes"
   const [lista, setLista] = useState([]);
+  const [pesquisaInput, setPesquisaInput] = useState('')
+  const response = pesquisaInput.length > 0 ?
+  lista.filter(dados => dados.referencia.includes(pesquisaInput)) :
+  []
+
+  const handleChange = (e) => {
+    setPesquisaInput(e.target.value);
+  }
+
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);  
   
@@ -41,26 +50,43 @@ function GerenciarLocalizacaoTodos(){
 
     return(<>
 
+        <div class="input-group mb-3">
+            <button class="btn btn-outline-secondary" type="button" id="button-addon1">Área Plantio</button>
+            <input type="text" class="form-control" name='pesquisaInput' onChange={handleChange} placeholder="Digite a área a ser pesquisa" aria-label="Example text with button addon" aria-describedby="button-addon1"/>
+        </div> 
+
         <table class="table">
           <thead>
             <tr>
               <th scope="col">Código</th>
-              <th scope="col">Localização X</th>
-              <th scope="col">Localização Y</th>
               <th scope="col">Disponivel</th>
             </tr>
           </thead>
-          {lista.map((data, i)=>{return(<>               
-                <tbody key={i}>
-                  <tr>
-                    <td>{data.referencia}</td>
-                    <td>{data.eixoX}</td>
-                    <td>{data.eixoY}</td>
-                    <td>{data.area}</td>
-                    <td>{data.disponivel ? (<>Disponivel</>) : (<>Utilizado</>)}</td>       
-                  </tr>
-                </tbody>
-              </>)})}  
+
+          {pesquisaInput.length > 0 ?(<>
+          
+            {response.map((data, i)=>{return(<>               
+                  <tbody key={i}>
+                    <tr>
+                      <td>{data.referencia}</td>
+                      <td>{data.disponivel ? (<>Disponivel</>) : (<>Utilizado</>)}</td>       
+                    </tr>
+                  </tbody>
+                </>)})}
+          
+          </>) : (<>
+
+              {lista.map((data, i)=>{return(<>               
+                  <tbody key={i}>
+                    <tr>
+                      <td>{data.referencia}</td>
+                      <td>{data.disponivel ? (<>Disponivel</>) : (<>Utilizado</>)}</td>       
+                    </tr>
+                  </tbody>
+                </>)})}
+
+          </>)}
+            
            
               </table>
   

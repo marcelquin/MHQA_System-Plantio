@@ -5,8 +5,6 @@ import Gerencia_AreaPlantio from './AreaPlantio/Gerencia_AreaPlantio';
 import Gerencia_Planta from './Planta/Gerencia_Planta';
 import Cad_AreaPlantio from './AreaPlantio/Cad_AreaPlantio';
 import Cad_Planta from './Planta/Cad_Planta';
-import AdubacaoGeral from './AreaPlantio/AdubacaoArea';
-import Gerencia_Bloco from './Bloco/Gerencia_Bloco';
 import Gerencia_Localizacao from './Localizacao/Gerencia_Localizacao';
 
 function Gerenciar() {
@@ -51,14 +49,6 @@ function Gerenciar() {
           </tr>
           <br/>
           <tr>
-            <td className='titulo'>BLOCO</td>
-          </tr>
-          <br/>
-          <tr>
-            <td className='opcao' onClick={() => setseletorOpcao("blocoGer")}><a>Gerenciar</a></td>
-          </tr>
-          <br/>
-          <tr>
             <td className='titulo'>PLANTA</td>
           </tr>
           <br/>
@@ -73,7 +63,6 @@ function Gerenciar() {
         {seletorOpcao === "areaCad" ? (<div className='conteudo'><Cad_AreaPlantio/></div>) : ("")}
         {seletorOpcao === "areager" ? (<div className='conteudo'><Gerencia_AreaPlantio/></div>) : (<p></p>)}
         {seletorOpcao === "localizacaoGer" ? (<div className='conteudo'><Gerencia_Localizacao/></div>)  : (<p></p>)}
-        {seletorOpcao === "blocoGer" ? (<div className='conteudo'><Gerencia_Bloco/></div>)  : (<p></p>)}
         {seletorOpcao === "plantaCad" ?  (<div className='conteudo'><Cad_Planta/> </div>):  ("")}
         {seletorOpcao === "plantaGer" ? (<div className='conteudo'><Gerencia_Planta/></div>)  : (<p></p>)}
     </div>    

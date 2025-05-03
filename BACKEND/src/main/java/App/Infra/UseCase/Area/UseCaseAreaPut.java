@@ -13,18 +13,20 @@ public class UseCaseAreaPut {
         this.areaGateway = areaGateway;
     }
 
+    public ResponseEntity<Area> EditarInformacoesArea(@RequestParam Long id,
+                                                      @RequestParam String nome,
+                                                      @RequestParam String dimensao,
+                                                      @RequestParam String gps)
+    {return areaGateway.EditarInformacoesArea(id, nome, dimensao, gps);}
 
-    public ResponseEntity<Area> EditarArea(@RequestParam Long id,
-                                           @RequestParam String dimensao,
-                                           @RequestParam String nomeIdentificador)
-    {return areaGateway.EditarArea(id, dimensao, nomeIdentificador);}
+    public ResponseEntity<Area> AmpliarPlantio(@RequestParam Long id,
+                                               @RequestParam int numeroPlantio,
+                                               @RequestParam int numeroLinhas,
+                                               @RequestParam int numeroLocalizacoes)
+    {return areaGateway.AmpliarPlantio(id, numeroPlantio, numeroLinhas, numeroLocalizacoes);}
 
-    public ResponseEntity<Area> NovaAdubacao(@RequestParam Long id, @RequestParam String relatorio)
-    {return areaGateway.NovaAdubacao(id, relatorio);}
+    public ResponseEntity<Area> ReduzirPlantio(@RequestParam Long id,
+                                               @RequestParam int numeroPlantio)
+    {return areaGateway.ReduzirPlantio(id, numeroPlantio);}
 
-    public ResponseEntity<Area> AlterarDimensaoLocalizacoes(@RequestParam Long id,
-                                                            @RequestParam int eixoX,
-                                                            @RequestParam int eixoY,
-                                                            @RequestParam int quantidadeBlocos)
-    {return areaGateway.AlterarDimensaoLocalizacoes(id, eixoX, eixoY, quantidadeBlocos);}
 }

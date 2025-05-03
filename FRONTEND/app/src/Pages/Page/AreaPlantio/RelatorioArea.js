@@ -5,24 +5,41 @@ function RelatorioArea({data})
     return(<>
         <div class="card">
           <div class="card-body">
-            <h1 className='infoTitulo'>NOME: {data.nomeIdentificador}</h1>
+            <h1 className='infoTitulo'>NOME: {data.nome}</h1>
             <br/>
             <p className='infoItem'>
-              Contendo <span className='infoTexto'>{data.dimensao}</span>, {data.localizacoes ? data.localizacoes.length : 0} locais cadastrados, 
-              <br/><br/>LOCALIZAÇÕES:<br/>
-              {data.localizacoes ? data.localizacoes.filter(loc => loc.disponivel).length : 0} disponíveis neste momento.
-              <br/><br/>
-              BLOCOS:<br/>
-              {data.blocos ? data.blocos.filter(loc => loc.blocos).length : 0} disponíveis neste momento.
-
-            </p>        
-            <p className='infoItem'>Notificações:</p>
-            {data.notificacoes != null ?(<>
-                {data.notificacoes.map((data, i)=>{return(<>
-                    <span className='infoTexto' key={i}>{data}</span>
-                    <br/>
+              DIMENSÃO: <span className='infoTexto'>{data.dimensao}</span><br/>
+              GPS: <span className='infoTexto'>{data.gps}</span><br/>
+              PLANTIOS: <span> {data.plantios ? (<>
+              {data.plantios.length}
+              </>) : (<></>)}</span><br/>
+            </p>
+            <h1 className='infoTitulo'>INFORMAÇÕES ADICIONAIS:</h1>
+            <p>
+            {data.plantios.map((plantio, i) => (
+              <div key={i}>
+                <br/>
+                NUMERO DE PLANTIO: <span>{plantio.numero}</span><br/>
+                NUMERO DE LINHAS: <span>{plantio.linhas.length}</span><br/>
+                LOCALIZAÇÕES POR LINHA:<br/>
+                {plantio.linhas.map((linha, j) => (
+                  <div key={j}>
+                    Linha {j + 1}: {linha.localizacoes.length} localizações, {linha.localizacoes.filter(loc => loc.disponivel).length} disponíveis neste momento.
+                  </div>
+                ))}
+                <br/>
+                <h1 className='infoTitulo'>RELATÓRIOS DE ADUBAÇÃO</h1>
+                {data.plantios.map((plantio,i)=>{return(<>
+                    Numero da linha: {plantio.numero}<br/>
+                    {plantio.notificacoes.map((notificacao,k)=>{return(<>
+                        <span>{notificacao}</span><br/>
+                    </>)})}
                 </>)})}
-            </>) : (<></>)}
+              </div>
+            ))}
+            </p>
+            
+
           </div>
         </div> 
     </>)
