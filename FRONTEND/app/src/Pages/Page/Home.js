@@ -67,11 +67,11 @@ return (
                 {response.map((data, i)=>{return(<>
                 <tbody key={i}>
                   <tr>
-                  <td scope="row">{data.nomePopular}</td>
+                    <td scope="row">{data.nomePopular}</td>
+                    <td>{data.localizacao ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
                     <td>{data.ciclo.ciclo}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>
                     <td>{data.ciclo.dataCicloAtual}</td>
-                    <td>{data.localizacao ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
                     <td>{data.instrucoes}</td>
                   </tr>
                 </tbody>
@@ -81,12 +81,12 @@ return (
               
                 {listAll.map((data, i)=>{return(<>
                 <tbody key={i}>
-                  <tr>
+                <tr>
                     <td scope="row">{data.nomePopular}</td>
+                    <td>{data.localizacao ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
                     <td>{data.ciclo.ciclo}</td>
                     <td>{data.ciclo.dataUltimoCiclo}</td>
                     <td>{data.ciclo.dataCicloAtual}</td>
-                    <td>{data.localizacao ? (<>{data.localizacao.referencia}</>) : (<></>)}</td>
                     <td>{data.instrucoes}</td>
                   </tr>
                 </tbody>

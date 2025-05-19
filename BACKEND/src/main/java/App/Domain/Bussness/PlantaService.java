@@ -234,15 +234,12 @@ public class PlantaService implements PlantaGateway {
     {
         try
         {
-            if(id != null)
-            {
-                PlantaEntity entity = plantaRepository.findById(id).orElseThrow(
-                        EntityNotFoundException::new
-                );
-                Planta response = plantaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
+            if(id == null) {throw new NullargumentsException();}
+            PlantaEntity entity = plantaRepository.findById(id).orElseThrow(
+                    EntityNotFoundException::new
+            );
+            Planta response = plantaMapper.EntityToDto(entity);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         } catch (Exception e)
         {
             e.getMessage();
@@ -257,32 +254,25 @@ public class PlantaService implements PlantaGateway {
     {
         try
         {
-            if(nomeCientifico != null &&
-               nomePopular != null &&
-               instrucoes != null)
-            {
-                PlantaEntity entity = new PlantaEntity();
-                Ciclo ciclo = cicloService.NovoCiclo().getBody();
-                cicloService.AlterarCiclo(ciclo.getId(),CICLO.GERMINACAO);
-                CicloEntity cicloEntity = cicloMapper.DtoToEntity(ciclo);
-                entity.setCiclo(cicloEntity);
-                if(localizacaoId != null)
-                {
-                    Localizacao localizacao = localizacaoService.BuscarLocalizacaoPorId(localizacaoId).getBody();
-                    LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
-                    entity.setLocalizacao(localizacaoEntity);
-                    localizacaoEntity.SetPlanta();
-                    Localizacao localizacaoRequest = localizacaoMapper.EntityToDto(localizacaoEntity);
-                    localizacaoService.SalvarAlteracao(localizacaoRequest);
-                    entity.SetInfo(nomePopular,nomeCientifico,instrucoes);
-                    plantaRepository.save(entity);
-                    Planta response = plantaMapper.EntityToDto(entity);
-
-                    return  new ResponseEntity<>(response, HttpStatus.CREATED);
-                }
-
-            }
-            else {throw new NullargumentsException();}
+            if(nomeCientifico == null){throw new NullargumentsException();}
+            if(nomePopular == null){throw new NullargumentsException();}
+            if(instrucoes == null){throw new NullargumentsException();}
+            if(localizacaoId == null){throw new NullargumentsException();}
+            PlantaEntity entity = new PlantaEntity();
+            Ciclo ciclo = cicloService.NovoCiclo().getBody();
+            cicloService.AlterarCiclo(ciclo.getId(),CICLO.GERMINACAO);
+            CicloEntity cicloEntity = cicloMapper.DtoToEntity(ciclo);
+            entity.setCiclo(cicloEntity);
+            Localizacao localizacao = localizacaoService.BuscarLocalizacaoPorId(localizacaoId).getBody();
+            LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
+            entity.setLocalizacao(localizacaoEntity);
+            localizacaoEntity.SetPlanta();
+            Localizacao localizacaoRequest = localizacaoMapper.EntityToDto(localizacaoEntity);
+            localizacaoService.SalvarAlteracao(localizacaoRequest);
+            entity.SetInfo(nomePopular,nomeCientifico,instrucoes);
+            plantaRepository.save(entity);
+            Planta response = plantaMapper.EntityToDto(entity);
+            return  new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e)
         {
             e.getMessage();

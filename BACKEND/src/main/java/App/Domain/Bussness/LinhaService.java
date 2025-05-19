@@ -82,15 +82,12 @@ public class LinhaService implements LinhaGateway {
     {
         try
         {
-            if(id != null)
-            {
-                LinhaEntity entity = linhaRepository.findById(id).orElseThrow(
-                        EntityNotFoundException::new
-                );
-                Linha response = linhaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
+            if(id == null){throw new NullargumentsException();}
+            LinhaEntity entity = linhaRepository.findById(id).orElseThrow(
+                    EntityNotFoundException::new
+            );
+            Linha response = linhaMapper.EntityToDto(entity);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -103,23 +100,20 @@ public class LinhaService implements LinhaGateway {
     {
         try
         {
-            if(numero > 0)
+            if(numero <= 0) {throw new NullargumentsException();}
+            LinhaEntity entity = new LinhaEntity();
+            List<LocalizacaoEntity> localizacaoEntities = new ArrayList<>();
+            entity.SetInfoInicial(numero);
+            for(int i = 1 ; i<=numeroLocalizacoes; i++)
             {
-                LinhaEntity entity = new LinhaEntity();
-                List<LocalizacaoEntity> localizacaoEntities = new ArrayList<>();
-                entity.SetInfoInicial(numero);
-                for(int i = 1 ; i<=numeroLocalizacoes; i++)
-                {
-                    Localizacao localizacao = localizacaoService.NovaLocalizacao(area,numero,numeroPlantio,i).getBody();
-                    LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
-                    entity.getLocalizacoes().add(localizacaoEntity);
-                }
-                entity.getLocalizacoes().addAll(localizacaoEntities);
-                linhaRepository.save(entity);
-                Linha response = linhaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.CREATED);
+                Localizacao localizacao = localizacaoService.NovaLocalizacao(area,numero,numeroPlantio,i).getBody();
+                LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
+                entity.getLocalizacoes().add(localizacaoEntity);
             }
-            else {throw new NullargumentsException();}
+            entity.getLocalizacoes().addAll(localizacaoEntities);
+            linhaRepository.save(entity);
+            Linha response = linhaMapper.EntityToDto(entity);
+            return new ResponseEntity<>(response,HttpStatus.CREATED);
         }
         catch (Exception e)
         {
@@ -132,11 +126,8 @@ public class LinhaService implements LinhaGateway {
     {
         try
         {
-            if(id != null)
-            {
-                linhaRepository.deleteById(id);
-            }
-            else {throw new NullargumentsException();}
+            if(id == null) {throw new NullargumentsException();}
+            linhaRepository.deleteById(id);
         }
         catch (Exception e)
         {
@@ -149,36 +140,34 @@ public class LinhaService implements LinhaGateway {
     {
         try
         {
-            if(id != null && numeroLocalizacoes >0)
+            if(id == null){throw new NullargumentsException();}
+            if(numeroLocalizacoes <= 0){throw new NullargumentsException();}
+            Linha linha = BuscarLinhaPorId(id).getBody();
+            List<LocalizacaoEntity> localizacaoEntities = new ArrayList<>();
+            LinhaEntity entity = linhaMapper.DtoToEntity(linha);
+            entity.setLocalizacoes(localizacaoEntities);
+            linhaRepository.save(entity);
+            for(Localizacao localizacao : linha.getLocalizacoes())
             {
-                Linha linha = BuscarLinhaPorId(id).getBody();
-                List<LocalizacaoEntity> localizacaoEntities = new ArrayList<>();
-                LinhaEntity entity = linhaMapper.DtoToEntity(linha);
-                entity.setLocalizacoes(localizacaoEntities);
-                linhaRepository.save(entity);
-                for(Localizacao localizacao : linha.getLocalizacoes())
+                String input = localizacao.getReferencia();
+                String[] parts = input.split("_");
+                String[] subParts = parts[1].split("-");
+                String part2 = subParts[0]; // "1"
+                String part3 = subParts[1];
+                int locAtual = Integer.parseInt(part3);
+                if(locAtual > numeroLocalizacoes)
                 {
-                    String input = localizacao.getReferencia();
-                    String[] parts = input.split("_");
-                    String[] subParts = parts[1].split("-");
-                    String part2 = subParts[0]; // "1"
-                    String part3 = subParts[1];
-                    int locAtual = Integer.parseInt(part3);
-                    if(locAtual > numeroLocalizacoes)
-                    {
-                        localizacaoService.DeletarLocalizacaoPorId(localizacao.getId());
-                    }
-                    else
-                    {
-                        LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
-                        entity.getLocalizacoes().add(localizacaoEntity);
-                    }
+                    localizacaoService.DeletarLocalizacaoPorId(localizacao.getId());
                 }
-                linhaRepository.saveAndFlush(entity);
-                Linha response = linhaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.OK);
+                else
+                {
+                    LocalizacaoEntity localizacaoEntity = localizacaoMapper.DtoToEntity(localizacao);
+                    entity.getLocalizacoes().add(localizacaoEntity);
+                }
             }
-            else {throw new NullargumentsException();}
+            linhaRepository.saveAndFlush(entity);
+            Linha response = linhaMapper.EntityToDto(entity);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -192,13 +181,10 @@ public class LinhaService implements LinhaGateway {
     {
         try
         {
-            if(linha != null)
-            {
-                LinhaEntity entity = linhaMapper.DtoToEntity(linha);
-                linhaRepository.save(entity);
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
+            if(linha == null){throw new NullargumentsException();}
+            LinhaEntity entity = linhaMapper.DtoToEntity(linha);
+            linhaRepository.save(entity);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception e)
         {

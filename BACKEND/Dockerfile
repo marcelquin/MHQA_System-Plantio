@@ -14,10 +14,6 @@ RUN mvn clean package -DskipTests
 FROM amazoncorretto:21-alpine
 
 # Metadados
-LABEL maintainer="seu-email@exemplo.com"
-LABEL version="1.0"
-LABEL description="Aplicação Spring Boot com Java 21"
-
 # Definindo diretório de trabalho
 WORKDIR /app
 

@@ -109,15 +109,12 @@ public class AreaService implements AreaGateway {
     {
         try
         {
-            if(id != null)
-            {
-                AreaEntity entity = areaRepository.findById(id).orElseThrow(
-                        EntityNotFoundException::new
-                );
-                Area response = areaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
+            if(id == null){throw new NullargumentsException();}
+            AreaEntity entity = areaRepository.findById(id).orElseThrow(
+                    EntityNotFoundException::new
+            );
+            Area response = areaMapper.EntityToDto(entity);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -131,15 +128,12 @@ public class AreaService implements AreaGateway {
     {
         try
         {
-            if(nome != null)
-            {
-                AreaEntity entity = areaRepository.findBynome(nome).orElseThrow(
-                        EntityNotFoundException::new
-                );
-                Area response = areaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
+            if(nome == null){throw new NullargumentsException();}
+            AreaEntity entity = areaRepository.findBynome(nome).orElseThrow(
+                    EntityNotFoundException::new
+            );
+            Area response = areaMapper.EntityToDto(entity);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -158,21 +152,23 @@ public class AreaService implements AreaGateway {
     {
         try
         {
-            if(nome != null && dimensao != null && gps != null && numeroLinhas > 0 && numeroPlantios > 0)
+            if(nome == null){throw new NullargumentsException();}
+            if(dimensao == null){throw new NullargumentsException();}
+            if(gps == null){throw new NullargumentsException();}
+            if(numeroLinhas <= 0){throw new NullargumentsException();}
+            if(numeroPlantios <= 0){throw new NullargumentsException();}
+            if(numeroLocalizacoes <= 0){throw new NullargumentsException();}
+            AreaEntity entity = new AreaEntity();
+            entity.SetInfoInicial(nome,dimensao,gps);
+            for(int i = 1; i<=numeroPlantios; i++)
             {
-                AreaEntity entity = new AreaEntity();
-                entity.SetInfoInicial(nome,dimensao,gps);
-                for(int i = 1; i<=numeroPlantios; i++)
-                {
-                    Plantio plantio = plantioService.NovoPlantio(nome,numeroLinhas,i,numeroLocalizacoes).getBody();
-                    PlantioEntity plantioEntity = plantioMapper.DtoToEntity(plantio);
-                    entity.getPlantios().add(plantioEntity);
-                }
-                areaRepository.save(entity);
-                Area response = areaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.CREATED);
+                Plantio plantio = plantioService.NovoPlantio(nome,numeroLinhas,i,numeroLocalizacoes).getBody();
+                PlantioEntity plantioEntity = plantioMapper.DtoToEntity(plantio);
+                entity.getPlantios().add(plantioEntity);
             }
-            else {throw new NullargumentsException();}
+            areaRepository.save(entity);
+            Area response = areaMapper.EntityToDto(entity);
+            return new ResponseEntity<>(response,HttpStatus.CREATED);
         }
         catch (Exception e)
         {
@@ -189,16 +185,16 @@ public class AreaService implements AreaGateway {
     {
         try
         {
-            if(id != null && nome != null && dimensao != null && gps != null)
-            {
-                Area area = BuscarAreaPorId(id).getBody();
-                AreaEntity entity = areaMapper.DtoToEntity(area);
-                entity.EditInfol(nome,dimensao,gps);
-                areaRepository.save(entity);
-                area = areaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(area, HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
+            if(id == null){throw new NullargumentsException();}
+            if(nome == null){throw new NullargumentsException();}
+            if(dimensao == null){throw new NullargumentsException();}
+            if(gps == null){throw new NullargumentsException();}
+            Area area = BuscarAreaPorId(id).getBody();
+            AreaEntity entity = areaMapper.DtoToEntity(area);
+            entity.EditInfol(nome,dimensao,gps);
+            areaRepository.save(entity);
+            area = areaMapper.EntityToDto(entity);
+            return new ResponseEntity<>(area, HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -212,53 +208,53 @@ public class AreaService implements AreaGateway {
     {
         try
         {
-            if(id != null && numeroPlantio > 0 && numeroLinhas >0)
+            if(id == null){throw new NullargumentsException();}
+            if(numeroLinhas <= 0){throw new NullargumentsException();}
+            if(numeroPlantio <= 0){throw new NullargumentsException();}
+            if(numeroLocalizacoes <= 0){throw new NullargumentsException();}
+            Area area = BuscarAreaPorId(id).getBody();
+            for(Plantio plantio : area.getPlantios())
             {
-                Area area = BuscarAreaPorId(id).getBody();
-                for(Plantio plantio : area.getPlantios())
+                if(plantio.getLinhas().size() < numeroLinhas)
                 {
-                    if(plantio.getLinhas().size() < numeroLinhas)
+                    int inicio = plantio.getLinhas().size() + 1;
+                    int fim = numeroLinhas;
+                    for( int i = inicio ; i<=fim;i++)
                     {
-                        int inicio = plantio.getLinhas().size() + 1;
-                        int fim = numeroLinhas;
-                        for( int i = inicio ; i<=fim;i++)
-                        {
-                            Linha linha = linhaService.NovaLinha(area.getNome(),i,numeroPlantio,numeroLocalizacoes).getBody();
-                            plantio.getLinhas().add(linha);
-                        }
-                    }
-                    for(Linha linha : plantio.getLinhas())
-                    {
-                        if(linha.getLocalizacoes().size() < numeroLocalizacoes)
-                        {
-                            int inicio = linha.getLocalizacoes().size()+1;
-                            int fim = numeroLocalizacoes;
-                            for(int i = inicio; i<=fim;i++)
-                            {
-                                Localizacao localizacao = localizacaoService.NovaLocalizacao(area.getNome(),numeroLinhas,numeroPlantio,i).getBody();
-                                linha.getLocalizacoes().add(localizacao);
-                            }
-                            linhaService.SalvarAlteracao(linha);
-                        }
+                        Linha linha = linhaService.NovaLinha(area.getNome(),i,numeroPlantio,numeroLocalizacoes).getBody();
+                        plantio.getLinhas().add(linha);
                     }
                 }
-                if(area.getPlantios().size() < numeroPlantio)
+                for(Linha linha : plantio.getLinhas())
                 {
-                    List<Plantio> plantioEntities = new ArrayList<>();
-                    int j = area.getPlantios().size() + 1;
-                    for(int i = j; i<=numeroPlantio;i++)
+                    if(linha.getLocalizacoes().size() < numeroLocalizacoes)
                     {
-                        Plantio plantio = plantioService.NovoPlantio(area.getNome(),numeroLinhas, i,numeroLocalizacoes).getBody();
-                        plantioEntities.add(plantio);
+                        int inicio = linha.getLocalizacoes().size()+1;
+                        int fim = numeroLocalizacoes;
+                        for(int i = inicio; i<=fim;i++)
+                        {
+                            Localizacao localizacao = localizacaoService.NovaLocalizacao(area.getNome(),numeroLinhas,numeroPlantio,i).getBody();
+                            linha.getLocalizacoes().add(localizacao);
+                        }
+                        linhaService.SalvarAlteracao(linha);
                     }
-                    area.getPlantios().addAll(plantioEntities);
-                    area.setTimeStamp(LocalDateTime.now());
                 }
-                AreaEntity entity = areaMapper.DtoToEntity(area);
-                areaRepository.save(entity);
-                return new ResponseEntity<>(area, HttpStatus.OK);
             }
-            else {throw new NullargumentsException();}
+            if(area.getPlantios().size() < numeroPlantio)
+            {
+                List<Plantio> plantioEntities = new ArrayList<>();
+                int j = area.getPlantios().size() + 1;
+                for(int i = j; i<=numeroPlantio;i++)
+                {
+                    Plantio plantio = plantioService.NovoPlantio(area.getNome(),numeroLinhas, i,numeroLocalizacoes).getBody();
+                    plantioEntities.add(plantio);
+                }
+                area.getPlantios().addAll(plantioEntities);
+                area.setTimeStamp(LocalDateTime.now());
+            }
+            AreaEntity entity = areaMapper.DtoToEntity(area);
+            areaRepository.save(entity);
+            return new ResponseEntity<>(area, HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -272,30 +268,27 @@ public class AreaService implements AreaGateway {
     {
         try
         {
-            if(id != null && numeroPlantio > 0)
+            if(id == null){throw new NullargumentsException();}
+            if(numeroPlantio <= 0){throw new NullargumentsException();}
+            Area area = BuscarAreaPorId(id).getBody();
+            AreaEntity entity = areaMapper.DtoToEntity(area);
+            List<PlantioEntity> plantioEntities = new ArrayList<>();
+            entity.setPlantios(plantioEntities);
+            for(Plantio plantio : area.getPlantios())
             {
-                Area area = BuscarAreaPorId(id).getBody();
-                AreaEntity entity = areaMapper.DtoToEntity(area);
-                List<PlantioEntity> plantioEntities = new ArrayList<>();
-                List<Plantio> plantioEntitiesAtual = area.getPlantios();
-                entity.setPlantios(plantioEntities);
-                for(Plantio plantio : area.getPlantios())
+                if(plantio.getNumero() > numeroPlantio)
                 {
-                    if(plantio.getNumero() > numeroPlantio)
-                    {
-                        plantioService.DeletarPlantio(plantio.getId());
-                    }
-                    else
-                    {
-                        PlantioEntity plantioEntity = plantioMapper.DtoToEntity(plantio);
-                        plantioEntities.add(plantioEntity);
-                    }
+                    plantioService.DeletarPlantio(plantio.getId());
                 }
-                areaRepository.save(entity);
-                area = areaMapper.EntityToDto(entity);
-                return new ResponseEntity<>(area, HttpStatus.OK);
+                else
+                {
+                    PlantioEntity plantioEntity = plantioMapper.DtoToEntity(plantio);
+                    plantioEntities.add(plantioEntity);
+                }
             }
-            else {throw new NullargumentsException();}
+            areaRepository.save(entity);
+            area = areaMapper.EntityToDto(entity);
+            return new ResponseEntity<>(area, HttpStatus.OK);
         }
         catch (Exception e)
         {

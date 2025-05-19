@@ -98,15 +98,12 @@ public class LocalizacaoService implements LocalizacaoGateway {
     {
         try
         {
-            if(id != null)
-            {
-                LocalizacaoEntity entity = localizacaoRepository.findById(id).orElseThrow(
-                        EntityNotFoundException::new
-                );
-                Localizacao response = localizacaoMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
+            if(id == null) {throw new NullargumentsException();}
+            LocalizacaoEntity entity = localizacaoRepository.findById(id).orElseThrow(
+                    EntityNotFoundException::new
+            );
+            Localizacao response = localizacaoMapper.EntityToDto(entity);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -119,15 +116,12 @@ public class LocalizacaoService implements LocalizacaoGateway {
     {
         try
         {
-            if(referencia != null)
-            {
-                LocalizacaoEntity entity = localizacaoRepository.findByreferencia(referencia).orElseThrow(
-                        EntityNotFoundException::new
-                );
-                Localizacao response = localizacaoMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
+            if(referencia == null) {throw new NullargumentsException();}
+            LocalizacaoEntity entity = localizacaoRepository.findByreferencia(referencia).orElseThrow(
+                    EntityNotFoundException::new
+            );
+            Localizacao response = localizacaoMapper.EntityToDto(entity);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -141,15 +135,15 @@ public class LocalizacaoService implements LocalizacaoGateway {
     {
         try
         {
-            if(area != null && numeroLinha > 0 && referencia > 0 && numeroPlantio >0)
-            {
-                LocalizacaoEntity entity = new LocalizacaoEntity();
-                entity.SetInfoInicial(area, numeroPlantio, numeroLinha,referencia);
-                localizacaoRepository.save(entity);
-                Localizacao response = localizacaoMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.CREATED);
-            }
-            else {throw new NullargumentsException();}
+            if(area == null){throw new NullargumentsException();}
+            if(numeroLinha <=0){throw new NullargumentsException();}
+            if(referencia <=0){throw new NullargumentsException();}
+            if(numeroPlantio <=0){throw new NullargumentsException();}
+            LocalizacaoEntity entity = new LocalizacaoEntity();
+            entity.SetInfoInicial(area, numeroPlantio, numeroLinha,referencia);
+            localizacaoRepository.save(entity);
+            Localizacao response = localizacaoMapper.EntityToDto(entity);
+            return new ResponseEntity<>(response,HttpStatus.CREATED);
         }
         catch (Exception e)
         {
@@ -162,16 +156,15 @@ public class LocalizacaoService implements LocalizacaoGateway {
     {
         try
         {
-            if(area != null && numeroLinha > 0 && id != null)
-            {
-                Localizacao localizacao = BuscarLocalizacaoPorId(id).getBody();
-                localizacao.setNomeArea(area);
-                localizacao.setTimeStamp(LocalDateTime.now());
-                LocalizacaoEntity entity = localizacaoMapper.DtoToEntity(localizacao);
-                localizacaoRepository.save(entity);
-                return new ResponseEntity<>(localizacao, HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
+            if(area == null){throw new NullargumentsException();}
+            if(numeroLinha <=0){throw new NullargumentsException();}
+            if(id == null){throw new NullargumentsException();}
+            Localizacao localizacao = BuscarLocalizacaoPorId(id).getBody();
+            localizacao.setNomeArea(area);
+            localizacao.setTimeStamp(LocalDateTime.now());
+            LocalizacaoEntity entity = localizacaoMapper.DtoToEntity(localizacao);
+            localizacaoRepository.save(entity);
+            return new ResponseEntity<>(localizacao, HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -184,13 +177,10 @@ public class LocalizacaoService implements LocalizacaoGateway {
     {
         try
         {
-            if(localizacao != null)
-            {
-                LocalizacaoEntity entity = localizacaoMapper.DtoToEntity(localizacao);
-                localizacaoRepository.save(entity);
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
+            if(localizacao == null){throw new NullargumentsException();}
+            LocalizacaoEntity entity = localizacaoMapper.DtoToEntity(localizacao);
+            localizacaoRepository.save(entity);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -203,11 +193,8 @@ public class LocalizacaoService implements LocalizacaoGateway {
     {
         try
         {
-            if(id != null)
-            {
-                localizacaoRepository.deleteById(id);
-            }
-            else {throw new NullargumentsException();}
+            if(id == null){throw new NullargumentsException();}
+            localizacaoRepository.deleteById(id);
         }
         catch (Exception e)
         {

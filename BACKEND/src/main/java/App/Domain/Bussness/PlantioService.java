@@ -85,6 +85,7 @@ public class PlantioService implements PlantioGateway {
     {
         try
         {
+            if(id == null){throw new NullargumentsException();}
             PlantioEntity entity = plantioRepository.findById(id).orElseThrow(
                     EntityNotFoundException::new
             );
@@ -97,27 +98,26 @@ public class PlantioService implements PlantioGateway {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-
+    
     public ResponseEntity<Plantio> NovoPlantio(String area,int numeroLinhas, int numeroPlantio, int numeroLocalizacoes)
     {
         try
         {
-            if(numeroLinhas > 0 && numeroPlantio > 0)
+            if(numeroLinhas <= 0){throw new NullargumentsException();}
+            if(numeroPlantio <= 0){throw new NullargumentsException();}
+            if(numeroLocalizacoes <= 0){throw new NullargumentsException();}
+            PlantioEntity entity = new PlantioEntity();
+            List<LinhaEntity> linhas = new ArrayList<>();
+            for(int i = 1 ; i <= numeroLinhas; i++)
             {
-                PlantioEntity entity = new PlantioEntity();
-                List<LinhaEntity> linhas = new ArrayList<>();
-                for(int i = 1 ; i <= numeroLinhas; i++)
-                {
-                    Linha linha = linhaService.NovaLinha(area,i, numeroPlantio,numeroLocalizacoes).getBody();
-                    LinhaEntity linhaEntity = linhaMapper.DtoToEntity(linha);
-                    linhas.add(linhaEntity);
-                }
-                entity.SetInfoInicial(linhas, numeroPlantio);
-                plantioRepository.save(entity);
-                Plantio response = plantioMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.OK);
+                Linha linha = linhaService.NovaLinha(area,i, numeroPlantio,numeroLocalizacoes).getBody();
+                LinhaEntity linhaEntity = linhaMapper.DtoToEntity(linha);
+                linhas.add(linhaEntity);
             }
-            else {throw new NullargumentsException();}
+            entity.SetInfoInicial(linhas, numeroPlantio);
+            plantioRepository.save(entity);
+            Plantio response = plantioMapper.EntityToDto(entity);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -131,34 +131,33 @@ public class PlantioService implements PlantioGateway {
     {
         try
         {
-            if(id != null && numeroLinhas >0 && numeroLocalizacoes > 0)
+            if(id == null){{throw new NullargumentsException();}}
+            if(numeroLinhas <= 0){{throw new NullargumentsException();}}
+            if(numeroLocalizacoes <= 0){{throw new NullargumentsException();}}
+            Plantio plantio = BuscarPlantioPorId(id).getBody();
+            List<LinhaEntity> novaLista = new ArrayList<>();
+            PlantioEntity entity = plantioMapper.DtoToEntity(plantio);
+            entity.setLinhas(novaLista);
+            List<Linha> listaAtual = plantio.getLinhas();
+            if(plantio.getLinhas().size() > numeroLinhas)
             {
-                Plantio plantio = BuscarPlantioPorId(id).getBody();
-                List<LinhaEntity> novaLista = new ArrayList<>();
-                PlantioEntity entity = plantioMapper.DtoToEntity(plantio);
-                entity.setLinhas(novaLista);
-                List<Linha> listaAtual = plantio.getLinhas();
-                if(plantio.getLinhas().size() > numeroLinhas)
+                for (Linha linha : plantio.getLinhas())
                 {
-                    for (Linha linha : plantio.getLinhas())
+                    Linha linha1 = linhaService.reduzirLocalizacoes(linha.getId(),numeroLocalizacoes).getBody();
+                    if (linha.getNumero() > numeroLinhas)
                     {
-                        Linha linha1 = linhaService.reduzirLocalizacoes(linha.getId(),numeroLocalizacoes).getBody();
-                        if (linha.getNumero() > numeroLinhas)
-                        {
-                            linhaService.DeletarLinhaPorId(linha.getId());
-                        }
-                        else
-                        {
-                            LinhaEntity linhaEntity = linhaMapper.DtoToEntity(linha1);
-                            novaLista.add(linhaEntity);
-                        }
+                        linhaService.DeletarLinhaPorId(linha.getId());
                     }
-                    plantioRepository.save(entity);
+                    else
+                    {
+                        LinhaEntity linhaEntity = linhaMapper.DtoToEntity(linha1);
+                        novaLista.add(linhaEntity);
+                    }
                 }
-                plantio = plantioMapper.EntityToDto(entity);
-                return new ResponseEntity<>(plantio, HttpStatus.OK);
+                plantioRepository.save(entity);
             }
-            else {throw new NullargumentsException();}
+            plantio = plantioMapper.EntityToDto(entity);
+            return new ResponseEntity<>(plantio, HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -171,20 +170,18 @@ public class PlantioService implements PlantioGateway {
     {
         try
         {
-            if(id != null)
+            if(id == null) {throw new NullargumentsException();}
+            Plantio plantio = BuscarPlantioPorId(id).getBody();
+            PlantioEntity entity = plantioMapper.DtoToEntity(plantio);
+            List<LinhaEntity> novaLista = new ArrayList<>();
+            entity.setLinhas(novaLista);
+            plantioRepository.save(entity);
+            for(Linha linha : plantio.getLinhas())
             {
-                Plantio plantio = BuscarPlantioPorId(id).getBody();
-                PlantioEntity entity = plantioMapper.DtoToEntity(plantio);
-                List<LinhaEntity> novaLista = new ArrayList<>();
-                entity.setLinhas(novaLista);
-                plantioRepository.save(entity);
-                for(Linha linha : plantio.getLinhas())
-                {
-                    linhaService.DeletarLinhaPorId(linha.getId());
-                }
-                plantioRepository.deleteById(id);
+                linhaService.DeletarLinhaPorId(linha.getId());
             }
-            else {throw new NullargumentsException();}
+            plantioRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -198,16 +195,14 @@ public class PlantioService implements PlantioGateway {
     {
         try
         {
-            if(id != null && relatorio != null)
-            {
-                Plantio plantio = BuscarPlantioPorId(id).getBody();
-                PlantioEntity entity = plantioMapper.DtoToEntity(plantio);
-                entity.SetNovaAdubacao(relatorio);
-                plantioRepository.save(entity);
-                plantio = plantioMapper.EntityToDto(entity);
-                return new ResponseEntity<>(plantio,HttpStatus.OK);
-            }
-            else {throw new NullargumentsException();}
+            if(id == null){throw new NullargumentsException();}
+            if(relatorio == null){throw new NullargumentsException();}
+            Plantio plantio = BuscarPlantioPorId(id).getBody();
+            PlantioEntity entity = plantioMapper.DtoToEntity(plantio);
+            entity.SetNovaAdubacao(relatorio);
+            plantioRepository.save(entity);
+            plantio = plantioMapper.EntityToDto(entity);
+            return new ResponseEntity<>(plantio,HttpStatus.OK);
         }
         catch (Exception e)
         {
